@@ -5,7 +5,7 @@ namespace app
 {
 	enum class version
 	{
-		1_0,
+		v1_0,
 	};
 }
 
