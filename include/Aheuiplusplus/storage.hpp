@@ -3,7 +3,6 @@
 
 #include <Aheuiplusplus/code.hpp>
 #include <Aheuiplusplus/function.hpp>
-#include <Aheuiplusplus/type.hpp>
 
 #include <cstddef>
 #include <variant>
