@@ -6,6 +6,16 @@ namespace app
 		: version_(version)
 	{}
 
+	void interpreter::run(const code& code)
+	{
+		for (std::size_t i = 0; i < code.size(); ++i)
+		{
+			char32_t command = code[i];
+
+			// TODO
+		}
+	}
+
 	app::version interpreter::version() const noexcept
 	{
 		return version_;

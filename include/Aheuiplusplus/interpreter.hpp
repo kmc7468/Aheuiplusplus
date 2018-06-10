@@ -1,6 +1,7 @@
 #ifndef AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 #define AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 
+#include <Aheuiplusplus/code.hpp>
 #include <Aheuiplusplus/function.hpp>
 #include <Aheuiplusplus/storage.hpp>
 #include <Aheuiplusplus/version.hpp>
@@ -23,6 +24,9 @@ namespace app
 		interpreter& operator=(interpreter&& interpreter) noexcept = delete;
 		bool operator==(const interpreter& interpreter) const = delete;
 		bool operator!=(const interpreter& interpreter) const = delete;
+
+	public:
+		void run(const code& code);
 
 	public:
 		app::version version() const noexcept;
