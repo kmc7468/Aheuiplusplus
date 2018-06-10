@@ -8,11 +8,30 @@ namespace app
 
 	void interpreter::run(const code& code)
 	{
+		bool is_comment = false;
+
 		for (std::size_t i = 0; i < code.size(); ++i)
 		{
 			char32_t command = code[i];
 
-			// TODO
+			if (!is_comment && command == U'/' && code[i + 1] == U'*')
+			{
+				is_comment = true;
+				++i;
+			}
+			else if (is_comment && command == U'*' && code[i + 1] == U'/')
+			{
+				is_comment = false;
+				++i;
+			}
+			else if (!is_comment && is_complete_hangul(command))
+			{
+				char32_t chosung = get_chosung(command);
+				char32_t jungsung = get_jungsung(command);
+				char32_t jongsung = get_jongsung(command);
+
+				// TODO
+			}
 		}
 	}
 
