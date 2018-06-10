@@ -2,6 +2,9 @@
 #define AHEUIPLUSPLUS_HEADER_FUNCTION_HPP
 
 #include <Aheuiplusplus/code.hpp>
+#include <Aheuiplusplus/storage.hpp>
+
+#include <functional>
 
 namespace app
 {
@@ -50,6 +53,12 @@ namespace app
 		virtual ~aheuiaheuiplus_function() override = default;
 
 	public:
+		aheuiaheuiplus_function& operator=(const aheuiaheuiplus_function& function) = delete;
+		aheuiaheuiplus_function& operator=(aheuiaheuiplus_function&& function) noexcept = delete;
+		bool operator==(const aheuiaheuiplus_function& function) const = delete;
+		bool operator!=(const aheuiaheuiplus_function& function) const = delete;
+
+	public:
 		virtual function_type type() const noexcept override;
 
 	public:
@@ -59,6 +68,34 @@ namespace app
 
 	private:
 		app::code code_;
+	};
+
+	class native_function final : public function
+	{
+	public:
+		using function_t = std::function<void(std::vector<std::vector<storage*>>&, std::vector<function*>&)>;
+
+	public:
+		native_function(const function_t& functor);
+		native_function(const app::code& name, const function_t& functor);
+		native_function(const native_function& function) = delete;
+		native_function(native_function&& function) noexcept = delete;
+		virtual ~native_function() override = default;
+
+	public:
+		native_function& operator=(const native_function& function) = delete;
+		native_function& operator=(native_function&& function) noexcept = delete;
+		bool operator==(const native_function& function) const = delete;
+		bool operator!=(const native_function& function) const = delete;
+
+	public:
+		virtual function_type type() const noexcept override;
+
+	public:
+		const function_t& functor() const noexcept;
+
+	private:
+		function_t functor_;
 	};
 }
 

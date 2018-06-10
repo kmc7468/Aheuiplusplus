@@ -2,7 +2,6 @@
 #define AHEUIPLUSPLUS_HEADER_STORAGE_HPP
 
 #include <Aheuiplusplus/code.hpp>
-#include <Aheuiplusplus/function.hpp>
 
 #include <cstddef>
 #include <queue>
@@ -11,6 +10,8 @@
 
 namespace app
 {
+	class function;
+
 	enum class storage_type
 	{
 		list,
