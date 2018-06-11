@@ -85,18 +85,33 @@ namespace app
 
 				switch (chosung)
 				{
+				case U'ㄷ':
+					add_(jongsung, is_added_additional_data);
+					break;
+				case U'ㄸ':
+					mul_(jongsung, is_added_additional_data);
+					break;
+				case U'ㅌ':
+					sub_(jongsung, is_added_additional_data);
+					break;
+				case U'ㄴ':
+					div_(jongsung, is_added_additional_data);
+					break;
+				case U'ㄹ':
+					mod_(jongsung, is_added_additional_data);
+					break;
+
+
+
 				case U'ㅁ':
 					pop_(jongsung, is_added_additional_data);
 					break;
-
 				case U'ㅂ':
 					push_(jongsung, is_added_additional_data);
 					break;
-
 				case U'ㅃ':
 					copy_(jongsung, is_added_additional_data);
 					break;
-
 				case U'ㅍ':
 					swap_(jongsung, is_added_additional_data);
 					break;
@@ -105,7 +120,6 @@ namespace app
 
 				case U'ㅇ':
 					break;
-
 				case U'ㅎ':
 					return;
 				}
@@ -243,6 +257,249 @@ namespace app
 		for (std::size_t i = 0; i < 28; ++i)
 		{
 			storage_indexs_.push_back(0);
+		}
+	}
+
+	void interpreter::add_(char32_t jongsung, bool is_added_additional_data)
+	{
+		if (jongsung == 0 && !is_added_additional_data)
+		{
+			element* right_operand = storage_()->pop();
+			element* left_operand = storage_()->pop();
+
+			if (is_integer_mode_)
+			{
+				long long right_operand_integer = std::get<0>(*right_operand).integer();
+				long long left_operand_integer = std::get<0>(*left_operand).integer();
+
+				long long result = left_operand_integer + right_operand_integer;
+
+				storage_()->push(new element(number(result)));
+			}
+			else
+			{
+				double right_operand_decimal = std::get<0>(*right_operand).decimal();
+				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+
+				double result = left_operand_decimal + right_operand_decimal;
+
+				storage_()->push(new element(number(result)));
+			}
+		}
+		else if (jongsung == 0 && is_added_additional_data)
+		{
+			element* right_operand = storage_()->pop();
+			element* left_operand = storage_()->pop();
+
+			if (is_integer_mode_)
+			{
+				long long right_operand_integer = std::get<0>(*right_operand).integer();
+				long long left_operand_integer = std::get<0>(*left_operand).integer();
+
+				long long result = left_operand_integer | right_operand_integer;
+
+				storage_()->push(new element(number(result)));
+			}
+			else
+			{
+				double right_operand_decimal = std::get<0>(*right_operand).decimal();
+				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+
+				static_assert(sizeof(long long) == sizeof(double), "The sizes of long long and double types must be the same.");
+
+				long long right_operand_integer = *reinterpret_cast<long long*>(&right_operand_decimal);
+				long long left_operand_integer = *reinterpret_cast<long long*>(&left_operand_decimal);
+
+				long long result = left_operand_integer + right_operand_integer;
+
+				storage_()->push(new element(number(result)));
+			}
+		}
+	}
+	void interpreter::mul_(char32_t jongsung, bool is_added_additional_data)
+	{
+		if (jongsung == 0 && !is_added_additional_data)
+		{
+			element* right_operand = storage_()->pop();
+			element* left_operand = storage_()->pop();
+
+			if (is_integer_mode_)
+			{
+				long long right_operand_integer = std::get<0>(*right_operand).integer();
+				long long left_operand_integer = std::get<0>(*left_operand).integer();
+
+				long long result = left_operand_integer * right_operand_integer;
+
+				storage_()->push(new element(number(result)));
+			}
+			else
+			{
+				double right_operand_decimal = std::get<0>(*right_operand).decimal();
+				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+
+				double result = left_operand_decimal * right_operand_decimal;
+
+				storage_()->push(new element(number(result)));
+			}
+		}
+		else if (jongsung == 0 && is_added_additional_data)
+		{
+			element* right_operand = storage_()->pop();
+			element* left_operand = storage_()->pop();
+
+			if (is_integer_mode_)
+			{
+				long long right_operand_integer = std::get<0>(*right_operand).integer();
+				long long left_operand_integer = std::get<0>(*left_operand).integer();
+
+				long long result = left_operand_integer & right_operand_integer;
+
+				storage_()->push(new element(number(result)));
+			}
+			else
+			{
+				double right_operand_decimal = std::get<0>(*right_operand).decimal();
+				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+
+				long long right_operand_integer = *reinterpret_cast<long long*>(&right_operand_decimal);
+				long long left_operand_integer = *reinterpret_cast<long long*>(&left_operand_decimal);
+
+				long long result = left_operand_integer & right_operand_integer;
+
+				storage_()->push(new element(number(result)));
+			}
+		}
+	}
+	void interpreter::sub_(char32_t jongsung, bool is_added_additional_data)
+	{
+		if (jongsung == 0 && !is_added_additional_data)
+		{
+			element* right_operand = storage_()->pop();
+			element* left_operand = storage_()->pop();
+
+			if (is_integer_mode_)
+			{
+				long long right_operand_integer = std::get<0>(*right_operand).integer();
+				long long left_operand_integer = std::get<0>(*left_operand).integer();
+
+				long long result = left_operand_integer - right_operand_integer;
+
+				storage_()->push(new element(number(result)));
+			}
+			else
+			{
+				double right_operand_decimal = std::get<0>(*right_operand).decimal();
+				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+
+				double result = left_operand_decimal - right_operand_decimal;
+
+				storage_()->push(new element(number(result)));
+			}
+		}
+		else if (jongsung == 0 && is_added_additional_data)
+		{
+			element* right_operand = storage_()->pop();
+			element* left_operand = storage_()->pop();
+
+			long long right_operand_integer = std::get<0>(*right_operand).integer();
+			long long left_operand_integer = std::get<0>(*left_operand).integer();
+
+			long long result = left_operand_integer << right_operand_integer;
+
+			storage_()->push(new element(number(result)));
+		}
+	}
+	void interpreter::div_(char32_t jongsung, bool is_added_additional_data)
+	{
+		if (jongsung == 0 && !is_added_additional_data)
+		{
+			element* right_operand = storage_()->pop();
+			element* left_operand = storage_()->pop();
+
+			if (is_integer_mode_)
+			{
+				long long right_operand_integer = std::get<0>(*right_operand).integer();
+				long long left_operand_integer = std::get<0>(*left_operand).integer();
+
+				long long result = left_operand_integer / right_operand_integer;
+
+				storage_()->push(new element(number(result)));
+			}
+			else
+			{
+				double right_operand_decimal = std::get<0>(*right_operand).decimal();
+				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+
+				double result = left_operand_decimal / right_operand_decimal;
+
+				storage_()->push(new element(number(result)));
+			}
+		}
+		else if (jongsung == 0 && is_added_additional_data)
+		{
+			element* right_operand = storage_()->pop();
+			element* left_operand = storage_()->pop();
+
+			long long right_operand_integer = std::get<0>(*right_operand).integer();
+			long long left_operand_integer = std::get<0>(*left_operand).integer();
+
+			long long result = left_operand_integer >> right_operand_integer;
+
+			storage_()->push(new element(number(result)));
+		}
+	}
+	void interpreter::mod_(char32_t jongsung, bool is_added_additional_data)
+	{
+		if (jongsung == 0 && !is_added_additional_data)
+		{
+			element* right_operand = storage_()->pop();
+			element* left_operand = storage_()->pop();
+
+			if (is_integer_mode_)
+			{
+				long long right_operand_integer = std::get<0>(*right_operand).integer();
+				long long left_operand_integer = std::get<0>(*left_operand).integer();
+
+				long long result = left_operand_integer % right_operand_integer;
+
+				storage_()->push(new element(number(result)));
+			}
+			else
+			{
+				double right_operand_decimal = std::get<0>(*right_operand).decimal();
+				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+
+				double result = std::fmod(left_operand_decimal, right_operand_decimal);
+
+				storage_()->push(new element(number(result)));
+			}
+		}
+		else if (jongsung == 0 && is_added_additional_data)
+		{
+			element* right_operand = storage_()->pop();
+			element* left_operand = storage_()->pop();
+
+			if (is_integer_mode_)
+			{
+				long long right_operand_integer = std::get<0>(*right_operand).integer();
+				long long left_operand_integer = std::get<0>(*left_operand).integer();
+
+				long long result = left_operand_integer ^ right_operand_integer;
+
+				storage_()->push(new element(number(result)));
+			}
+			else
+			{
+				double right_operand_decimal = std::get<0>(*right_operand).decimal();
+				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+
+				long long right_operand_integer = *reinterpret_cast<long long*>(&right_operand_decimal);
+				long long left_operand_integer = *reinterpret_cast<long long*>(&left_operand_decimal);
+
+				long long result = left_operand_integer ^ right_operand_integer;
+
+				storage_()->push(new element(number(result)));
+			}
 		}
 	}
 
@@ -487,7 +744,7 @@ namespace app
 		}
 		else
 		{
-			storage_()->push(new element(get_integer_(jongsung, is_added_additional_data)));
+			storage_()->push(new element(number(get_integer_(jongsung, is_added_additional_data))));
 		}
 	}
 	void interpreter::copy_(char32_t jongsung, bool is_added_additional_data)
@@ -750,22 +1007,22 @@ namespace app
 
 		direction = 3;
 	}
-	double app::interpreter::get_integer_(char32_t jongsung, bool is_added_additional_data)
+	long long app::interpreter::get_integer_(char32_t jongsung, bool is_added_additional_data)
 	{
-		double value;
+		long long value;
 
 		switch (jongsung)
 		{
 		case U'ㄱ':
 		case U'ㄴ':
 		case U'ㅅ':
-			value = 2.0;
+			value = 2;
 			break;
 
 		case U'ㄷ':
 		case U'ㅈ':
 		case U'ㅋ':
-			value = 3.0;
+			value = 3;
 			break;
 
 		case U'ㄲ':
@@ -776,33 +1033,33 @@ namespace app
 		case U'ㅊ':
 		case U'ㅌ':
 		case U'ㅍ':
-			value = 4.0;
+			value = 4;
 			break;
 
 		case U'ㄵ':
 		case U'ㄶ':
 		case U'ㄹ':
-			value = 5.0;
+			value = 5;
 			break;
 
 		case U'ㅄ':
-			value = 6.0;
+			value = 6;
 			break;
 
 		case U'ㄺ':
 		case U'ㄽ':
-			value = 7.0;
+			value = 7;
 			break;
 
 		case U'ㅀ':
-			value = 8.0;
+			value = 8;
 			break;
 
 		case U'ㄻ':
 		case U'ㄼ':
 		case U'ㄾ':
 		case U'ㄿ':
-			value = 9.0;
+			value = 9;
 			break;
 		}
 
@@ -839,6 +1096,11 @@ namespace app
 	std::size_t interpreter::selected_index() const noexcept
 	{
 		return selected_index_;
+	}
+
+	bool interpreter::is_integer_mode() const noexcept
+	{
+		return is_integer_mode_;
 	}
 
 	std::FILE* interpreter::input_stream()

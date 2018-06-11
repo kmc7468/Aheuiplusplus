@@ -34,6 +34,12 @@ namespace app
 	private:
 		void initialize_();
 
+		void add_(char32_t jongsung, bool is_added_additional_data);
+		void mul_(char32_t jongsung, bool is_added_additional_data);
+		void sub_(char32_t jongsung, bool is_added_additional_data);
+		void div_(char32_t jongsung, bool is_added_additional_data);
+		void mod_(char32_t jongsung, bool is_added_additional_data);
+		
 		void pop_(char32_t jongsung, bool is_added_additional_data);
 		void push_(char32_t jongsung, bool is_added_additional_data);
 		void copy_(char32_t jongsung, bool is_added_additional_data);
@@ -43,7 +49,7 @@ namespace app
 		void go_right_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
 		void go_up_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
 		void go_down_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
-		double get_integer_(char32_t jongsung, bool is_added_additional_data);
+		long long get_integer_(char32_t jongsung, bool is_added_additional_data);
 
 		app::storage* storage_();
 
@@ -54,6 +60,8 @@ namespace app
 		std::size_t selected_index() const noexcept;
 		const std::vector<function*>& functions() const noexcept;
 
+		bool is_integer_mode() const noexcept;
+
 		std::FILE* input_stream();
 		std::FILE* output_stream();
 
@@ -63,6 +71,8 @@ namespace app
 		std::vector<std::size_t> storage_indexs_;
 		std::size_t selected_index_ = 0;
 		std::vector<function*> functions_;
+
+		bool is_integer_mode_ = true;
 
 		std::FILE* input_stream_;
 		std::FILE* output_stream_;
