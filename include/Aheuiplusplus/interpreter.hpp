@@ -13,7 +13,7 @@ namespace app
 	class interpreter final
 	{
 	public:
-		interpreter() = default;
+		interpreter(std::FILE* input_stream, std::FILE* output_stream);
 		interpreter(app::version version, std::FILE* input_stream, std::FILE* output_stream);
 		interpreter(const interpreter& interpreter) = delete;
 		interpreter(interpreter&& interpreter) noexcept = delete;
@@ -32,13 +32,17 @@ namespace app
 		std::size_t storage_index(std::size_t index) const;
 
 	private:
+		void initialize_();
+
 		void pop_(char32_t jongsung, bool is_added_additional_data);
+		void push_(char32_t jongsung, bool is_added_additional_data);
 
 		void go_left_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
 		void go_right_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
 		void go_up_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
 		void go_down_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
-		
+		double get_integer_(char32_t jongsung, bool is_added_additional_data);
+
 		app::storage* storage_();
 
 	public:
