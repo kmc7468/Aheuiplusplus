@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cwchar>
+#include <cwctype>
 #include <string>
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
@@ -457,6 +458,11 @@ namespace app
 					}
 					else
 					{
+						if (std::iswspace(high_surrogate))
+						{
+							break;
+						}
+
 						temp += high_surrogate;
 					}
 				}
