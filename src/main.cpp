@@ -5,7 +5,7 @@
 #endif
 
 static_assert(sizeof(wchar_t) != sizeof(char32_t) && AHEUIPLUSPLUS_MACRO_IS_WINDOWS,
-	"Only Windows can have different sizes of wchar_t and char32_t.");
+	"The size of wchar_t and char32_t can be different from each other on Windows.");
 
 int main(int argc, char** argv)
 {

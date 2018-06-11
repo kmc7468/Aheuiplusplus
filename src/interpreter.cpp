@@ -3,7 +3,13 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstdio>
+#include <cwchar>
 #include <string>
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+#	include <fcntl.h>
+#	include <io.h>
+#endif
 
 namespace app
 {
@@ -239,10 +245,16 @@ namespace app
 			{
 				if (value->index() == 0) // 숫자일 경우
 				{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 					std::fprintf(output_stream_, "%lld", static_cast<std::int64_t>(std::get<0>(*value)));
 				}
 				else if (value->index() == 1) // 문자일 경우
 				{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 					std::fprintf(output_stream_, "%lld", static_cast<std::int64_t>(std::get<1>(*value)));
 				}
 			}
@@ -250,10 +262,16 @@ namespace app
 			{
 				if (value->index() == 0) // 숫자일 경우
 				{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 					std::fprintf(output_stream_, "%f", std::get<0>(*value));
 				}
 				else if (value->index() == 1) // 문자일 경우
 				{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 					std::fprintf(output_stream_, "%f", static_cast<double>(std::get<1>(*value)));
 				}
 			}
@@ -267,6 +285,9 @@ namespace app
 					}
 					else
 					{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
 						std::wstring converted = char32_to_wchar(static_cast<char32_t>(std::get<0>(*value)));
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
 					}
@@ -279,6 +300,9 @@ namespace app
 					}
 					else
 					{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
 						std::wstring converted = char32_to_wchar(std::get<1>(*value));
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
 					}
@@ -294,6 +318,9 @@ namespace app
 					}
 					else
 					{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
 						std::wstring converted = char32_to_wchar(std::get<1>(*value));
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
 					}
@@ -307,6 +334,9 @@ namespace app
 					}
 					else
 					{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
 						raw_code convert_value = std::get<2>(*value);
 						std::wstring converted;
 
@@ -339,6 +369,9 @@ namespace app
 	{
 		if (jongsung == U'ㅇ' && !is_added_additional_data) // 숫자(정수) 입력
 		{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			_setmode(_fileno(input_stream_), _O_TEXT);
+#endif
 			long long temp;
 			std::fscanf(input_stream_, "%lld", &temp);
 
@@ -346,6 +379,9 @@ namespace app
 		}
 		else if (jongsung == U'ㅇ' && is_added_additional_data) // 숫자(소수) 입력
 		{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			_setmode(_fileno(input_stream_), _O_TEXT);
+#endif
 			double temp;
 			std::fscanf(input_stream_, "%lf", &temp);
 
@@ -362,6 +398,9 @@ namespace app
 			}
 			else
 			{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+				_setmode(_fileno(input_stream_), _O_U16TEXT);
+#endif
 				wchar_t high_surrogate = std::fgetwc(input_stream_);
 
 				if (high_surrogate >= 0xD800 && high_surrogate <= 0xDBFF)
@@ -391,6 +430,9 @@ namespace app
 			}
 			else
 			{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+				_setmode(_fileno(input_stream_), _O_U16TEXT);
+#endif
 				raw_code temp;
 
 				while (!std::feof(input_stream_))
