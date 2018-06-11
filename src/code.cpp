@@ -1,6 +1,7 @@
 #include <Aheuiplusplus/code.hpp>
 
 #include <stdexcept>
+#include <utility>
 
 namespace app
 {
@@ -99,5 +100,78 @@ namespace app
 	char32_t is_added_additional_data(char32_t jungsung)
 	{
 		return jungsung != get_jungsung_original(jungsung);
+	}
+}
+
+namespace app
+{
+	code::code(const raw_code& code)
+	{
+		parse_raw_code_(code);
+	}
+	code::code(const code& code)
+		: codes_(code.codes_)
+	{}
+	code::code(code&& code) noexcept
+		: codes_(std::move(code.codes_))
+	{}
+
+	code& code::operator=(const raw_code& code)
+	{
+		parse_raw_code_(code);
+		return *this;
+	}
+	code& code::operator=(const code& code)
+	{
+		codes_ = code.codes_;
+		return *this;
+	}
+	code& code::operator=(code&& code) noexcept
+	{
+		codes_ = std::move(code.codes_);
+		return *this;
+	}
+
+	char32_t code::command(std::size_t x, std::size_t y) const
+	{
+		return codes_[y][x];
+	}
+	char32_t& code::command(std::size_t x, std::size_t y)
+	{
+		return codes_[y][x];
+	}
+	const raw_code& code::line(std::size_t y) const
+	{
+		return codes_[y];
+	}
+	raw_code& code::line(std::size_t y)
+	{
+		return codes_[y];
+	}
+
+	void code::parse_raw_code_(const raw_code& code)
+	{
+		codes_.clear();
+
+		raw_code code_editable = code;
+		code_editable.push_back(U'\n');
+		raw_code splited;
+
+		while (code_editable.find(U'\n') != raw_code::npos)
+		{
+			splited = code_editable.substr(0, code_editable.find(U'\n') + 1);
+			codes_.push_back(splited);
+
+			code_editable = code_editable.substr(code_editable.find(U'\n') + 1);
+		}
+	}
+
+	const std::vector<raw_code>& code::codes() const noexcept
+	{
+		return codes_;
+	}
+	std::vector<raw_code>& code::codes() noexcept
+	{
+		return codes_;
 	}
 }
