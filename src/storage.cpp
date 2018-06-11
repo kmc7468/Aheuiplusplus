@@ -56,6 +56,11 @@ namespace app
 	}
 	element* queue::pop()
 	{
+		if (queue_.size() == 0)
+		{
+			return nullptr;
+		}
+
 		element* data = queue_.front();
 		queue_.pop();
 
