@@ -294,6 +294,9 @@ namespace app
 
 				storage_()->push(new element(number(result)));
 			}
+
+			delete right_operand;
+			delete left_operand;
 		}
 		else if (jongsung == 0 && is_added_additional_data)
 		{
@@ -323,6 +326,9 @@ namespace app
 
 				storage_()->push(new element(number(result)));
 			}
+
+			delete right_operand;
+			delete left_operand;
 		}
 	}
 	void interpreter::mul_(char32_t jongsung, bool is_added_additional_data)
@@ -350,6 +356,9 @@ namespace app
 
 				storage_()->push(new element(number(result)));
 			}
+
+			delete right_operand;
+			delete left_operand;
 		}
 		else if (jongsung == 0 && is_added_additional_data)
 		{
@@ -377,6 +386,9 @@ namespace app
 
 				storage_()->push(new element(number(result)));
 			}
+
+			delete right_operand;
+			delete left_operand;
 		}
 	}
 	void interpreter::sub_(char32_t jongsung, bool is_added_additional_data)
@@ -404,6 +416,9 @@ namespace app
 
 				storage_()->push(new element(number(result)));
 			}
+
+			delete right_operand;
+			delete left_operand;
 		}
 		else if (jongsung == 0 && is_added_additional_data)
 		{
@@ -416,6 +431,9 @@ namespace app
 			long long result = left_operand_integer << right_operand_integer;
 
 			storage_()->push(new element(number(result)));
+			
+			delete right_operand;
+			delete left_operand;
 		}
 	}
 	void interpreter::div_(char32_t jongsung, bool is_added_additional_data)
@@ -443,6 +461,9 @@ namespace app
 
 				storage_()->push(new element(number(result)));
 			}
+
+			delete right_operand;
+			delete left_operand;
 		}
 		else if (jongsung == 0 && is_added_additional_data)
 		{
@@ -455,6 +476,9 @@ namespace app
 			long long result = left_operand_integer >> right_operand_integer;
 
 			storage_()->push(new element(number(result)));
+
+			delete right_operand;
+			delete left_operand;
 		}
 	}
 	void interpreter::mod_(char32_t jongsung, bool is_added_additional_data)
@@ -482,6 +506,9 @@ namespace app
 
 				storage_()->push(new element(number(result)));
 			}
+
+			delete right_operand;
+			delete left_operand;
 		}
 		else if (jongsung == 0 && is_added_additional_data)
 		{
@@ -509,6 +536,9 @@ namespace app
 
 				storage_()->push(new element(number(result)));
 			}
+
+			delete right_operand;
+			delete left_operand;
 		}
 	}
 
