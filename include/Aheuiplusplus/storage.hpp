@@ -19,7 +19,7 @@ namespace app
 		passage,
 	};
 
-	using element = std::variant<double, char32_t, code, function*>;
+	using element = std::variant<double, char32_t, raw_code, function*>;
 
 	class storage
 	{

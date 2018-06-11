@@ -26,7 +26,7 @@ namespace app
 		bool operator!=(const interpreter& interpreter) const = delete;
 
 	public:
-		void run(const code& code);
+		void run(const raw_code& code);
 
 	public:
 		app::version version() const noexcept;

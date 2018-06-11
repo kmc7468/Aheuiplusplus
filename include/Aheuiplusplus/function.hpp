@@ -23,7 +23,7 @@ namespace app
 
 	protected:
 		function() = default;
-		function(const code& name);
+		function(const raw_code& name);
 
 	public:
 		function& operator=(const function& function) = delete;
@@ -35,19 +35,19 @@ namespace app
 		virtual function_type type() const noexcept = 0;
 
 	public:
-		code name() const;
-		void name(const code& new_name);
-		void name(code&& new_name) noexcept;
+		raw_code name() const;
+		void name(const raw_code& new_name);
+		void name(raw_code&& new_name) noexcept;
 
 	private:
-		code name_;
+		raw_code name_;
 	};
 
 	class aheuiaheuiplus_function final : public function
 	{
 	public:
 		aheuiaheuiplus_function() = default;
-		aheuiaheuiplus_function(const app::code& name);
+		aheuiaheuiplus_function(const raw_code& name);
 		aheuiaheuiplus_function(const aheuiaheuiplus_function& function) = delete;
 		aheuiaheuiplus_function(aheuiaheuiplus_function&& function) = delete;
 		virtual ~aheuiaheuiplus_function() override = default;
@@ -62,12 +62,12 @@ namespace app
 		virtual function_type type() const noexcept override;
 
 	public:
-		app::code code() const;
-		void code(const app::code& code);
-		void code(app::code&& code) noexcept;
+		raw_code code() const;
+		void code(const raw_code& code);
+		void code(raw_code&& code) noexcept;
 
 	private:
-		app::code code_;
+		raw_code code_;
 	};
 
 	class native_function final : public function
@@ -77,7 +77,7 @@ namespace app
 
 	public:
 		native_function(const function_t& functor);
-		native_function(const app::code& name, const function_t& functor);
+		native_function(const raw_code& name, const function_t& functor);
 		native_function(const native_function& function) = delete;
 		native_function(native_function&& function) noexcept = delete;
 		virtual ~native_function() override = default;

@@ -4,19 +4,19 @@
 
 namespace app
 {
-	function::function(const code& name)
+	function::function(const raw_code& name)
 		: name_(name)
 	{}
 
-	code function::name() const
+	raw_code function::name() const
 	{
 		return name_;
 	}
-	void function::name(const code& new_name)
+	void function::name(const raw_code& new_name)
 	{
 		name_ = new_name;
 	}
-	void function::name(code&& new_name) noexcept
+	void function::name(raw_code&& new_name) noexcept
 	{
 		name_ = std::move(new_name);
 	}
@@ -24,7 +24,7 @@ namespace app
 
 namespace app
 {
-	aheuiaheuiplus_function::aheuiaheuiplus_function(const app::code& name)
+	aheuiaheuiplus_function::aheuiaheuiplus_function(const raw_code& name)
 		: function(name)
 	{}
 
@@ -33,15 +33,15 @@ namespace app
 		return function_type::aheuiplusplus_function;
 	}
 
-	app::code aheuiaheuiplus_function::code() const
+	raw_code aheuiaheuiplus_function::code() const
 	{
 		return code_;
 	}
-	void aheuiaheuiplus_function::code(const app::code& new_code)
+	void aheuiaheuiplus_function::code(const raw_code& new_code)
 	{
 		code_ = new_code;
 	}
-	void aheuiaheuiplus_function::code(app::code&& new_code) noexcept
+	void aheuiaheuiplus_function::code(raw_code&& new_code) noexcept
 	{
 		code_ = std::move(new_code);
 	}
@@ -52,7 +52,7 @@ namespace app
 	native_function::native_function(const function_t& functor)
 		: functor_(functor)
 	{}
-	native_function::native_function(const code& name, const function_t& functor)
+	native_function::native_function(const raw_code& name, const function_t& functor)
 		: function(name), functor_(functor)
 	{}
 

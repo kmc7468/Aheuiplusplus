@@ -6,7 +6,7 @@ namespace app
 		: version_(version)
 	{}
 
-	void interpreter::run(const code& code)
+	void interpreter::run(const raw_code& code)
 	{
 		bool is_comment = false;
 

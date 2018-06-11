@@ -44,4 +44,60 @@ namespace app
 
 		return jongsungs[(hangul - 0xAC00) % 28];
 	}
+	char32_t get_jungsung_original(char32_t jungsung)
+	{
+		if (jungsung < 0x314F || jungsung > 0x3163)
+			throw std::invalid_argument("인수 jungsung은 현대 한글 모음이여야 합니다.");
+
+		switch (jungsung)
+		{
+		case U'ㅏ':
+		case U'ㅐ':
+			return U'ㅏ';
+
+		case U'ㅓ':
+		case U'ㅔ':
+			return U'ㅓ';
+
+		case U'ㅗ':
+		case U'ㅚ':
+			return U'ㅗ';
+
+		case U'ㅜ':
+		case U'ㅟ':
+			return U'ㅜ';
+
+		case U'ㅑ':
+		case U'ㅒ':
+			return U'ㅑ';
+
+		case U'ㅕ':
+		case U'ㅖ':
+			return U'ㅕ';
+
+		case U'ㅛ':
+		case U'ㅙ':
+			return U'ㅛ';
+
+		case U'ㅠ':
+		case U'ㅞ':
+			return U'ㅞ';
+
+		case U'ㅣ':
+		case U'ㅘ':
+			return U'ㅣ';
+
+		case U'ㅡ':
+		case U'ㅝ':
+			return U'ㅡ';
+
+		default:
+			return U'ㅢ';
+			
+		}
+	}
+	char32_t is_added_additional_data(char32_t jungsung)
+	{
+		return jungsung != get_jungsung_original(jungsung);
+	}
 }
