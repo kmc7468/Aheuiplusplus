@@ -12,11 +12,11 @@ namespace app
 	char32_t get_chosung(char32_t hangul)
 	{
 		if (!is_complete_hangul(hangul))
-			throw std::invalid_argument("ÀÎ¼ö hangulÀº ¿Ï¼ºµÈ Çö´ë ÇÑ±ÛÀÌ¿©¾ß ÇÕ´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ hangulì€ ì™„ì„±ëœ í˜„ëŒ€ í•œê¸€ì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
 
 		static constexpr char32_t chosungs[] = {
-			U'¤¡', U'¤¢', U'¤¤', U'¤§', U'¤¨', U'¤©', U'¤±', U'¤²', U'¤³', U'¤µ', U'¤¶', U'¤·', U'¤¸',
-			U'¤¹', U'¤º', U'¤»', U'¤¼', U'¤½', U'¤¾'
+			U'ã„±', U'ã„²', U'ã„´', U'ã„·', U'ã„¸', U'ã„¹', U'ã…', U'ã…‚', U'ã…ƒ', U'ã……', U'ã…†', U'ã…‡', U'ã…ˆ',
+			U'ã…‰', U'ã…Š', U'ã…‹', U'ã…Œ', U'ã…', U'ã…'
 		};
 
 		return chosungs[((((hangul - 0xAC00) - ((hangul - 0xAC00) % 28)) / 28) - ((((hangul - 0xAC00) - ((hangul - 0xAC00) % 28)) / 28) % 21)) / 21];
@@ -24,11 +24,11 @@ namespace app
 	char32_t get_jungsung(char32_t hangul)
 	{
 		if (!is_complete_hangul(hangul))
-			throw std::invalid_argument("ÀÎ¼ö hangulÀº ¿Ï¼ºµÈ Çö´ë ÇÑ±ÛÀÌ¿©¾ß ÇÕ´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ hangulì€ ì™„ì„±ëœ í˜„ëŒ€ í•œê¸€ì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
 
 		static constexpr char32_t jungsungs[] = {
-			U'¤¿', U'¤À', U'¤Á', U'¤Â', U'¤Ã', U'¤Ä', U'¤Å', U'¤Æ', U'¤Ç', U'¤È', U'¤É', U'¤Ê', U'¤Ë',
-			U'¤Ì', U'¤Í', U'¤Î', U'¤Ï', U'¤Ğ', U'¤Ñ', U'¤Ò', U'¤Ó'
+			U'ã…', U'ã…', U'ã…‘', U'ã…’', U'ã…“', U'ã…”', U'ã…•', U'ã…–', U'ã…—', U'ã…˜', U'ã…™', U'ã…š', U'ã…›',
+			U'ã…œ', U'ã…', U'ã…', U'ã…Ÿ', U'ã… ', U'ã…¡', U'ã…¢', U'ã…£'
 		};
 
 		return jungsungs[(((hangul - 0xAC00) - ((hangul - 0xAC00) % 28)) / 28) % 21];
@@ -36,11 +36,11 @@ namespace app
 	char32_t get_jongsung(char32_t hangul)
 	{
 		if (!is_complete_hangul(hangul))
-			throw std::invalid_argument("ÀÎ¼ö hangulÀº ¿Ï¼ºµÈ Çö´ë ÇÑ±ÛÀÌ¿©¾ß ÇÕ´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ hangulì€ ì™„ì„±ëœ í˜„ëŒ€ í•œê¸€ì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
 
 		static constexpr char32_t jongsungs[] = {
-			0, U'¤¡', U'¤¢', U'¤£', U'¤¤', U'¤¥', U'¤¦', U'¤§', U'¤©', U'¤ª', U'¤«', U'¤¬', U'¤­', U'¤®',
-			U'¤¯', U'¤°', U'¤±', U'¤²', U'¤´', U'¤µ', U'¤¶', U'¤·', U'¤¸', U'¤º', U'¤»', U'¤¼', U'¤½', U'¤¾'
+			0, U'ã„±', U'ã„²', U'ã„³', U'ã„´', U'ã„µ', U'ã„¶', U'ã„·', U'ã„¹', U'ã„º', U'ã„»', U'ã„¼', U'ã„½', U'ã„¾',
+			U'ã„¿', U'ã…€', U'ã…', U'ã…‚', U'ã…„', U'ã……', U'ã…†', U'ã…‡', U'ã…ˆ', U'ã…Š', U'ã…‹', U'ã…Œ', U'ã…', U'ã…'
 		};
 
 		return jongsungs[(hangul - 0xAC00) % 28];
@@ -48,52 +48,52 @@ namespace app
 	char32_t get_jungsung_original(char32_t jungsung)
 	{
 		if (jungsung < 0x314F || jungsung > 0x3163)
-			throw std::invalid_argument("ÀÎ¼ö jungsungÀº Çö´ë ÇÑ±Û ¸ğÀ½ÀÌ¿©¾ß ÇÕ´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ jungsungì€ í˜„ëŒ€ í•œê¸€ ëª¨ìŒì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
 
 		switch (jungsung)
 		{
-		case U'¤¿':
-		case U'¤À':
-			return U'¤¿';
+		case U'ã…':
+		case U'ã…':
+			return U'ã…';
 
-		case U'¤Ã':
-		case U'¤Ä':
-			return U'¤Ã';
+		case U'ã…“':
+		case U'ã…”':
+			return U'ã…“';
 
-		case U'¤Ç':
-		case U'¤Ê':
-			return U'¤Ç';
+		case U'ã…—':
+		case U'ã…š':
+			return U'ã…—';
 
-		case U'¤Ì':
-		case U'¤Ï':
-			return U'¤Ì';
+		case U'ã…œ':
+		case U'ã…Ÿ':
+			return U'ã…œ';
 
-		case U'¤Á':
-		case U'¤Â':
-			return U'¤Á';
+		case U'ã…‘':
+		case U'ã…’':
+			return U'ã…‘';
 
-		case U'¤Å':
-		case U'¤Æ':
-			return U'¤Å';
+		case U'ã…•':
+		case U'ã…–':
+			return U'ã…•';
 
-		case U'¤Ë':
-		case U'¤É':
-			return U'¤Ë';
+		case U'ã…›':
+		case U'ã…™':
+			return U'ã…›';
 
-		case U'¤Ğ':
-		case U'¤Î':
-			return U'¤Î';
+		case U'ã… ':
+		case U'ã…':
+			return U'ã…';
 
-		case U'¤Ó':
-		case U'¤È':
-			return U'¤Ó';
+		case U'ã…£':
+		case U'ã…˜':
+			return U'ã…£';
 
-		case U'¤Ñ':
-		case U'¤Í':
-			return U'¤Ñ';
+		case U'ã…¡':
+		case U'ã…':
+			return U'ã…¡';
 
 		default:
-			return U'¤Ò';
+			return U'ã…¢';
 			
 		}
 	}

@@ -58,7 +58,7 @@ namespace app
 	bool number::operator>(const number& number) const
 	{
 		if (is_integer_ != number.is_integer_)
-			throw std::invalid_argument("ÀÎ¼ö number¿Í ºñ±³ÇÒ ¼ö ¾ø½À´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ numberì™€ ë¹„êµí•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 
 		if (is_integer_)
 		{
@@ -72,7 +72,7 @@ namespace app
 	bool number::operator>=(const number& number) const
 	{
 		if (is_integer_ != number.is_integer_)
-			throw std::invalid_argument("ÀÎ¼ö number¿Í ºñ±³ÇÒ ¼ö ¾ø½À´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ numberì™€ ë¹„êµí•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 
 		if (is_integer_)
 		{
@@ -86,7 +86,7 @@ namespace app
 	bool number::operator<(const number& number) const
 	{
 		if (is_integer_ != number.is_integer_)
-			throw std::invalid_argument("ÀÎ¼ö number¿Í ºñ±³ÇÒ ¼ö ¾ø½À´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ numberì™€ ë¹„êµí•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 
 		if (is_integer_)
 		{
@@ -100,7 +100,7 @@ namespace app
 	bool number::operator<=(const number& number) const
 	{
 		if (is_integer_ != number.is_integer_)
-			throw std::invalid_argument("ÀÎ¼ö number¿Í ºñ±³ÇÒ ¼ö ¾ø½À´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ numberì™€ ë¹„êµí•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 
 		if (is_integer_)
 		{
@@ -217,7 +217,7 @@ namespace app
 	void list::virtual_length(std::size_t new_virtual_length)
 	{
 		if (new_virtual_length > length())
-			throw std::out_of_range("ÀÎ¼ö new_virtual_length´Â ÇÔ¼ı°ª length()º¸´Ù Å¬ ¼ö ¾ø½À´Ï´Ù.");
+			throw std::out_of_range("ì¸ìˆ˜ new_virtual_lengthëŠ” í•¨ìˆ«ê°’ length()ë³´ë‹¤ í´ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 
 		virtual_length_ = new_virtual_length;
 	}

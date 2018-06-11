@@ -64,7 +64,7 @@ namespace app
 		std::size_t x = 0;
 		std::size_t y = 0;
 
-		std::size_t direction = 0; // 0: ¿ŞÂÊ, 1: ¿À¸¥ÂÊ, 2: À§, 3: ¾Æ·¡
+		std::size_t direction = 0; // 0: ì™¼ìª½, 1: ì˜¤ë¥¸ìª½, 2: ìœ„, 3: ì•„ë˜
 
 		char32_t last_jungsung = 0;
 
@@ -85,66 +85,66 @@ namespace app
 
 				switch (chosung)
 				{
-				case U'¤±':
+				case U'ã…':
 					pop_(jongsung, is_added_additional_data);
 					break;
 
-				case U'¤²':
+				case U'ã…‚':
 					push_(jongsung, is_added_additional_data);
 					break;
 
-				case U'¤³':
+				case U'ã…ƒ':
 					copy_(jongsung, is_added_additional_data);
 					break;
 
-				case U'¤½':
+				case U'ã…':
 					swap_(jongsung, is_added_additional_data);
 					break;
 
 
 
-				case U'¤·':
+				case U'ã…‡':
 					break;
 
-				case U'¤¾':
+				case U'ã…':
 					return;
 				}
 
 				switch (jungsung_org)
 				{
-				case U'¤¿':
+				case U'ã…':
 					go_right_(x, y, 1, direction, splited_code);
 					break;
 
-				case U'¤Á':
+				case U'ã…‘':
 					go_right_(x, y, 2, direction, splited_code);
 					break;
 
-				case U'¤Ã':
+				case U'ã…“':
 					go_left_(x, y, 1, direction, splited_code);
 					break;
 
-				case U'¤Å':
+				case U'ã…•':
 					go_left_(x, y, 2, direction, splited_code);
 					break;
 
-				case U'¤Ç':
+				case U'ã…—':
 					go_up_(x, y, 1, direction, splited_code);
 					break;
 
-				case U'¤Ë':
+				case U'ã…›':
 					go_up_(x, y, 2, direction, splited_code);
 					break;
 
-				case U'¤Ì':
+				case U'ã…œ':
 					go_down_(x, y, 1, direction, splited_code);
 					break;
 
-				case U'¤Ğ':
+				case U'ã… ':
 					go_down_(x, y, 2, direction, splited_code);
 					break;
 
-				case U'¤Ñ':
+				case U'ã…¡':
 				{
 					if (direction == 0)
 					{
@@ -166,7 +166,7 @@ namespace app
 					break;
 				}
 
-				case U'¤Ó':
+				case U'ã…£':
 				{
 					if (direction == 0)
 					{
@@ -188,7 +188,7 @@ namespace app
 					break;
 				}
 				
-				case U'¤Ò':
+				case U'ã…¢':
 				{
 					if (direction == 0)
 					{
@@ -252,16 +252,16 @@ namespace app
 
 		if (value != nullptr)
 		{
-			if (jongsung == U'¤·' && !is_added_additional_data) // ¼ıÀÚ(Á¤¼ö) Ãâ·Â
+			if (jongsung == U'ã…‡' && !is_added_additional_data) // ìˆ«ì(ì •ìˆ˜) ì¶œë ¥
 			{
-				if (value->index() == 0) // ¼ıÀÚÀÏ °æ¿ì
+				if (value->index() == 0) // ìˆ«ìì¼ ê²½ìš°
 				{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 					_setmode(_fileno(output_stream_), _O_TEXT);
 #endif
 					std::fprintf(output_stream_, "%lld", std::get<0>(*value).integer());
 				}
-				else if (value->index() == 1) // ¹®ÀÚÀÏ °æ¿ì
+				else if (value->index() == 1) // ë¬¸ìì¼ ê²½ìš°
 				{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 					_setmode(_fileno(output_stream_), _O_TEXT);
@@ -269,16 +269,16 @@ namespace app
 					std::fprintf(output_stream_, "%lld", static_cast<std::int64_t>(std::get<1>(*value)));
 				}
 			}
-			else if (jongsung == U'¤·' && is_added_additional_data) // ¼ıÀÚ(¼Ò¼ö) Ãâ·Â
+			else if (jongsung == U'ã…‡' && is_added_additional_data) // ìˆ«ì(ì†Œìˆ˜) ì¶œë ¥
 			{
-				if (value->index() == 0) // ¼ıÀÚÀÏ °æ¿ì
+				if (value->index() == 0) // ìˆ«ìì¼ ê²½ìš°
 				{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 					_setmode(_fileno(output_stream_), _O_TEXT);
 #endif
 					std::fprintf(output_stream_, "%f", std::get<0>(*value).decimal());
 				}
-				else if (value->index() == 1) // ¹®ÀÚÀÏ °æ¿ì
+				else if (value->index() == 1) // ë¬¸ìì¼ ê²½ìš°
 				{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 					_setmode(_fileno(output_stream_), _O_TEXT);
@@ -286,9 +286,9 @@ namespace app
 					std::fprintf(output_stream_, "%f", static_cast<double>(std::get<1>(*value)));
 				}
 			}
-			else if (jongsung == U'¤¾' && !is_added_additional_data) // ¹®ÀÚ Ãâ·Â
+			else if (jongsung == U'ã…' && !is_added_additional_data) // ë¬¸ì ì¶œë ¥
 			{
-				if (value->index() == 0) // ¼ıÀÚÀÏ °æ¿ì
+				if (value->index() == 0) // ìˆ«ìì¼ ê²½ìš°
 				{
 					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 					{
@@ -303,7 +303,7 @@ namespace app
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
 					}
 				}
-				else if (value->index() == 1) // ¹®ÀÚÀÏ °æ¿ì
+				else if (value->index() == 1) // ë¬¸ìì¼ ê²½ìš°
 				{
 					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 					{
@@ -319,9 +319,9 @@ namespace app
 					}
 				}
 			}
-			else if (jongsung == U'¤¾' && is_added_additional_data) // ¹®ÀÚ¿­ Ãâ·Â
+			else if (jongsung == U'ã…' && is_added_additional_data) // ë¬¸ìì—´ ì¶œë ¥
 			{
-				if (value->index() == 1) // ¹®ÀÚÀÏ °æ¿ì
+				if (value->index() == 1) // ë¬¸ìì¼ ê²½ìš°
 				{
 					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 					{
@@ -336,7 +336,7 @@ namespace app
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
 					}
 				}
-				else if (value->index() == 2) // ¹®ÀÚ¿­ÀÏ °æ¿ì
+				else if (value->index() == 2) // ë¬¸ìì—´ì¼ ê²½ìš°
 				{
 					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 					{
@@ -378,7 +378,7 @@ namespace app
 	}
 	void interpreter::push_(char32_t jongsung, bool is_added_additional_data)
 	{
-		if (jongsung == U'¤·' && !is_added_additional_data) // ¼ıÀÚ(Á¤¼ö) ÀÔ·Â
+		if (jongsung == U'ã…‡' && !is_added_additional_data) // ìˆ«ì(ì •ìˆ˜) ì…ë ¥
 		{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 			_setmode(_fileno(input_stream_), _O_TEXT);
@@ -388,7 +388,7 @@ namespace app
 
 			storage_()->push(new element(number(temp)));
 		}
-		else if (jongsung == U'¤·' && is_added_additional_data) // ¼ıÀÚ(¼Ò¼ö) ÀÔ·Â
+		else if (jongsung == U'ã…‡' && is_added_additional_data) // ìˆ«ì(ì†Œìˆ˜) ì…ë ¥
 		{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 			_setmode(_fileno(input_stream_), _O_TEXT);
@@ -398,7 +398,7 @@ namespace app
 
 			storage_()->push(new element(number(temp)));
 		}
-		else if (jongsung == U'¤¾' && !is_added_additional_data) // ¹®ÀÚ ÀÔ·Â
+		else if (jongsung == U'ã…' && !is_added_additional_data) // ë¬¸ì ì…ë ¥
 		{
 			if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 			{
@@ -426,7 +426,7 @@ namespace app
 				}
 			}
 		}
-		else if (jongsung == U'¤¾' && is_added_additional_data) // ¹®ÀÚ¿­ ÀÔ·Â
+		else if (jongsung == U'ã…' && is_added_additional_data) // ë¬¸ìì—´ ì…ë ¥
 		{
 			if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 			{
@@ -476,7 +476,7 @@ namespace app
 		}
 		else if (jongsung == 0 && is_added_additional_data)
 		{
-			// TODO: Å¬·¡½º, ±¸Á¶Ã¼, ÇÔ¼ö
+			// TODO: í´ë˜ìŠ¤, êµ¬ì¡°ì²´, í•¨ìˆ˜
 		}
 		else
 		{
@@ -498,7 +498,7 @@ namespace app
 				}
 			}
 		}
-		else if (jongsung == U'¤¡')
+		else if (jongsung == U'ã„±')
 		{
 			element* copyed = storage_()->copy();
 
@@ -516,7 +516,7 @@ namespace app
 				}
 			}
 		}
-		else if (jongsung == U'¤¤')
+		else if (jongsung == U'ã„´')
 		{
 			element* copyed = storage_()->copy();
 
@@ -526,7 +526,7 @@ namespace app
 				*copyed = element(ceil);
 			}
 		}
-		else if (jongsung == U'¤¥')
+		else if (jongsung == U'ã„µ')
 		{
 			element* copyed = storage_()->copy();
 
@@ -544,7 +544,7 @@ namespace app
 				}
 			}
 		}
-		else if (jongsung == U'¤¦')
+		else if (jongsung == U'ã„¶')
 		{
 			element* copyed = storage_()->copy();
 
@@ -562,7 +562,7 @@ namespace app
 				}
 			}
 		}
-		else if (jongsung == U'¤§')
+		else if (jongsung == U'ã„·')
 		{
 			element* copyed = storage_()->copy();
 
@@ -580,7 +580,7 @@ namespace app
 				}
 			}
 		}
-		else if (jongsung == U'¤¼' && !is_added_additional_data)
+		else if (jongsung == U'ã…Œ' && !is_added_additional_data)
 		{
 			element* copyed = storage_()->copy();
 
@@ -589,7 +589,7 @@ namespace app
 				*copyed = element(static_cast<double>(static_cast<std::uint32_t>(std::get<1>(*copyed) <= 0xFFFF)));
 			}
 		}
-		else if (jongsung == U'¤½' && !is_added_additional_data)
+		else if (jongsung == U'ã…' && !is_added_additional_data)
 		{
 			element* copyed = storage_()->copy();
 
@@ -604,7 +604,7 @@ namespace app
 				}
 			}
 		}
-		else if (jongsung == U'¤¾' && !is_added_additional_data)
+		else if (jongsung == U'ã…' && !is_added_additional_data)
 		{
 			element* copyed = storage_()->copy();
 
@@ -630,7 +630,7 @@ namespace app
 			storage_()->push(first);
 			storage_()->push(second);
 		}
-		else if (jongsung == U'¤¡')
+		else if (jongsung == U'ã„±')
 		{
 			element* first = storage_()->pop();
 			element* second = storage_()->pop();
@@ -654,7 +654,7 @@ namespace app
 				storage_()->push(second);
 			}
 		}
-		else if (jongsung == U'¤¤')
+		else if (jongsung == U'ã„´')
 		{
 			element* first = storage_()->pop();
 			element* second = storage_()->pop();
@@ -749,52 +749,52 @@ namespace app
 
 		switch (jongsung)
 		{
-		case U'¤¡':
-		case U'¤¤':
-		case U'¤µ':
+		case U'ã„±':
+		case U'ã„´':
+		case U'ã……':
 			value = 2.0;
 			break;
 
-		case U'¤§':
-		case U'¤¸':
-		case U'¤»':
+		case U'ã„·':
+		case U'ã…ˆ':
+		case U'ã…‹':
 			value = 3.0;
 			break;
 
-		case U'¤¢':
-		case U'¤£':
-		case U'¤±':
-		case U'¤¶':
-		case U'¤²':
-		case U'¤º':
-		case U'¤¼':
-		case U'¤½':
+		case U'ã„²':
+		case U'ã„³':
+		case U'ã…':
+		case U'ã…†':
+		case U'ã…‚':
+		case U'ã…Š':
+		case U'ã…Œ':
+		case U'ã…':
 			value = 4.0;
 			break;
 
-		case U'¤¥':
-		case U'¤¦':
-		case U'¤©':
+		case U'ã„µ':
+		case U'ã„¶':
+		case U'ã„¹':
 			value = 5.0;
 			break;
 
-		case U'¤´':
+		case U'ã…„':
 			value = 6.0;
 			break;
 
-		case U'¤ª':
-		case U'¤­':
+		case U'ã„º':
+		case U'ã„½':
 			value = 7.0;
 			break;
 
-		case U'¤°':
+		case U'ã…€':
 			value = 8.0;
 			break;
 
-		case U'¤«':
-		case U'¤¬':
-		case U'¤®':
-		case U'¤¯':
+		case U'ã„»':
+		case U'ã„¼':
+		case U'ã„¾':
+		case U'ã„¿':
 			value = 9.0;
 			break;
 		}
