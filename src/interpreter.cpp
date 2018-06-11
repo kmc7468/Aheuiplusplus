@@ -292,7 +292,7 @@ namespace app
 				{
 					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 					{
-						std::fwprintf(output_stream_, L"%c", static_cast<wchar_t>(std::get<0>(*value).integer()));
+						std::fwprintf(output_stream_, L"%lc", static_cast<wchar_t>(std::get<0>(*value).integer()));
 					}
 					else
 					{
@@ -325,7 +325,7 @@ namespace app
 				{
 					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 					{
-						std::fwprintf(output_stream_, L"%c", std::get<1>(*value));
+						std::fwprintf(output_stream_, L"%lc", std::get<1>(*value));
 					}
 					else
 					{
@@ -403,7 +403,7 @@ namespace app
 			if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 			{
 				char32_t temp;
-				std::fwscanf(input_stream_, L"%c", &temp);
+				std::fwscanf(input_stream_, L"%lc", &temp);
 
 				storage_()->push(new element(temp));
 			}
@@ -434,7 +434,14 @@ namespace app
 
 				while (!std::feof(input_stream_))
 				{
-					temp += std::fgetwc(input_stream_);
+					char32_t input = std::fgetwc(input_stream_);
+
+					if (std::iswspace(input))
+					{
+						break;
+					}
+
+					temp += input;
 				}
 
 				storage_()->push(new element(temp));
