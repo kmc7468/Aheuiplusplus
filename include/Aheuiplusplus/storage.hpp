@@ -4,7 +4,7 @@
 #include <Aheuiplusplus/code.hpp>
 
 #include <cstddef>
-#include <queue>
+#include <deque>
 #include <variant>
 #include <vector>
 
@@ -41,6 +41,7 @@ namespace app
 		virtual storage_type type() const noexcept = 0;
 		virtual element* pop() = 0;
 		virtual void push(element* element) = 0;
+		virtual element* copy() = 0;
 		virtual std::size_t length() const = 0;
 	};
 
@@ -62,6 +63,7 @@ namespace app
 		virtual storage_type type() const noexcept override;
 		virtual element* pop() override;
 		virtual void push(element* element) override;
+		virtual element* copy() override;
 		virtual std::size_t length() const override;
 
 	public:
@@ -91,10 +93,11 @@ namespace app
 		virtual storage_type type() const noexcept override;
 		virtual element* pop() override;
 		virtual void push(element* element) override;
+		virtual element* copy() override;
 		virtual std::size_t length() const override;
 
 	private:
-		std::queue<element*> queue_;
+		std::deque<element*> queue_;
 	};
 }
 

@@ -36,6 +36,8 @@ namespace app
 
 		void pop_(char32_t jongsung, bool is_added_additional_data);
 		void push_(char32_t jongsung, bool is_added_additional_data);
+		void copy_(char32_t jongsung, bool is_added_additional_data);
+		void swap_(char32_t jongsung, bool is_added_additional_data);
 
 		void go_left_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
 		void go_right_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);

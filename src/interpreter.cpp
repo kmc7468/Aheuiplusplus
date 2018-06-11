@@ -1,6 +1,7 @@
 #include <Aheuiplusplus/interpreter.hpp>
 
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <cstdio>
 #include <cwchar>
@@ -90,6 +91,15 @@ namespace app
 				case U'げ':
 					push_(jongsung, is_added_additional_data);
 					break;
+
+				case U'こ':
+					copy_(jongsung, is_added_additional_data);
+					break;
+
+				case U'そ':
+					swap_(jongsung, is_added_additional_data);
+					break;
+
 
 
 				case U'し':
@@ -465,6 +475,223 @@ namespace app
 		else
 		{
 			storage_()->push(new element(get_integer_(jongsung, is_added_additional_data)));
+		}
+	}
+	void interpreter::copy_(char32_t jongsung, bool is_added_additional_data)
+	{
+		if (jongsung == 0)
+		{
+			element* copyed = storage_()->copy();
+
+			if (is_added_additional_data)
+			{
+				if (copyed->index() == 0)
+				{
+					double floor = std::floor(std::get<0>(*copyed));
+					*copyed = element(floor);
+				}
+			}
+		}
+		else if (jongsung == U'ぁ')
+		{
+			element* copyed = storage_()->copy();
+
+			if (copyed->index() == 0)
+			{
+				if (is_added_additional_data)
+				{
+					double abs = std::floor(std::abs(std::get<0>(*copyed)));
+					*copyed = element(abs);
+				}
+				else
+				{
+					double abs = std::abs(std::get<0>(*copyed));
+					*copyed = element(abs);
+				}
+			}
+		}
+		else if (jongsung == U'い')
+		{
+			element* copyed = storage_()->copy();
+
+			if (copyed->index() == 0)
+			{
+				double ceil = std::ceil(std::get<0>(*copyed));
+				*copyed = element(ceil);
+			}
+		}
+		else if (jongsung == U'ぅ')
+		{
+			element* copyed = storage_()->copy();
+
+			if (copyed->index() == 0)
+			{
+				if (is_added_additional_data)
+				{
+					double pow = std::floor(std::pow(std::get<0>(*copyed), 2));
+					*copyed = element(pow);
+				}
+				else
+				{
+					double pow = std::pow(std::get<0>(*copyed), 2);
+					*copyed = element(pow);
+				}
+			}
+		}
+		else if (jongsung == U'う')
+		{
+			element* copyed = storage_()->copy();
+
+			if (copyed->index() == 0)
+			{
+				if (is_added_additional_data)
+				{
+					double sqrt = std::floor(std::sqrt(std::get<0>(*copyed)));
+					*copyed = element(sqrt);
+				}
+				else
+				{
+					double sqrt = std::sqrt(std::get<0>(*copyed));
+					*copyed = element(sqrt);
+				}
+			}
+		}
+		else if (jongsung == U'ぇ')
+		{
+			element* copyed = storage_()->copy();
+
+			if (copyed->index() == 0)
+			{
+				if (is_added_additional_data)
+				{
+					double exp = std::floor(std::exp(std::get<0>(*copyed)));
+					*copyed = element(exp);
+				}
+				else
+				{
+					double exp = std::exp(std::get<0>(*copyed));
+					*copyed = element(exp);
+				}
+			}
+		}
+		else if (jongsung == U'ぜ' && !is_added_additional_data)
+		{
+			element* copyed = storage_()->copy();
+
+			if (copyed->index() == 1)
+			{
+				*copyed = element(static_cast<double>(static_cast<std::uint32_t>(std::get<1>(*copyed) <= 0xFFFF)));
+			}
+		}
+		else if (jongsung == U'そ' && !is_added_additional_data)
+		{
+			element* copyed = storage_()->copy();
+
+			if (copyed->index() == 1)
+			{
+				if (static_cast<std::uint32_t>(std::get<1>(*copyed) <= 0xFFFF))
+				{
+					char32_t temp = std::get<1>(*copyed) - 0x10000;
+					wchar_t high_surrogate = (temp / 0x400) + 0xD800;
+
+					*copyed = element(static_cast<double>(high_surrogate));
+
+					wchar_t low_surrogate = (temp % 0x400) + 0xDC00;
+				}
+			}
+		}
+		else if (jongsung == U'ぞ' && !is_added_additional_data)
+		{
+			element* copyed = storage_()->copy();
+
+			if (copyed->index() == 1)
+			{
+				if (static_cast<std::uint32_t>(std::get<1>(*copyed) <= 0xFFFF))
+				{
+					char32_t temp = std::get<1>(*copyed) - 0x10000;
+					wchar_t low_surrogate = (temp % 0x400) + 0xDC00;
+
+					*copyed = element(static_cast<double>(low_surrogate));
+				}
+			}
+		}
+	}
+	void interpreter::swap_(char32_t jongsung, bool is_added_additional_data)
+	{
+		if (jongsung == 0 && !is_added_additional_data)
+		{
+			element* first = storage_()->pop();
+			element* second = storage_()->pop();
+
+			storage_()->push(first);
+			storage_()->push(second);
+		}
+		else if (jongsung == U'ぁ')
+		{
+			element* first = storage_()->pop();
+			element* second = storage_()->pop();
+
+			if (first->index() == second->index() && first->index() == 0)
+			{
+				double value = std::pow(std::get<0>(*second), std::get<0>(*first));
+				
+				if (is_added_additional_data)
+				{
+					value = std::floor(value);
+				}
+
+				storage_()->push(second);
+				storage_()->push(first);
+				storage_()->push(new element(value));
+			}
+			else
+			{
+				storage_()->push(first);
+				storage_()->push(second);
+			}
+		}
+		else if (jongsung == U'い')
+		{
+			element* first = storage_()->pop();
+			element* second = storage_()->pop();
+
+			if (first->index() == second->index() && first->index() == 0)
+			{
+				double value;
+
+				if (std::get<0>(*second) == 0.0)
+				{
+					value = std::log(std::get<0>(*first));
+				}
+				else if (std::get<0>(*second) == 1.0)
+				{
+					value = std::log10(std::get<0>(*first));
+				}
+				else if (std::get<0>(*second) == 2.0)
+				{
+					value = std::log2(std::get<0>(*first));
+				}
+				else
+				{
+					storage_()->push(second);
+					storage_()->push(first);
+					return;
+				}
+
+				if (is_added_additional_data)
+				{
+					value = std::floor(value);
+				}
+
+				storage_()->push(second);
+				storage_()->push(first);
+				storage_()->push(new element(value));
+			}
+			else
+			{
+				storage_()->push(first);
+				storage_()->push(second);
+			}
 		}
 	}
 

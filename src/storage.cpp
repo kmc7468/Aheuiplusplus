@@ -30,6 +30,35 @@ namespace app
 		vector_.push_back(element);
 		virtual_length(virtual_length() + 1);
 	}
+	element* list::copy()
+	{
+		element* last = pop();
+		push(last);
+
+		switch (last->index())
+		{
+		case 0:
+			push(new element(std::get<0>(*last)));
+			break;
+
+		case 1:
+			push(new element(std::get<1>(*last)));
+			break;
+
+		case 2:
+			push(new element(std::get<2>(*last)));
+			break;
+
+		case 3:
+			push(new element(std::get<3>(*last)));
+			break;
+		}
+
+		last = pop();
+		push(last);
+
+		return last;
+	}
 	std::size_t list::length() const
 	{
 		return vector_.size();
@@ -62,13 +91,38 @@ namespace app
 		}
 
 		element* data = queue_.front();
-		queue_.pop();
+		queue_.pop_front();
 
 		return data;
 	}
 	void queue::push(element* element)
 	{
-		queue_.push(element);
+		queue_.push_back(element);
+	}
+	element* queue::copy()
+	{
+		element* data = queue_.front();
+		
+		switch (data->index())
+		{
+		case 0:
+			queue_.push_front(new element(std::get<0>(*data)));
+			break;
+
+		case 1:
+			queue_.push_front(new element(std::get<1>(*data)));
+			break;
+
+		case 2:
+			queue_.push_front(new element(std::get<2>(*data)));
+			break;
+
+		case 3:
+			queue_.push_front(new element(std::get<3>(*data)));
+			break;
+		}
+
+		return queue_.front();
 	}
 	std::size_t queue::length() const
 	{
