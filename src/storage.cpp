@@ -6,6 +6,152 @@
 
 namespace app
 {
+	number::number(long long integer) noexcept
+		: integer_(integer), decimal_(integer)
+	{}
+	number::number(double decimal) noexcept
+		: integer_(decimal), decimal_(decimal), is_integer_(false)
+	{}
+	number::number(const number& number) noexcept
+		: integer_(number.integer_), decimal_(number.decimal_), is_integer_(number.is_integer_)
+	{}
+
+	number& number::operator=(const number& number) noexcept
+	{
+		integer_ = number.integer_;
+		decimal_ = number.decimal_;
+
+		return *this;
+	}
+	bool number::operator==(const number& number) const noexcept
+	{
+		if (is_integer_ != number.is_integer_)
+		{
+			return false;
+		}
+
+		if (is_integer_)
+		{
+			return integer_ == number.integer_;
+		}
+		else
+		{
+			return decimal_ == number.decimal_;
+		}
+	}
+	bool number::operator!=(const number& number) const noexcept
+	{
+		if (is_integer_ != number.is_integer_)
+		{
+			return true;
+		}
+
+		if (is_integer_)
+		{
+			return integer_ != number.integer_;
+		}
+		else
+		{
+			return decimal_ != number.decimal_;
+		}
+	}
+	bool number::operator>(const number& number) const
+	{
+		if (is_integer_ != number.is_integer_)
+			throw std::invalid_argument("인수 number와 비교할 수 없습니다.");
+
+		if (is_integer_)
+		{
+			return integer_ > number.integer_;
+		}
+		else
+		{
+			return decimal_ > number.decimal_;
+		}
+	}
+	bool number::operator>=(const number& number) const
+	{
+		if (is_integer_ != number.is_integer_)
+			throw std::invalid_argument("인수 number와 비교할 수 없습니다.");
+
+		if (is_integer_)
+		{
+			return integer_ >= number.integer_;
+		}
+		else
+		{
+			return decimal_ >= number.decimal_;
+		}
+	}
+	bool number::operator<(const number& number) const
+	{
+		if (is_integer_ != number.is_integer_)
+			throw std::invalid_argument("인수 number와 비교할 수 없습니다.");
+
+		if (is_integer_)
+		{
+			return integer_ < number.integer_;
+		}
+		else
+		{
+			return decimal_ < number.decimal_;
+		}
+	}
+	bool number::operator<=(const number& number) const
+	{
+		if (is_integer_ != number.is_integer_)
+			throw std::invalid_argument("인수 number와 비교할 수 없습니다.");
+
+		if (is_integer_)
+		{
+			return integer_ <= number.integer_;
+		}
+		else
+		{
+			return decimal_ <= number.decimal_;
+		}
+	}
+
+	long long number::integer() const noexcept
+	{
+		return integer_;
+	}
+	void number::integer(long long new_integer) noexcept
+	{
+		if (!is_integer_)
+		{
+			is_integer_ = true;
+		}
+
+		integer_ = new_integer;
+		decimal_ = new_integer;
+	}
+	double number::decimal() const noexcept
+	{
+		return decimal_;
+	}
+	void number::decimal(double new_decimal) noexcept
+	{
+		if (is_integer_)
+		{
+			is_integer_ = false;
+		}
+
+		integer_ = new_decimal;
+		decimal_ = new_decimal;
+	}
+	bool number::is_integer() const noexcept
+	{
+		return is_integer_;
+	}
+	void number::is_integer(bool new_is_integer) noexcept
+	{
+		is_integer_ = new_is_integer;
+	}
+}
+
+namespace app
+{
 	storage_type list::type() const noexcept
 	{
 		return storage_type::list;

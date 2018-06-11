@@ -19,7 +19,39 @@ namespace app
 		passage,
 	};
 
-	using element = std::variant<double, char32_t, raw_code, function*>;
+	class number final
+	{
+	public:
+		number() noexcept = default;
+		number(long long integer) noexcept;
+		number(double decimal) noexcept;
+		number(const number& number) noexcept;
+		~number() = default;
+
+	public:
+		number& operator=(const number& number) noexcept;
+		bool operator==(const number& number) const noexcept;
+		bool operator!=(const number& number) const noexcept;
+		bool operator>(const number& number) const;
+		bool operator>=(const number& number) const;
+		bool operator<(const number& number) const;
+		bool operator<=(const number& number) const;
+
+	public:
+		long long integer() const noexcept;
+		void integer(long long new_integer) noexcept;
+		double decimal() const noexcept;
+		void decimal(double new_decimal) noexcept;
+		bool is_integer() const noexcept;
+		void is_integer(bool new_is_integer) noexcept;
+
+	private:
+		long long integer_ = 0;
+		double decimal_ = 0.0;
+		bool is_integer_ = true;
+	};
+
+	using element = std::variant<number, char32_t, raw_code, function*>;
 
 	class storage
 	{
