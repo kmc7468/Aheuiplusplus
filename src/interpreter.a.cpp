@@ -322,6 +322,11 @@ namespace app
 		{
 			element* copyed = storage_()->copy();
 
+			if (copyed == nullptr)
+			{
+				return true;
+			}
+
 			if (is_added_additional_data)
 			{
 				if (copyed->index() == 0)
@@ -336,6 +341,11 @@ namespace app
 		else if (jongsung == U'¤¡')
 		{
 			element* copyed = storage_()->copy();
+
+			if (copyed == nullptr)
+			{
+				return true;
+			}
 
 			if (copyed->index() == 0)
 			{
@@ -357,6 +367,11 @@ namespace app
 		{
 			element* copyed = storage_()->copy();
 
+			if (copyed == nullptr)
+			{
+				return true;
+			}
+
 			if (copyed->index() == 0)
 			{
 				long long ceil = static_cast<long long>(std::ceil(std::get<0>(*copyed).decimal()));
@@ -368,6 +383,11 @@ namespace app
 		else if (jongsung == U'¤¥')
 		{
 			element* copyed = storage_()->copy();
+
+			if (copyed == nullptr)
+			{
+				return true;
+			}
 
 			if (copyed->index() == 0)
 			{
@@ -389,6 +409,11 @@ namespace app
 		{
 			element* copyed = storage_()->copy();
 
+			if (copyed == nullptr)
+			{
+				return true;
+			}
+
 			if (copyed->index() == 0)
 			{
 				if (is_added_additional_data)
@@ -408,6 +433,11 @@ namespace app
 		else if (jongsung == U'¤§')
 		{
 			element* copyed = storage_()->copy();
+
+			if (copyed == nullptr)
+			{
+				return true;
+			}
 
 			if (copyed->index() == 0)
 			{
@@ -434,6 +464,16 @@ namespace app
 		{
 			element* first = storage_()->pop();
 			element* second = storage_()->pop();
+
+			if (first == nullptr && second != nullptr)
+			{
+				return true;
+			}
+			else if (first == nullptr && second == nullptr)
+			{
+				storage_()->push(second);
+				return true;
+			}
 
 			storage_()->push(first);
 			storage_()->push(second);

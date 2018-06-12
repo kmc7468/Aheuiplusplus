@@ -179,6 +179,12 @@ namespace app
 	element* list::copy()
 	{
 		element* last = pop();
+
+		if (last == nullptr)
+		{
+			return nullptr;
+		}
+
 		push(last);
 
 		switch (last->index())
@@ -248,6 +254,11 @@ namespace app
 	element* queue::copy()
 	{
 		element* data = queue_.front();
+
+		if (data == nullptr)
+		{
+			return nullptr;
+		}
 		
 		switch (data->index())
 		{
