@@ -34,6 +34,21 @@ namespace app
 #endif
 					std::fprintf(output_stream_, "%lld", static_cast<long long>(std::get<1>(*value)));
 				}
+				else if (value->index() == 2) // 문자열일 경우
+				{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
+
+					long long value_integer = 0;
+
+					if (!std::get<2>(*value).empty())
+					{
+						value_integer = static_cast<long long>(std::get<2>(*value)[0]);
+					}
+
+					std::fprintf(output_stream_, "%lld", value_integer);
+				}
 			}
 			else if (jongsung == U'ㅇ' && is_added_additional_data) // 숫자(소수) 출력
 			{
@@ -73,7 +88,7 @@ namespace app
 				{
 					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 					{
-						std::fwprintf(output_stream_, L"%c", std::get<1>(*value));
+						std::fwprintf(output_stream_, L"%lc", std::get<1>(*value));
 					}
 					else
 					{
@@ -81,6 +96,21 @@ namespace app
 						_setmode(_fileno(output_stream_), _O_U16TEXT);
 #endif
 						std::wstring converted = char32_to_wchar(std::get<1>(*value));
+						std::fwprintf(output_stream_, L"%ls", converted.c_str());
+					}
+				}
+				else if (value->index() == 2) // 문자열일 경우
+				{
+					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
+					{
+						std::fwprintf(output_stream_, L"%lc", std::get<2>(*value).empty() ? 0 : std::get<2>(*value)[0]);
+					}
+					else
+					{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
+						std::wstring converted = char32_to_wchar(std::get<2>(*value).empty() ? 0 : std::get<2>(*value)[0]);
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
 					}
 				}
