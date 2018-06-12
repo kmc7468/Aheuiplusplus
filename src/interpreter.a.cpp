@@ -138,8 +138,7 @@ namespace app
 				storage_()->push(value);
 				value = nullptr;
 			}
-
-
+			
 			delete value;
 		}
 
@@ -252,17 +251,6 @@ namespace app
 				storage_()->push(new element(temp));
 			}
 
-			return false;
-		}
-		else if (jongsung == 0 && !is_added_additional_data)
-		{
-			storage_()->push(new element(number(0.0)));
-
-			return false;
-		}
-		else if (jongsung == 0 && is_added_additional_data)
-		{
-			// TODO: 클래스, 구조체, 함수
 			return false;
 		}
 		else

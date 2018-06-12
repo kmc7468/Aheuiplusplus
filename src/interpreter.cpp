@@ -283,6 +283,10 @@ namespace app
 
 		switch (jongsung)
 		{
+		case 0:
+			value = 0;
+			break;
+
 		case U'ㄱ':
 		case U'ㄴ':
 		case U'ㅅ':
