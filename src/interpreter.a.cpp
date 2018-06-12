@@ -207,7 +207,7 @@ namespace app
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 			_setmode(_fileno(input_stream_), _O_TEXT);
 #endif
-			long long temp;
+			long long temp = 0;
 			std::fscanf(input_stream_, "%lld", &temp);
 
 			storage_()->push(new element(number(temp)));

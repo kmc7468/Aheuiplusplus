@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 {
 	app::interpreter i(stdin, stdout);
 
-	i.run(U"뱋밯다맿히");
+	i.run(U"밯빠망방다망히");
 
 	return 0;
 }
