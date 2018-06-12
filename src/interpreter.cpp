@@ -883,45 +883,6 @@ namespace app
 				}
 			}
 		}
-		else if (jongsung == U'ㅌ' && !is_added_additional_data)
-		{
-			element* copyed = storage_()->copy();
-
-			if (copyed->index() == 1)
-			{
-				*copyed = element(static_cast<double>(static_cast<std::uint32_t>(std::get<1>(*copyed) <= 0xFFFF)));
-			}
-		}
-		else if (jongsung == U'ㅍ' && !is_added_additional_data)
-		{
-			element* copyed = storage_()->copy();
-
-			if (copyed->index() == 1)
-			{
-				if (static_cast<std::uint32_t>(std::get<1>(*copyed) <= 0xFFFF))
-				{
-					char32_t temp = std::get<1>(*copyed) - 0x10000;
-					wchar_t high_surrogate = (temp / 0x400) + 0xD800;
-
-					*copyed = element(static_cast<double>(high_surrogate));
-				}
-			}
-		}
-		else if (jongsung == U'ㅎ' && !is_added_additional_data)
-		{
-			element* copyed = storage_()->copy();
-
-			if (copyed->index() == 1)
-			{
-				if (static_cast<std::uint32_t>(std::get<1>(*copyed) <= 0xFFFF))
-				{
-					char32_t temp = std::get<1>(*copyed) - 0x10000;
-					wchar_t low_surrogate = (temp % 0x400) + 0xDC00;
-
-					*copyed = element(static_cast<double>(low_surrogate));
-				}
-			}
-		}
 	}
 	void interpreter::swap_(char32_t jongsung, bool is_added_additional_data)
 	{
@@ -932,73 +893,6 @@ namespace app
 
 			storage_()->push(first);
 			storage_()->push(second);
-		}
-		else if (jongsung == U'ㄱ')
-		{
-			element* first = storage_()->pop();
-			element* second = storage_()->pop();
-
-			if (first->index() == second->index() && first->index() == 0)
-			{
-				double value = std::pow(std::get<0>(*second).decimal(), std::get<0>(*first).decimal());
-				
-				if (is_added_additional_data)
-				{
-					value = std::floor(value);
-				}
-
-				storage_()->push(second);
-				storage_()->push(first);
-				storage_()->push(new element(value));
-			}
-			else
-			{
-				storage_()->push(first);
-				storage_()->push(second);
-			}
-		}
-		else if (jongsung == U'ㄴ')
-		{
-			element* first = storage_()->pop();
-			element* second = storage_()->pop();
-
-			if (first->index() == second->index() && first->index() == 0)
-			{
-				double value;
-
-				if (std::get<0>(*second) == 0.0)
-				{
-					value = std::log(std::get<0>(*first).decimal());
-				}
-				else if (std::get<0>(*second) == 1.0)
-				{
-					value = std::log10(std::get<0>(*first).decimal());
-				}
-				else if (std::get<0>(*second) == 2.0)
-				{
-					value = std::log2(std::get<0>(*first).decimal());
-				}
-				else
-				{
-					storage_()->push(second);
-					storage_()->push(first);
-					return;
-				}
-
-				if (is_added_additional_data)
-				{
-					value = std::floor(value);
-				}
-
-				storage_()->push(second);
-				storage_()->push(first);
-				storage_()->push(new element(value));
-			}
-			else
-			{
-				storage_()->push(first);
-				storage_()->push(second);
-			}
 		}
 	}
 	
