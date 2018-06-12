@@ -25,6 +25,12 @@ namespace app
 		std::size_t selected_index = jongsung == 0 ? 0 : (jongsung - U'¤¡' + 1);
 
 		element* value = storage_()->pop();
+		
+		if (value == nullptr)
+		{
+			return true;
+		}
+
 		storages_[selected_index][storage_indexs_[selected_index]]->push(value);
 
 		if (value->index() == 0 && is_added_additional_data)
