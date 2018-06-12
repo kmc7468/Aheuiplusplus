@@ -15,6 +15,9 @@ namespace app
 	char32_t get_jungsung_original(char32_t jungsung);
 	char32_t is_added_additional_data(char32_t jungsung);
 
+	std::wstring char32_to_wchar(char32_t character);
+	char32_t wchar_to_char32(wchar_t high_surrogate, wchar_t low_surrogate);
+
 	class code final
 	{
 	public:

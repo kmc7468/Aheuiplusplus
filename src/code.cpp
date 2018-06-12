@@ -101,6 +101,34 @@ namespace app
 	{
 		return jungsung != get_jungsung_original(jungsung);
 	}
+
+	std::wstring char32_to_wchar(char32_t character)
+	{
+		if (character <= 65'535)
+		{
+			return std::wstring(1, static_cast<wchar_t>(character));
+		}
+
+		std::wstring result;
+		result.resize(2);
+
+		char32_t temp = character - 0x10000;
+
+		wchar_t high_surrogate = (temp / 0x400) + 0xD800;
+		wchar_t low_surrogate = (temp % 0x400) + 0xDC00;
+
+		result[0] = low_surrogate;
+		result[1] = high_surrogate;
+
+		return result;
+	}
+	char32_t wchar_to_char32(wchar_t high_surrogate, wchar_t low_surrogate)
+	{
+		char32_t temp_high = (high_surrogate - 0xD800) * 0x400;
+		char32_t temp_low = low_surrogate - 0xDC00;
+
+		return temp_high + temp_low + 0x10000;
+	}
 }
 
 namespace app
