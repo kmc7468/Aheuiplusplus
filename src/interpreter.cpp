@@ -279,7 +279,7 @@ namespace app
 	}
 	long long app::interpreter::get_integer_(char32_t jongsung, bool is_added_additional_data)
 	{
-		long long value;
+		long long value = 0;
 
 		switch (jongsung)
 		{

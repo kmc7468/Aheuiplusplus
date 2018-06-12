@@ -32,7 +32,7 @@ namespace app
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 					_setmode(_fileno(output_stream_), _O_TEXT);
 #endif
-					std::fprintf(output_stream_, "%lld", static_cast<std::int64_t>(std::get<1>(*value)));
+					std::fprintf(output_stream_, "%lld", static_cast<long long>(std::get<1>(*value)));
 				}
 			}
 			else if (jongsung == U'ㅇ' && is_added_additional_data) // 숫자(소수) 출력
@@ -87,7 +87,22 @@ namespace app
 			}
 			else if (jongsung == U'ㅎ' && is_added_additional_data) // 문자열 출력
 			{
-				if (value->index() == 1) // 문자일 경우
+				if (value->index() == 0)
+				{
+					if constexpr (sizeof(wchar_t) == sizeof(char32_t)) // 숫자일 경우
+					{
+						std::fwprintf(output_stream_, L"%lc", static_cast<wchar_t>(std::get<0>(*value).integer()));
+					}
+					else
+					{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
+						std::wstring converted = char32_to_wchar(static_cast<char32_t>(std::get<0>(*value).integer()));
+						std::fwprintf(output_stream_, L"%ls", converted.c_str());
+					}
+				}
+				else if (value->index() == 1) // 문자일 경우
 				{
 					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 					{
@@ -125,13 +140,6 @@ namespace app
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
 					}
 				}
-			}
-			else if (jongsung == 0 && !is_added_additional_data)
-			{
-				storage_()->push(value);
-				value = nullptr;
-
-				storage_()->push(new element(number(static_cast<double>(storage_()->length()))));
 			}
 			else if (is_added_additional_data)
 			{
@@ -210,7 +218,7 @@ namespace app
 				{
 					char32_t input = std::fgetwc(input_stream_);
 
-					if (std::iswspace(input))
+					if (input < 65'535 && std::iswspace(static_cast<std::wint_t>(input)))
 					{
 						break;
 					}
@@ -270,7 +278,7 @@ namespace app
 			{
 				if (copyed->index() == 0)
 				{
-					std::int64_t floor = std::get<0>(*copyed).integer();
+					long long floor = std::get<0>(*copyed).integer();
 					*copyed = element(number(floor));
 				}
 			}
@@ -285,7 +293,7 @@ namespace app
 			{
 				if (is_added_additional_data)
 				{
-					double abs = std::floor(std::abs(std::get<0>(*copyed).decimal()));
+					long long abs = static_cast<long long>(std::abs(std::get<0>(*copyed).decimal()));
 					*copyed = element(number(abs));
 				}
 				else
@@ -303,7 +311,7 @@ namespace app
 
 			if (copyed->index() == 0)
 			{
-				double ceil = std::ceil(std::get<0>(*copyed).decimal());
+				long long ceil = static_cast<long long>(std::ceil(std::get<0>(*copyed).decimal()));
 				*copyed = element(number(ceil));
 			}
 
@@ -317,7 +325,7 @@ namespace app
 			{
 				if (is_added_additional_data)
 				{
-					double pow = std::floor(std::pow(std::get<0>(*copyed).decimal(), 2));
+					long long pow = static_cast<long long>(std::pow(std::get<0>(*copyed).decimal(), 2));
 					*copyed = element(number(pow));
 				}
 				else
@@ -337,7 +345,7 @@ namespace app
 			{
 				if (is_added_additional_data)
 				{
-					double sqrt = std::floor(std::sqrt(std::get<0>(*copyed).decimal()));
+					long long sqrt = static_cast<long long>(std::sqrt(std::get<0>(*copyed).decimal()));
 					*copyed = element(number(sqrt));
 				}
 				else
@@ -357,7 +365,7 @@ namespace app
 			{
 				if (is_added_additional_data)
 				{
-					double exp = std::floor(std::exp(std::get<0>(*copyed).decimal()));
+					long long exp = static_cast<long long>(std::exp(std::get<0>(*copyed).decimal()));
 					*copyed = element(number(exp));
 				}
 				else
