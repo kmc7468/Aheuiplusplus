@@ -465,11 +465,11 @@ namespace app
 			element* first = storage_()->pop();
 			element* second = storage_()->pop();
 
-			if (first == nullptr && second != nullptr)
+			if (first == nullptr && second == nullptr)
 			{
 				return true;
 			}
-			else if (first == nullptr && second == nullptr)
+			else if (first == nullptr)
 			{
 				storage_()->push(second);
 				return true;
