@@ -66,6 +66,21 @@ namespace app
 #endif
 					std::fprintf(output_stream_, "%f", static_cast<double>(std::get<1>(*value)));
 				}
+				else if (value->index() == 2) // 문자열일 경우
+				{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
+
+					double value_integer = 0.0;
+
+					if (!std::get<2>(*value).empty())
+					{
+						value_integer = static_cast<double>(std::get<2>(*value)[0]);
+					}
+
+					std::fprintf(output_stream_, "%f", value_integer);
+				}
 			}
 			else if (jongsung == U'ㅎ' && !is_added_additional_data) // 문자 출력
 			{
@@ -175,12 +190,15 @@ namespace app
 			{
 				storage_()->push(value);
 				value = nullptr;
+
+				return true;
 			}
 			
 			delete value;
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 	bool interpreter::push_(char32_t jongsung, bool is_added_additional_data)
 	{
@@ -248,7 +266,7 @@ namespace app
 				{
 					char32_t input = std::fgetwc(input_stream_);
 
-					if (input < 65'535 && std::iswspace(static_cast<std::wint_t>(input)))
+					if (std::iswspace(static_cast<std::wint_t>(input)))
 					{
 						break;
 					}
