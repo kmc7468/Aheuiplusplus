@@ -34,20 +34,19 @@ namespace app
 	private:
 		void initialize_();
 
-		void add_(char32_t jongsung, bool is_added_additional_data);
-		void mul_(char32_t jongsung, bool is_added_additional_data);
-		void sub_(char32_t jongsung, bool is_added_additional_data);
-		void div_(char32_t jongsung, bool is_added_additional_data);
-		void mod_(char32_t jongsung, bool is_added_additional_data);
+		bool add_(char32_t jongsung, bool is_added_additional_data);
+		bool mul_(char32_t jongsung, bool is_added_additional_data);
+		bool sub_(char32_t jongsung, bool is_added_additional_data);
+		bool div_(char32_t jongsung, bool is_added_additional_data);
+		bool mod_(char32_t jongsung, bool is_added_additional_data);
 		
-		void pop_(char32_t jongsung, bool is_added_additional_data);
-		void push_(char32_t jongsung, bool is_added_additional_data);
-		void copy_(char32_t jongsung, bool is_added_additional_data);
-		void swap_(char32_t jongsung, bool is_added_additional_data);
+		bool pop_(char32_t jongsung, bool is_added_additional_data);
+		bool push_(char32_t jongsung, bool is_added_additional_data);
+		bool copy_(char32_t jongsung, bool is_added_additional_data);
+		bool swap_(char32_t jongsung, bool is_added_additional_data);
 
-		void change_storage_(char32_t jongsung, bool is_added_additional_data);
-		void move_(char32_t jongsung, bool is_added_additional_data);
-		void compare_(char32_t jongsung, bool is_added_additional_data);
+		bool change_storage_(char32_t jongsung, bool is_added_additional_data);
+		bool move_(char32_t jongsung, bool is_added_additional_data);
 
 		void go_left_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
 		void go_right_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);

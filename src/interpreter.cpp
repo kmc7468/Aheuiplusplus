@@ -81,48 +81,48 @@ namespace app
 				char32_t jungsung_org = get_jungsung_original(jungsung);
 				bool is_added_additional_data = app::is_added_additional_data(jungsung);
 
-				last_jungsung = jungsung;
+				bool is_ignored = false;
 
 				switch (chosung)
 				{
 				case U'ㄷ':
-					add_(jongsung, is_added_additional_data);
+					is_ignored = add_(jongsung, is_added_additional_data);
 					break;
 				case U'ㄸ':
-					mul_(jongsung, is_added_additional_data);
+					is_ignored = mul_(jongsung, is_added_additional_data);
 					break;
 				case U'ㅌ':
-					sub_(jongsung, is_added_additional_data);
+					is_ignored = sub_(jongsung, is_added_additional_data);
 					break;
 				case U'ㄴ':
-					div_(jongsung, is_added_additional_data);
+					is_ignored = div_(jongsung, is_added_additional_data);
 					break;
 				case U'ㄹ':
-					mod_(jongsung, is_added_additional_data);
+					is_ignored = mod_(jongsung, is_added_additional_data);
 					break;
 
 
 
 				case U'ㅁ':
-					pop_(jongsung, is_added_additional_data);
+					is_ignored = pop_(jongsung, is_added_additional_data);
 					break;
 				case U'ㅂ':
-					push_(jongsung, is_added_additional_data);
+					is_ignored = push_(jongsung, is_added_additional_data);
 					break;
 				case U'ㅃ':
-					copy_(jongsung, is_added_additional_data);
+					is_ignored = copy_(jongsung, is_added_additional_data);
 					break;
 				case U'ㅍ':
-					swap_(jongsung, is_added_additional_data);
+					is_ignored = swap_(jongsung, is_added_additional_data);
 					break;
 
 
 
 				case U'ㅅ':
-					change_storage_(jongsung, is_added_additional_data);
+					is_ignored = change_storage_(jongsung, is_added_additional_data);
 					break;
 				case U'ㅆ':
-					move_(jongsung, is_added_additional_data);
+					is_ignored = move_(jongsung, is_added_additional_data);
 					break;
 
 
@@ -133,7 +133,12 @@ namespace app
 					return;
 				}
 
-				switch (jungsung_org)
+				if (!is_ignored)
+				{
+					last_jungsung = jungsung_org;
+				}
+
+				switch (last_jungsung)
 				{
 				case U'ㅏ':
 					go_right_(x, y, 1, direction, splited_code);
@@ -269,7 +274,7 @@ namespace app
 		}
 	}
 
-	void interpreter::add_(char32_t jongsung, bool is_added_additional_data)
+	bool interpreter::add_(char32_t jongsung, bool is_added_additional_data)
 	{
 		if (jongsung == 0 && !is_added_additional_data)
 		{
@@ -297,6 +302,8 @@ namespace app
 
 			delete right_operand;
 			delete left_operand;
+
+			return false;
 		}
 		else if (jongsung == 0 && is_added_additional_data)
 		{
@@ -329,9 +336,13 @@ namespace app
 
 			delete right_operand;
 			delete left_operand;
+
+			return false;
 		}
+
+		return true;
 	}
-	void interpreter::mul_(char32_t jongsung, bool is_added_additional_data)
+	bool interpreter::mul_(char32_t jongsung, bool is_added_additional_data)
 	{
 		if (jongsung == 0 && !is_added_additional_data)
 		{
@@ -359,6 +370,8 @@ namespace app
 
 			delete right_operand;
 			delete left_operand;
+
+			return false;
 		}
 		else if (jongsung == 0 && is_added_additional_data)
 		{
@@ -389,9 +402,13 @@ namespace app
 
 			delete right_operand;
 			delete left_operand;
+
+			return false;
 		}
+
+		return true;
 	}
-	void interpreter::sub_(char32_t jongsung, bool is_added_additional_data)
+	bool interpreter::sub_(char32_t jongsung, bool is_added_additional_data)
 	{
 		if (jongsung == 0 && !is_added_additional_data)
 		{
@@ -419,6 +436,8 @@ namespace app
 
 			delete right_operand;
 			delete left_operand;
+
+			return false;
 		}
 		else if (jongsung == 0 && is_added_additional_data)
 		{
@@ -434,9 +453,13 @@ namespace app
 			
 			delete right_operand;
 			delete left_operand;
+
+			return false;
 		}
+	
+		return true;
 	}
-	void interpreter::div_(char32_t jongsung, bool is_added_additional_data)
+	bool interpreter::div_(char32_t jongsung, bool is_added_additional_data)
 	{
 		if (jongsung == 0 && !is_added_additional_data)
 		{
@@ -464,6 +487,8 @@ namespace app
 
 			delete right_operand;
 			delete left_operand;
+
+			return false;
 		}
 		else if (jongsung == 0 && is_added_additional_data)
 		{
@@ -479,9 +504,13 @@ namespace app
 
 			delete right_operand;
 			delete left_operand;
+
+			return false;
 		}
+	
+		return true;
 	}
-	void interpreter::mod_(char32_t jongsung, bool is_added_additional_data)
+	bool interpreter::mod_(char32_t jongsung, bool is_added_additional_data)
 	{
 		if (jongsung == 0 && !is_added_additional_data)
 		{
@@ -509,6 +538,8 @@ namespace app
 
 			delete right_operand;
 			delete left_operand;
+
+			return false;
 		}
 		else if (jongsung == 0 && is_added_additional_data)
 		{
@@ -539,10 +570,14 @@ namespace app
 
 			delete right_operand;
 			delete left_operand;
+		
+			return false;
 		}
+	
+		return true;
 	}
 
-	void interpreter::pop_(char32_t jongsung, bool is_added_additional_data)
+	bool interpreter::pop_(char32_t jongsung, bool is_added_additional_data)
 	{
 		element* value = storage_()->pop();
 
@@ -668,11 +703,14 @@ namespace app
 				storage_()->push(value);
 				value = nullptr;
 			}
+		
 
 			delete value;
 		}
+
+		return false;
 	}
-	void interpreter::push_(char32_t jongsung, bool is_added_additional_data)
+	bool interpreter::push_(char32_t jongsung, bool is_added_additional_data)
 	{
 		if (jongsung == U'ㅇ' && !is_added_additional_data) // 숫자(정수) 입력
 		{
@@ -683,6 +721,8 @@ namespace app
 			std::fscanf(input_stream_, "%lld", &temp);
 
 			storage_()->push(new element(number(temp)));
+
+			return false;
 		}
 		else if (jongsung == U'ㅇ' && is_added_additional_data) // 숫자(소수) 입력
 		{
@@ -693,6 +733,8 @@ namespace app
 			std::fscanf(input_stream_, "%lf", &temp);
 
 			storage_()->push(new element(number(temp)));
+
+			return false;
 		}
 		else if (jongsung == U'ㅎ' && !is_added_additional_data) // 문자 입력
 		{
@@ -721,6 +763,8 @@ namespace app
 					storage_()->push(new element(static_cast<char32_t>(high_surrogate)));
 				}
 			}
+
+			return false;
 		}
 		else if (jongsung == U'ㅎ' && is_added_additional_data) // 문자열 입력
 		{
@@ -772,21 +816,28 @@ namespace app
 
 				storage_()->push(new element(temp));
 			}
+
+			return false;
 		}
 		else if (jongsung == 0 && !is_added_additional_data)
 		{
 			storage_()->push(new element(0.0));
+
+			return false;
 		}
 		else if (jongsung == 0 && is_added_additional_data)
 		{
 			// TODO: 클래스, 구조체, 함수
+			return false;
 		}
 		else
 		{
 			storage_()->push(new element(number(get_integer_(jongsung, is_added_additional_data))));
+			
+			return false;
 		}
 	}
-	void interpreter::copy_(char32_t jongsung, bool is_added_additional_data)
+	bool interpreter::copy_(char32_t jongsung, bool is_added_additional_data)
 	{
 		if (jongsung == 0)
 		{
@@ -800,6 +851,8 @@ namespace app
 					*copyed = element(floor);
 				}
 			}
+
+			return false;
 		}
 		else if (jongsung == U'ㄱ')
 		{
@@ -818,6 +871,8 @@ namespace app
 					*copyed = element(abs);
 				}
 			}
+
+			return false;
 		}
 		else if (jongsung == U'ㄴ')
 		{
@@ -828,6 +883,8 @@ namespace app
 				double ceil = std::ceil(std::get<0>(*copyed).decimal());
 				*copyed = element(ceil);
 			}
+
+			return false;
 		}
 		else if (jongsung == U'ㄵ')
 		{
@@ -846,6 +903,8 @@ namespace app
 					*copyed = element(pow);
 				}
 			}
+
+			return false;
 		}
 		else if (jongsung == U'ㄶ')
 		{
@@ -864,6 +923,8 @@ namespace app
 					*copyed = element(sqrt);
 				}
 			}
+
+			return false;
 		}
 		else if (jongsung == U'ㄷ')
 		{
@@ -882,9 +943,13 @@ namespace app
 					*copyed = element(exp);
 				}
 			}
+
+			return false;
 		}
+
+		return true;
 	}
-	void interpreter::swap_(char32_t jongsung, bool is_added_additional_data)
+	bool interpreter::swap_(char32_t jongsung, bool is_added_additional_data)
 	{
 		if (jongsung == 0 && !is_added_additional_data)
 		{
@@ -893,14 +958,18 @@ namespace app
 
 			storage_()->push(first);
 			storage_()->push(second);
+
+			return false;
 		}
+
+		return true;
 	}
 	
-	void interpreter::change_storage_(char32_t jongsung, bool is_added_additional_data)
+	bool interpreter::change_storage_(char32_t jongsung, bool is_added_additional_data)
 	{
 		if (is_added_additional_data)
 		{
-			return;
+			return true;
 		}
 
 		if (jongsung == 0)
@@ -911,8 +980,10 @@ namespace app
 		{
 			selected_index_ = jongsung - U'ㄱ' + 1;
 		}
+
+		return false;
 	}
-	void interpreter::move_(char32_t jongsung, bool is_added_additional_data)
+	bool interpreter::move_(char32_t jongsung, bool is_added_additional_data)
 	{
 		std::size_t selected_index = jongsung == 0 ? 0 : (jongsung - U'ㄱ' + 1);
 
@@ -924,6 +995,8 @@ namespace app
 			number& value_number = std::get<0>(*value);
 			value_number.is_integer(true);
 		}
+
+		return false;
 	}
 
 	void interpreter::go_left_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code)
