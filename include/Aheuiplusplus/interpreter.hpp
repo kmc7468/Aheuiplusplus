@@ -6,6 +6,7 @@
 #include <Aheuiplusplus/storage.hpp>
 #include <Aheuiplusplus/version.hpp>
 
+#include <memory>
 #include <vector>
 
 namespace app
@@ -47,12 +48,18 @@ namespace app
 
 		bool change_storage_(char32_t jongsung, bool is_added_additional_data);
 		bool move_(char32_t jongsung, bool is_added_additional_data);
+		bool compare_(char32_t jongsung, bool is_added_additional_data);
+		bool is_zero_(char32_t jongsung, bool is_added_additional_data, bool& is_reflection);
 
 		void go_left_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
 		void go_right_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
 		void go_up_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
 		void go_down_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
 		long long get_integer_(char32_t jongsung, bool is_added_additional_data);
+		void type_casting_arithmetic_(element* left_operand, element* right_operand,
+			std::shared_ptr<element>& left_operand_out, std::shared_ptr<element>& right_operand_out) const;
+		void type_casting_compare_(element* left_operand, element* right_operand,
+			std::shared_ptr<element>& left_operand_out, std::shared_ptr<element>& right_operand_out) const;
 
 		app::storage* storage_();
 

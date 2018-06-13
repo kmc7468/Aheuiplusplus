@@ -1,124 +1,9 @@
 #include <Aheuiplusplus/interpreter.hpp>
 
 #include <cmath>
-#include <memory>
 
 namespace app
 {
-	namespace
-	{
-		void type_casting_arithmetic_(element* left_operand, element* right_operand,
-			std::shared_ptr<element>& left_operand_out, std::shared_ptr<element>& right_operand_out,
-			bool is_integer_mode)
-		{
-			if (left_operand->index() == right_operand->index())
-			{
-				left_operand_out = std::make_shared<element>(*left_operand);
-				right_operand_out = std::make_shared<element>(*right_operand);
-			}
-			else
-			{
-				switch (left_operand->index())
-				{
-				case 0:
-				{
-					switch (right_operand->index())
-					{
-					case 1: // 숫자, 문자 = 숫자
-					{
-						if (is_integer_mode)
-						{
-							left_operand_out = std::make_shared<element>(*left_operand);
-							right_operand_out = std::make_shared<element>(
-								number(static_cast<long long>(std::get<1>(*right_operand))));
-						}
-						else
-						{
-							left_operand_out = std::make_shared<element>(
-								number(static_cast<double>(std::get<0>(*left_operand).decimal())));
-							right_operand_out = std::make_shared<element>(
-								number(static_cast<double>(std::get<1>(*right_operand))));
-						}
-
-						break;
-					}
-
-					case 2: // 숫자, 문자열 = 문자열
-					{
-						left_operand_out = std::make_shared<element>(
-							raw_code(1, static_cast<char32_t>(std::get<0>(*left_operand).integer())));
-						right_operand_out = std::make_shared<element>(*right_operand);
-
-						break;
-					}
-					}
-					break;
-				}
-
-				case 1:
-				{
-					switch (right_operand->index())
-					{
-					case 0: // 문자, 숫자 = 숫자
-					{
-						if (is_integer_mode)
-						{
-							left_operand_out = std::make_shared<element>(
-								number(static_cast<long long>(std::get<1>(*left_operand))));
-							right_operand_out = std::make_shared<element>(*right_operand);
-						}
-						else
-						{
-							left_operand_out = std::make_shared<element>(
-								number(static_cast<double>(std::get<1>(*left_operand))));
-							right_operand_out = std::make_shared<element>(
-									number(static_cast<double>(std::get<0>(*right_operand).decimal())));
-						}
-
-						break;
-					}
-
-					case 2: // 문자 + 문자열 = 문자열
-					{
-						left_operand_out = std::make_shared<element>(
-							raw_code(1, std::get<1>(*left_operand)));
-						right_operand_out = std::make_shared<element>(*right_operand);
-
-						break;
-					}
-					}
-					break;
-				}
-
-				case 2:
-				{
-					switch (right_operand->index())
-					{
-					case 0: // 문자열 + 숫자 = 문자열
-					{
-						left_operand_out = std::make_shared<element>(*left_operand);
-						right_operand_out = std::make_shared<element>(
-							raw_code(1, static_cast<char32_t>(std::get<0>(*right_operand).integer())));
-
-						break;
-					}
-
-					case 1: // 문자열 + 문자 = 문자열
-					{
-						left_operand_out = std::make_shared<element>(*left_operand);
-						right_operand_out = std::make_shared<element>(
-							raw_code(1, std::get<1>(*right_operand)));
-
-						break;
-					}
-					}
-					break;
-				}
-				}
-			}
-		}
-	}
-
 	bool interpreter::add_(char32_t jongsung, bool is_added_additional_data)
 	{
 		if (jongsung == 0 && !is_added_additional_data)
@@ -128,7 +13,7 @@ namespace app
 
 			std::shared_ptr<element> right_operand_converted;
 			std::shared_ptr<element> left_operand_converted;
-			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted);
 
 			switch (left_operand_converted->index())
 			{
@@ -189,7 +74,7 @@ namespace app
 
 			std::shared_ptr<element> right_operand_converted;
 			std::shared_ptr<element> left_operand_converted;
-			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted);
 
 			switch (left_operand_converted->index())
 			{
@@ -257,7 +142,7 @@ namespace app
 
 			std::shared_ptr<element> right_operand_converted;
 			std::shared_ptr<element> left_operand_converted;
-			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted);
 
 			switch (left_operand_converted->index())
 			{
@@ -309,7 +194,7 @@ namespace app
 
 			std::shared_ptr<element> right_operand_converted;
 			std::shared_ptr<element> left_operand_converted;
-			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted);
 
 			switch (left_operand_converted->index())
 			{
@@ -375,7 +260,7 @@ namespace app
 
 			std::shared_ptr<element> right_operand_converted;
 			std::shared_ptr<element> left_operand_converted;
-			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted);
 
 			switch (left_operand_converted->index())
 			{
@@ -427,7 +312,7 @@ namespace app
 
 			std::shared_ptr<element> right_operand_converted;
 			std::shared_ptr<element> left_operand_converted;
-			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted);
 
 			switch (left_operand_converted->index())
 			{
@@ -493,7 +378,7 @@ namespace app
 
 			std::shared_ptr<element> right_operand_converted;
 			std::shared_ptr<element> left_operand_converted;
-			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted);
 
 			switch (left_operand_converted->index())
 			{
@@ -545,7 +430,7 @@ namespace app
 
 			std::shared_ptr<element> right_operand_converted;
 			std::shared_ptr<element> left_operand_converted;
-			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted);
 
 			switch (left_operand_converted->index())
 			{
@@ -611,7 +496,7 @@ namespace app
 
 			std::shared_ptr<element> right_operand_converted;
 			std::shared_ptr<element> left_operand_converted;
-			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted);
 
 			switch (left_operand_converted->index())
 			{
@@ -663,7 +548,7 @@ namespace app
 
 			std::shared_ptr<element> right_operand_converted;
 			std::shared_ptr<element> left_operand_converted;
-			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted);
 
 			switch (left_operand_converted->index())
 			{

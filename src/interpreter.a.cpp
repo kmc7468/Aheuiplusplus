@@ -380,8 +380,8 @@ namespace app
 						_setmode(_fileno(input_stream_), _O_U16TEXT);
 #endif
 
-						char temp = *(reinterpret_cast<char*>(&high_surrogate) + 1);
-						*reinterpret_cast<char*>(&high_surrogate) = temp;
+						char temp2 = *(reinterpret_cast<char*>(&high_surrogate) + 1);
+						*reinterpret_cast<char*>(&high_surrogate) = temp2;
 						*(reinterpret_cast<char*>(&high_surrogate) + 1) = high_surrogate_low;
 					}
 

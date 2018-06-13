@@ -41,6 +41,7 @@ namespace app
 				bool is_added_additional_data = app::is_added_additional_data(jungsung);
 
 				bool is_ignored = false;
+				bool is_reflection = false;
 
 				switch (chosung)
 				{
@@ -83,7 +84,13 @@ namespace app
 				case U'ㅆ':
 					is_ignored = move_(jongsung, is_added_additional_data);
 					break;
-
+				case U'ㅈ':
+					is_ignored = compare_(jongsung, is_added_additional_data);
+					break;
+				case U'ㅊ':
+					is_ignored = is_zero_(jongsung, is_added_additional_data, is_reflection);
+					break;
+				
 
 
 				case U'ㅇ':
@@ -196,6 +203,28 @@ namespace app
 
 					break;
 				}
+				}
+				
+				if (is_reflection)
+				{
+					switch (direction)
+					{
+					case 0:
+						direction = 1;
+						break;
+
+					case 1:
+						direction = 0;
+						break;
+
+					case 2:
+						direction = 3;
+						break;
+
+					case 3:
+						direction = 2;
+						break;
+					}
 				}
 			}
 		}
@@ -343,6 +372,181 @@ namespace app
 		}
 
 		return value;
+	}
+	void interpreter::type_casting_arithmetic_(element* left_operand, element* right_operand,
+		std::shared_ptr<element>& left_operand_out, std::shared_ptr<element>& right_operand_out) const
+	{
+		if (left_operand->index() == right_operand->index())
+		{
+			left_operand_out = std::make_shared<element>(*left_operand);
+			right_operand_out = std::make_shared<element>(*right_operand);
+		}
+		else
+		{
+			switch (left_operand->index())
+			{
+			case 0:
+			{
+				switch (right_operand->index())
+				{
+				case 1: // 숫자, 문자 = 숫자
+				{
+					if (is_integer_mode_)
+					{
+						left_operand_out = std::make_shared<element>(*left_operand);
+						right_operand_out = std::make_shared<element>(
+							number(static_cast<long long>(std::get<1>(*right_operand))));
+					}
+					else
+					{
+						left_operand_out = std::make_shared<element>(
+							number(static_cast<double>(std::get<0>(*left_operand).decimal())));
+						right_operand_out = std::make_shared<element>(
+							number(static_cast<double>(std::get<1>(*right_operand))));
+					}
+
+					break;
+				}
+
+				case 2: // 숫자, 문자열 = 문자열
+				{
+					left_operand_out = std::make_shared<element>(
+						raw_code(1, static_cast<char32_t>(std::get<0>(*left_operand).integer())));
+					right_operand_out = std::make_shared<element>(*right_operand);
+
+					break;
+				}
+				}
+				break;
+			}
+
+			case 1:
+			{
+				switch (right_operand->index())
+				{
+				case 0: // 문자, 숫자 = 숫자
+				{
+					if (is_integer_mode_)
+					{
+						left_operand_out = std::make_shared<element>(
+							number(static_cast<long long>(std::get<1>(*left_operand))));
+						right_operand_out = std::make_shared<element>(*right_operand);
+					}
+					else
+					{
+						left_operand_out = std::make_shared<element>(
+							number(static_cast<double>(std::get<1>(*left_operand))));
+						right_operand_out = std::make_shared<element>(
+							number(static_cast<double>(std::get<0>(*right_operand).decimal())));
+					}
+
+					break;
+				}
+
+				case 2: // 문자 + 문자열 = 문자열
+				{
+					left_operand_out = std::make_shared<element>(
+						raw_code(1, std::get<1>(*left_operand)));
+					right_operand_out = std::make_shared<element>(*right_operand);
+
+					break;
+				}
+				}
+				break;
+			}
+
+			case 2:
+			{
+				switch (right_operand->index())
+				{
+				case 0: // 문자열 + 숫자 = 문자열
+				{
+					left_operand_out = std::make_shared<element>(*left_operand);
+					right_operand_out = std::make_shared<element>(
+						raw_code(1, static_cast<char32_t>(std::get<0>(*right_operand).integer())));
+
+					break;
+				}
+
+				case 1: // 문자열 + 문자 = 문자열
+				{
+					left_operand_out = std::make_shared<element>(*left_operand);
+					right_operand_out = std::make_shared<element>(
+						raw_code(1, std::get<1>(*right_operand)));
+
+					break;
+				}
+				}
+				break;
+			}
+			}
+		}
+	}
+	void interpreter::type_casting_compare_(element* left_operand, element* right_operand,
+		std::shared_ptr<element>& left_operand_out, std::shared_ptr<element>& right_operand_out) const
+	{
+		if (left_operand->index() == right_operand->index())
+		{
+			left_operand_out = std::make_shared<element>(*left_operand);
+			right_operand_out = std::make_shared<element>(*right_operand);
+		}
+		else
+		{
+			switch (left_operand->index())
+			{
+			case 0:
+			{
+				switch (right_operand->index())
+				{
+				case 1: // 숫자, 문자 = 숫자
+				{
+					if (std::get<0>(*left_operand).is_integer())
+					{
+						left_operand_out = std::make_shared<element>(*left_operand);
+						right_operand_out = std::make_shared<element>(
+							number(static_cast<long long>(std::get<1>(*right_operand))));
+					}
+					else
+					{
+						left_operand_out = std::make_shared<element>(
+							number(static_cast<double>(std::get<0>(*left_operand).decimal())));
+						right_operand_out = std::make_shared<element>(
+							number(static_cast<double>(std::get<1>(*right_operand))));
+					}
+
+					break;
+				}
+				}
+				break;
+			}
+
+			case 1:
+			{
+				switch (right_operand->index())
+				{
+				case 0: // 문자, 숫자 = 숫자
+				{
+					if (std::get<0>(*right_operand).is_integer())
+					{
+						left_operand_out = std::make_shared<element>(
+							number(static_cast<long long>(std::get<1>(*left_operand))));
+						right_operand_out = std::make_shared<element>(*right_operand);
+					}
+					else
+					{
+						left_operand_out = std::make_shared<element>(
+							number(static_cast<double>(std::get<1>(*left_operand))));
+						right_operand_out = std::make_shared<element>(
+							number(static_cast<double>(std::get<0>(*right_operand).decimal())));
+					}
+
+					break;
+				}
+				}
+				break;
+			}
+			}
+		}
 	}
 
 	app::storage* interpreter::storage_()
