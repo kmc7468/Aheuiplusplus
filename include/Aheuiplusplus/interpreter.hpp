@@ -79,6 +79,9 @@ namespace app
 
 		std::FILE* input_stream_;
 		std::FILE* output_stream_;
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		bool is_processed_space_char_ = true;
+#endif
 	};
 }
 
