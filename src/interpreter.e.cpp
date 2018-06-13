@@ -1,5 +1,6 @@
 #include <Aheuiplusplus/interpreter.hpp>
 
+#include <cmath>
 #include <memory>
 
 namespace app
@@ -246,23 +247,46 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (is_integer_mode_)
+			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
-				long long right_operand_integer = std::get<0>(*right_operand).integer();
-				long long left_operand_integer = std::get<0>(*left_operand).integer();
+				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 
-				long long result = left_operand_integer * right_operand_integer;
-
-				storage_()->push(new element(number(result)));
+				return true;
 			}
-			else
+
+			std::shared_ptr<element> right_operand_converted;
+			std::shared_ptr<element> left_operand_converted;
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+
+			switch (left_operand_converted->index())
 			{
-				double right_operand_decimal = std::get<0>(*right_operand).decimal();
-				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+			case 0:
+			{
+				if (is_integer_mode_)
+				{
+					storage_()->push(new element(number(
+						std::get<0>(*left_operand_converted).integer() * std::get<0>(*right_operand_converted).integer()
+					)));
+				}
+				else
+				{
+					storage_()->push(new element(number(
+						std::get<0>(*left_operand_converted).decimal() * std::get<0>(*right_operand_converted).decimal()
+					)));
+				}
 
-				double result = left_operand_decimal * right_operand_decimal;
+				break;
+			}
 
-				storage_()->push(new element(number(result)));
+			case 1:
+			{
+				storage_()->push(new element(
+					std::get<1>(*left_operand_converted) * std::get<1>(*right_operand_converted)
+				));
+
+				break;
+			}
 			}
 
 			delete right_operand;
@@ -275,26 +299,55 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (is_integer_mode_)
+			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
-				long long right_operand_integer = std::get<0>(*right_operand).integer();
-				long long left_operand_integer = std::get<0>(*left_operand).integer();
+				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 
-				long long result = left_operand_integer & right_operand_integer;
-
-				storage_()->push(new element(number(result)));
+				return true;
 			}
-			else
+
+			std::shared_ptr<element> right_operand_converted;
+			std::shared_ptr<element> left_operand_converted;
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+
+			switch (left_operand_converted->index())
 			{
-				double right_operand_decimal = std::get<0>(*right_operand).decimal();
-				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+			case 0:
+			{
+				if (is_integer_mode_)
+				{
+					storage_()->push(new element(number(
+						std::get<0>(*left_operand_converted).integer() & std::get<0>(*right_operand_converted).integer()
+					)));
+				}
+				else
+				{
+					double left_operand_decimal = std::get<0>(*left_operand_converted).decimal();
+					double right_operand_decimal = std::get<0>(*right_operand_converted).decimal();
 
-				long long right_operand_integer = *reinterpret_cast<long long*>(&right_operand_decimal);
-				long long left_operand_integer = *reinterpret_cast<long long*>(&left_operand_decimal);
+					long long left_operand_integer = *reinterpret_cast<long long*>(&left_operand_decimal);
+					long long right_operand_integer = *reinterpret_cast<long long*>(&right_operand_decimal);
 
-				long long result = left_operand_integer & right_operand_integer;
+					long long result = left_operand_integer & right_operand_integer;
+					double result_decimal = *reinterpret_cast<double*>(&result);
 
-				storage_()->push(new element(number(result)));
+					storage_()->push(new element(number(
+						result_decimal
+					)));
+				}
+
+				break;
+			}
+
+			case 1:
+			{
+				storage_()->push(new element(
+					std::get<1>(*left_operand_converted) & std::get<1>(*right_operand_converted)
+				));
+
+				break;
+			}
 			}
 
 			delete right_operand;
@@ -312,23 +365,46 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (is_integer_mode_)
+			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
-				long long right_operand_integer = std::get<0>(*right_operand).integer();
-				long long left_operand_integer = std::get<0>(*left_operand).integer();
+				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 
-				long long result = left_operand_integer - right_operand_integer;
-
-				storage_()->push(new element(number(result)));
+				return true;
 			}
-			else
+
+			std::shared_ptr<element> right_operand_converted;
+			std::shared_ptr<element> left_operand_converted;
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+
+			switch (left_operand_converted->index())
 			{
-				double right_operand_decimal = std::get<0>(*right_operand).decimal();
-				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+			case 0:
+			{
+				if (is_integer_mode_)
+				{
+					storage_()->push(new element(number(
+						std::get<0>(*left_operand_converted).integer() - std::get<0>(*right_operand_converted).integer()
+					)));
+				}
+				else
+				{
+					storage_()->push(new element(number(
+						std::get<0>(*left_operand_converted).decimal() - std::get<0>(*right_operand_converted).decimal()
+					)));
+				}
 
-				double result = left_operand_decimal - right_operand_decimal;
+				break;
+			}
 
-				storage_()->push(new element(number(result)));
+			case 1:
+			{
+				storage_()->push(new element(
+					std::get<1>(*left_operand_converted) - std::get<1>(*right_operand_converted)
+				));
+
+				break;
+			}
 			}
 
 			delete right_operand;
@@ -341,12 +417,56 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			long long right_operand_integer = std::get<0>(*right_operand).integer();
-			long long left_operand_integer = std::get<0>(*left_operand).integer();
+			if (left_operand->index() >= 2 && right_operand->index() >= 2)
+			{
+				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 
-			long long result = left_operand_integer << right_operand_integer;
+				return true;
+			}
 
-			storage_()->push(new element(number(result)));
+			std::shared_ptr<element> right_operand_converted;
+			std::shared_ptr<element> left_operand_converted;
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+
+			switch (left_operand_converted->index())
+			{
+			case 0:
+			{
+				if (is_integer_mode_)
+				{
+					storage_()->push(new element(number(
+						std::get<0>(*left_operand_converted).integer() << std::get<0>(*right_operand_converted).integer()
+					)));
+				}
+				else
+				{
+					double left_operand_decimal = std::get<0>(*left_operand_converted).decimal();
+					double right_operand_decimal = std::get<0>(*right_operand_converted).decimal();
+
+					long long left_operand_integer = *reinterpret_cast<long long*>(&left_operand_decimal);
+					long long right_operand_integer = *reinterpret_cast<long long*>(&right_operand_decimal);
+
+					long long result = left_operand_integer << right_operand_integer;
+					double result_decimal = *reinterpret_cast<double*>(&result);
+
+					storage_()->push(new element(number(
+						result_decimal
+					)));
+				}
+
+				break;
+			}
+
+			case 1:
+			{
+				storage_()->push(new element(
+					std::get<1>(*left_operand_converted) << std::get<1>(*right_operand_converted)
+				));
+
+				break;
+			}
+			}
 
 			delete right_operand;
 			delete left_operand;
@@ -363,23 +483,46 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (is_integer_mode_)
+			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
-				long long right_operand_integer = std::get<0>(*right_operand).integer();
-				long long left_operand_integer = std::get<0>(*left_operand).integer();
+				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 
-				long long result = left_operand_integer / right_operand_integer;
-
-				storage_()->push(new element(number(result)));
+				return true;
 			}
-			else
+
+			std::shared_ptr<element> right_operand_converted;
+			std::shared_ptr<element> left_operand_converted;
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+
+			switch (left_operand_converted->index())
 			{
-				double right_operand_decimal = std::get<0>(*right_operand).decimal();
-				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+			case 0:
+			{
+				if (is_integer_mode_)
+				{
+					storage_()->push(new element(number(
+						std::get<0>(*left_operand_converted).integer() / std::get<0>(*right_operand_converted).integer()
+					)));
+				}
+				else
+				{
+					storage_()->push(new element(number(
+						std::get<0>(*left_operand_converted).decimal() / std::get<0>(*right_operand_converted).decimal()
+					)));
+				}
 
-				double result = left_operand_decimal / right_operand_decimal;
+				break;
+			}
 
-				storage_()->push(new element(number(result)));
+			case 1:
+			{
+				storage_()->push(new element(
+					std::get<1>(*left_operand_converted) / std::get<1>(*right_operand_converted)
+				));
+
+				break;
+			}
 			}
 
 			delete right_operand;
@@ -392,12 +535,56 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			long long right_operand_integer = std::get<0>(*right_operand).integer();
-			long long left_operand_integer = std::get<0>(*left_operand).integer();
+			if (left_operand->index() >= 2 && right_operand->index() >= 2)
+			{
+				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 
-			long long result = left_operand_integer >> right_operand_integer;
+				return true;
+			}
 
-			storage_()->push(new element(number(result)));
+			std::shared_ptr<element> right_operand_converted;
+			std::shared_ptr<element> left_operand_converted;
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+
+			switch (left_operand_converted->index())
+			{
+			case 0:
+			{
+				if (is_integer_mode_)
+				{
+					storage_()->push(new element(number(
+						std::get<0>(*left_operand_converted).integer() >> std::get<0>(*right_operand_converted).integer()
+					)));
+				}
+				else
+				{
+					double left_operand_decimal = std::get<0>(*left_operand_converted).decimal();
+					double right_operand_decimal = std::get<0>(*right_operand_converted).decimal();
+
+					long long left_operand_integer = *reinterpret_cast<long long*>(&left_operand_decimal);
+					long long right_operand_integer = *reinterpret_cast<long long*>(&right_operand_decimal);
+
+					long long result = left_operand_integer >> right_operand_integer;
+					double result_decimal = *reinterpret_cast<double*>(&result);
+
+					storage_()->push(new element(number(
+						result_decimal
+					)));
+				}
+
+				break;
+			}
+
+			case 1:
+			{
+				storage_()->push(new element(
+					std::get<1>(*left_operand_converted) >> std::get<1>(*right_operand_converted)
+				));
+
+				break;
+			}
+			}
 
 			delete right_operand;
 			delete left_operand;
@@ -414,23 +601,46 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (is_integer_mode_)
+			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
-				long long right_operand_integer = std::get<0>(*right_operand).integer();
-				long long left_operand_integer = std::get<0>(*left_operand).integer();
+				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 
-				long long result = left_operand_integer % right_operand_integer;
-
-				storage_()->push(new element(number(result)));
+				return true;
 			}
-			else
+
+			std::shared_ptr<element> right_operand_converted;
+			std::shared_ptr<element> left_operand_converted;
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+
+			switch (left_operand_converted->index())
 			{
-				double right_operand_decimal = std::get<0>(*right_operand).decimal();
-				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+			case 0:
+			{
+				if (is_integer_mode_)
+				{
+					storage_()->push(new element(number(
+						std::get<0>(*left_operand_converted).integer() % std::get<0>(*right_operand_converted).integer()
+					)));
+				}
+				else
+				{
+					storage_()->push(new element(number(
+						std::fmod(std::get<0>(*left_operand_converted).decimal(), std::get<0>(*right_operand_converted).decimal())
+					)));
+				}
 
-				double result = std::fmod(left_operand_decimal, right_operand_decimal);
+				break;
+			}
 
-				storage_()->push(new element(number(result)));
+			case 1:
+			{
+				storage_()->push(new element(
+					std::get<1>(*left_operand_converted) % std::get<1>(*right_operand_converted)
+				));
+
+				break;
+			}
 			}
 
 			delete right_operand;
@@ -443,26 +653,55 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (is_integer_mode_)
+			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
-				long long right_operand_integer = std::get<0>(*right_operand).integer();
-				long long left_operand_integer = std::get<0>(*left_operand).integer();
+				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 
-				long long result = left_operand_integer ^ right_operand_integer;
-
-				storage_()->push(new element(number(result)));
+				return true;
 			}
-			else
+
+			std::shared_ptr<element> right_operand_converted;
+			std::shared_ptr<element> left_operand_converted;
+			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted, is_integer_mode_);
+
+			switch (left_operand_converted->index())
 			{
-				double right_operand_decimal = std::get<0>(*right_operand).decimal();
-				double left_operand_decimal = std::get<0>(*left_operand).decimal();
+			case 0:
+			{
+				if (is_integer_mode_)
+				{
+					storage_()->push(new element(number(
+						std::get<0>(*left_operand_converted).integer() ^ std::get<0>(*right_operand_converted).integer()
+					)));
+				}
+				else
+				{
+					double left_operand_decimal = std::get<0>(*left_operand_converted).decimal();
+					double right_operand_decimal = std::get<0>(*right_operand_converted).decimal();
 
-				long long right_operand_integer = *reinterpret_cast<long long*>(&right_operand_decimal);
-				long long left_operand_integer = *reinterpret_cast<long long*>(&left_operand_decimal);
+					long long left_operand_integer = *reinterpret_cast<long long*>(&left_operand_decimal);
+					long long right_operand_integer = *reinterpret_cast<long long*>(&right_operand_decimal);
 
-				long long result = left_operand_integer ^ right_operand_integer;
+					long long result = left_operand_integer ^ right_operand_integer;
+					double result_decimal = *reinterpret_cast<double*>(&result);
 
-				storage_()->push(new element(number(result)));
+					storage_()->push(new element(number(
+						result_decimal
+					)));
+				}
+
+				break;
+			}
+
+			case 1:
+			{
+				storage_()->push(new element(
+					std::get<1>(*left_operand_converted) ^ std::get<1>(*right_operand_converted)
+				));
+
+				break;
+			}
 			}
 
 			delete right_operand;
