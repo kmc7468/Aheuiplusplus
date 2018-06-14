@@ -107,54 +107,154 @@ namespace app
 				switch (last_jungsung)
 				{
 				case U'ㅏ':
-					go_right_(x, y, 1, direction, splited_code);
-					break;
-
-				case U'ㅑ':
-					go_right_(x, y, 2, direction, splited_code);
-					break;
-
-				case U'ㅓ':
-					go_left_(x, y, 1, direction, splited_code);
-					break;
-
-				case U'ㅕ':
-					go_left_(x, y, 2, direction, splited_code);
-					break;
-
-				case U'ㅗ':
-					go_up_(x, y, 1, direction, splited_code);
-					break;
-
-				case U'ㅛ':
-					go_up_(x, y, 2, direction, splited_code);
-					break;
-
-				case U'ㅜ':
-					go_down_(x, y, 1, direction, splited_code);
-					break;
-
-				case U'ㅠ':
-					go_down_(x, y, 2, direction, splited_code);
-					break;
-
-				case U'ㅡ':
 				{
-					if (direction == 0)
-					{
-						go_right_(x, y, 1, direction, splited_code);
-					}
-					else if (direction == 1)
+					if (is_reflection)
 					{
 						go_left_(x, y, 1, direction, splited_code);
 					}
-					else if (direction == 2)
+					else
+					{
+						go_right_(x, y, 1, direction, splited_code);
+					}
+					break;
+				}
+
+				case U'ㅑ':
+				{
+					if (is_reflection)
+					{
+						go_left_(x, y, 2, direction, splited_code);
+					}
+					else
+					{
+						go_right_(x, y, 2, direction, splited_code);
+					}
+					break;
+				}
+
+				case U'ㅓ':
+				{
+					if (is_reflection)
+					{
+						go_right_(x, y, 1, direction, splited_code);
+					}
+					else
+					{
+						go_left_(x, y, 1, direction, splited_code);
+					}
+					break;
+				}
+
+				case U'ㅕ':
+				{
+					if (is_reflection)
+					{
+						go_right_(x, y, 2, direction, splited_code);
+					}
+					else
+					{
+						go_left_(x, y, 2, direction, splited_code);
+					}
+					break;
+				}
+
+				case U'ㅗ':
+				{
+					if (is_reflection)
 					{
 						go_down_(x, y, 1, direction, splited_code);
 					}
 					else
 					{
 						go_up_(x, y, 1, direction, splited_code);
+					}
+					break;
+				}
+
+				case U'ㅛ':
+				{
+					if (is_reflection)
+					{
+						go_down_(x, y, 2, direction, splited_code);
+					}
+					else
+					{
+						go_up_(x, y, 2, direction, splited_code);
+					}
+					break;
+				}
+
+				case U'ㅜ':
+				{
+					if (is_reflection)
+					{
+						go_up_(x, y, 1, direction, splited_code);
+					}
+					else
+					{
+						go_down_(x, y, 1, direction, splited_code);
+					}
+					break;
+				}
+
+				case U'ㅠ':
+				{
+					if (is_reflection)
+					{
+						go_up_(x, y, 2, direction, splited_code);
+					}
+					else
+					{
+						go_down_(x, y, 2, direction, splited_code);
+					}
+					break;
+				}
+
+				case U'ㅡ':
+				{
+					if (direction == 0)
+					{
+						if (is_reflection)
+						{
+							go_left_(x, y, 1, direction, splited_code);
+						}
+						else
+						{
+							go_right_(x, y, 1, direction, splited_code);
+						}
+					}
+					else if (direction == 1)
+					{
+						if (is_reflection)
+						{
+							go_right_(x, y, 1, direction, splited_code);
+						}
+						else
+						{
+							go_left_(x, y, 1, direction, splited_code);
+						}
+					}
+					else if (direction == 2)
+					{
+						if (is_reflection)
+						{
+							go_up_(x, y, 1, direction, splited_code);
+						}
+						else
+						{
+							go_down_(x, y, 1, direction, splited_code);
+						}
+					}
+					else
+					{
+						if (is_reflection)
+						{
+							go_down_(x, y, 1, direction, splited_code);
+						}
+						else
+						{
+							go_up_(x, y, 1, direction, splited_code);
+						}
 					}
 
 					break;
@@ -164,19 +264,47 @@ namespace app
 				{
 					if (direction == 0)
 					{
-						go_left_(x, y, 1, direction, splited_code);
+						if (is_reflection)
+						{
+							go_right_(x, y, 1, direction, splited_code);
+						}
+						else
+						{
+							go_left_(x, y, 1, direction, splited_code);
+						}
 					}
 					else if (direction == 1)
 					{
-						go_right_(x, y, 1, direction, splited_code);
+						if (is_reflection)
+						{
+							go_left_(x, y, 1, direction, splited_code);
+						}
+						else
+						{
+							go_right_(x, y, 1, direction, splited_code);
+						}
 					}
 					else if (direction == 2)
 					{
-						go_up_(x, y, 1, direction, splited_code);
+						if (is_reflection)
+						{
+							go_down_(x, y, 1, direction, splited_code);
+						}
+						else
+						{
+							go_up_(x, y, 1, direction, splited_code);
+						}
 					}
 					else
 					{
-						go_down_(x, y, 1, direction, splited_code);
+						if (is_reflection)
+						{
+							go_up_(x, y, 1, direction, splited_code);
+						}
+						else
+						{
+							go_down_(x, y, 1, direction, splited_code);
+						}
 					}
 
 					break;
@@ -186,45 +314,51 @@ namespace app
 				{
 					if (direction == 0)
 					{
-						go_left_(x, y, 1, direction, splited_code);
+						if (is_reflection)
+						{
+							go_right_(x, y, 1, direction, splited_code);
+						}
+						else
+						{
+							go_left_(x, y, 1, direction, splited_code);
+						}
 					}
 					else if (direction == 1)
 					{
-						go_right_(x, y, 1, direction, splited_code);
+						if (is_reflection)
+						{
+							go_left_(x, y, 1, direction, splited_code);
+						}
+						else
+						{
+							go_right_(x, y, 1, direction, splited_code);
+						}
 					}
 					else if (direction == 2)
 					{
-						go_down_(x, y, 1, direction, splited_code);
+						if (is_reflection)
+						{
+							go_up_(x, y, 1, direction, splited_code);
+						}
+						else
+						{
+							go_down_(x, y, 1, direction, splited_code);
+						}
 					}
 					else
 					{
-						go_up_(x, y, 1, direction, splited_code);
+						if (is_reflection)
+						{
+							go_down_(x, y, 1, direction, splited_code);
+						}
+						else
+						{
+							go_up_(x, y, 1, direction, splited_code);
+						}
 					}
 
 					break;
 				}
-				}
-				
-				if (is_reflection)
-				{
-					switch (direction)
-					{
-					case 0:
-						direction = 1;
-						break;
-
-					case 1:
-						direction = 0;
-						break;
-
-					case 2:
-						direction = 3;
-						break;
-
-					case 3:
-						direction = 2;
-						break;
-					}
 				}
 			}
 		}
@@ -277,7 +411,7 @@ namespace app
 	{
 		x += move;
 
-		if (x >= splited_code.line(y).size() - 1)
+		if (x >= splited_code.line(y).size())
 		{
 			x = 0;
 		}
@@ -299,7 +433,7 @@ namespace app
 	{
 		y += move;
 
-		if (y >= splited_code.codes().size() - 1)
+		if (y >= splited_code.codes().size())
 		{
 			y = 0;
 		}
