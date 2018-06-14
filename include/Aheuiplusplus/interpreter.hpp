@@ -11,8 +11,12 @@
 
 namespace app
 {
+	class debugger;
+
 	class interpreter final
 	{
+		friend class app::debugger;
+
 	public:
 		interpreter(std::FILE* input_stream, std::FILE* output_stream);
 		interpreter(app::version version, std::FILE* input_stream, std::FILE* output_stream);
@@ -34,6 +38,9 @@ namespace app
 
 	private:
 		void initialize_();
+
+		void run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
+			char32_t& last_jungsung, bool& is_ignored, bool& is_reflection);
 
 		bool add_(char32_t jongsung, bool is_added_additional_data);
 		bool mul_(char32_t jongsung, bool is_added_additional_data);
@@ -89,6 +96,7 @@ namespace app
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 		bool is_processed_space_char_ = true;
 #endif
+		app::debugger* debugger_ = nullptr;
 	};
 }
 

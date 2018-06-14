@@ -1,5 +1,7 @@
 ﻿#include <Aheuiplusplus/interpreter.hpp>
 
+#include <Aheuiplusplus/debugger.hpp>
+
 #include <cstddef>
 #include <cstdint>
 
@@ -18,30 +20,67 @@ namespace app
 
 	void interpreter::run(const raw_code& code)
 	{
-		app::code splited_code = code;
-
 		std::size_t x = 0;
 		std::size_t y = 0;
 
 		std::size_t direction = 0; // 0: 왼쪽, 1: 오른쪽, 2: 위, 3: 아래
 
 		char32_t last_jungsung = 0;
+		bool is_ignored = false;
+		bool is_reflection = false;
+
+		run_(code, x, y, direction, last_jungsung, is_ignored, is_reflection);
+	}
+
+	const app::storage* interpreter::storage(std::size_t index) const
+	{
+		return storages_[index][storage_indexs_[index]];
+	}
+	std::size_t interpreter::storage_index(std::size_t index) const
+	{
+		return storage_indexs_[index];
+	}
+
+	void interpreter::initialize_()
+	{
+		for (std::size_t i = 0; i < 26; ++i)
+		{
+			std::vector<app::storage*> storages;
+			storages.push_back(new list());
+
+			storages_.push_back(storages);
+		}
+
+		std::vector<app::storage*> queues;
+		queues.push_back(new queue());
+		storages_.insert(storages_.begin() + 21, queues);
+
+		std::vector<app::storage*> passages;
+		storages_.push_back(passages);
+
+		for (std::size_t i = 0; i < 28; ++i)
+		{
+			storage_indexs_.push_back(0);
+		}
+	}
+
+	void interpreter::run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
+		char32_t& last_jungsung, bool& is_ignored, bool& is_reflection)
+	{
+		app::code splited_code = code;
 
 		while (true)
 		{
 			char32_t command = splited_code.command(x, y);
-			
+
 			if (is_complete_hangul(command))
 			{
 				char32_t chosung = get_chosung(command);
 				char32_t jungsung = get_jungsung(command);
 				char32_t jongsung = get_jongsung(command);
-				
+
 				char32_t jungsung_org = get_jungsung_original(jungsung);
 				bool is_added_additional_data = app::is_added_additional_data(jungsung);
-
-				bool is_ignored = false;
-				bool is_reflection = false;
 
 				switch (chosung)
 				{
@@ -90,7 +129,7 @@ namespace app
 				case U'ㅊ':
 					is_ignored = is_zero_(jongsung, is_added_additional_data, is_reflection);
 					break;
-				
+
 
 
 				case U'ㅇ':
@@ -309,7 +348,7 @@ namespace app
 
 					break;
 				}
-				
+
 				case U'ㅢ':
 				{
 					if (direction == 0)
@@ -361,38 +400,6 @@ namespace app
 				}
 				}
 			}
-		}
-	}
-
-	const app::storage* interpreter::storage(std::size_t index) const
-	{
-		return storages_[index][storage_indexs_[index]];
-	}
-	std::size_t interpreter::storage_index(std::size_t index) const
-	{
-		return storage_indexs_[index];
-	}
-
-	void interpreter::initialize_()
-	{
-		for (std::size_t i = 0; i < 26; ++i)
-		{
-			std::vector<app::storage*> storages;
-			storages.push_back(new list());
-
-			storages_.push_back(storages);
-		}
-
-		std::vector<app::storage*> queues;
-		queues.push_back(new queue());
-		storages_.insert(storages_.begin() + 21, queues);
-
-		std::vector<app::storage*> passages;
-		storages_.push_back(passages);
-
-		for (std::size_t i = 0; i < 28; ++i)
-		{
-			storage_indexs_.push_back(0);
 		}
 	}
 

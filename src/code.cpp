@@ -102,6 +102,67 @@ namespace app
 		return jungsung != get_jungsung_original(jungsung);
 	}
 
+	char32_t get_complete_hangul(char32_t chosung, char32_t jungsung)
+	{
+		return get_complete_hangul(chosung, jungsung, 0);
+	}
+	char32_t get_complete_hangul(char32_t chosung, char32_t jungsung, char32_t jongsung)
+	{
+		if (chosung < U'ㄱ' || chosung > U'ㅎ')
+			throw std::invalid_argument("인수 chosung은 현대 한글 자음 중 초성에 올 수 있는 자음이여야 합니다.");
+		if (jungsung < U'ㅏ' || jungsung > U'ㅣ')
+			throw std::invalid_argument("인수 jungsung은 현대 한글 모음이여야 합니다.");
+		if (jongsung != 0 && (jongsung < U'ㄱ' || jongsung > U'ㅎ'))
+			throw std::invalid_argument("인수 jongsung은 현대 한글 자음 중 종성에 올 수 있는 자음이여야 합니다.");
+
+		static constexpr char32_t chosungs[] = {
+			U'ㄱ', U'ㄲ', U'ㄴ', U'ㄷ', U'ㄸ', U'ㄹ', U'ㅁ', U'ㅂ', U'ㅃ', U'ㅅ', U'ㅆ', U'ㅇ', U'ㅈ',
+			U'ㅉ', U'ㅊ', U'ㅋ', U'ㅌ', U'ㅍ', U'ㅎ'
+		};
+
+		char32_t chosung_id = static_cast<char32_t>(-1);
+
+		for (std::size_t i = 0; i < 19; ++i)
+		{
+			if (chosungs[i] == chosung)
+			{
+				chosung_id = i;
+				break;
+			}
+		}
+
+		if (chosung_id == static_cast<char32_t>(-1))
+			throw std::invalid_argument("인수 chosung은 현대 한글 자음 중 초성에 올 수 있는 자음이여야 합니다.");
+
+		if (jongsung == 0)
+		{
+			return 588 * chosung_id + 28 * (jungsung - U'ㅏ') + 0xAC00;
+		}
+		else
+		{
+			static constexpr char32_t jongsungs[] = {
+				0, U'ㄱ', U'ㄲ', U'ㄳ', U'ㄴ', U'ㄵ', U'ㄶ', U'ㄷ', U'ㄹ', U'ㄺ', U'ㄻ', U'ㄼ', U'ㄽ', U'ㄾ',
+				U'ㄿ', U'ㅀ', U'ㅁ', U'ㅂ', U'ㅄ', U'ㅅ', U'ㅆ', U'ㅇ', U'ㅈ', U'ㅊ', U'ㅋ', U'ㅌ', U'ㅍ', U'ㅎ'
+			};
+
+			char32_t jongsung_id = static_cast<char32_t>(-1);
+
+			for (std::size_t i = 0; i < 28; ++i)
+			{
+				if (jongsungs[i] == jongsung)
+				{
+					jongsung_id = i;
+					break;
+				}
+			}
+
+			if (jongsung_id == static_cast<char32_t>(-1))
+				throw std::invalid_argument("인수 jongsung은 현대 한글 자음 중 종성에 올 수 있는 자음이여야 합니다.");
+
+			return 588 * chosung_id + 28 * (jungsung - U'ㅏ') + jongsung_id + 0xAC00;
+		}
+	}
+
 	std::wstring char32_to_wchar(char32_t character)
 	{
 		if (character <= 65'535)
