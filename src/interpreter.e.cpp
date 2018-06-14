@@ -11,6 +11,16 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
+			if (right_operand == nullptr && left_operand == nullptr)
+			{
+				return true;
+			}
+			else if (right_operand == nullptr)
+			{
+				storage_()->push(left_operand);
+				return true;
+			}
+
 			std::shared_ptr<element> right_operand_converted;
 			std::shared_ptr<element> left_operand_converted;
 			type_casting_arithmetic_(left_operand, right_operand, left_operand_converted, right_operand_converted);
@@ -63,6 +73,16 @@ namespace app
 		{
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
+
+			if (right_operand == nullptr && left_operand == nullptr)
+			{
+				return true;
+			}
+			else if (right_operand == nullptr)
+			{
+				storage_()->push(left_operand);
+				return true;
+			}
 
 			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
@@ -132,6 +152,16 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
+			if (right_operand == nullptr && left_operand == nullptr)
+			{
+				return true;
+			}
+			else if (right_operand == nullptr)
+			{
+				storage_()->push(left_operand);
+				return true;
+			}
+
 			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
 				storage_()->push(left_operand);
@@ -183,6 +213,16 @@ namespace app
 		{
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
+
+			if (right_operand == nullptr && left_operand == nullptr)
+			{
+				return true;
+			}
+			else if (right_operand == nullptr)
+			{
+				storage_()->push(left_operand);
+				return true;
+			}
 
 			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
@@ -250,6 +290,16 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
+			if (right_operand == nullptr && left_operand == nullptr)
+			{
+				return true;
+			}
+			else if (right_operand == nullptr)
+			{
+				storage_()->push(left_operand);
+				return true;
+			}
+
 			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
 				storage_()->push(left_operand);
@@ -301,6 +351,16 @@ namespace app
 		{
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
+
+			if (right_operand == nullptr && left_operand == nullptr)
+			{
+				return true;
+			}
+			else if (right_operand == nullptr)
+			{
+				storage_()->push(left_operand);
+				return true;
+			}
 
 			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
@@ -368,6 +428,16 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
+			if (right_operand == nullptr && left_operand == nullptr)
+			{
+				return true;
+			}
+			else if (right_operand == nullptr)
+			{
+				storage_()->push(left_operand);
+				return true;
+			}
+
 			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
 				storage_()->push(left_operand);
@@ -419,6 +489,16 @@ namespace app
 		{
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
+
+			if (right_operand == nullptr && left_operand == nullptr)
+			{
+				return true;
+			}
+			else if (right_operand == nullptr)
+			{
+				storage_()->push(left_operand);
+				return true;
+			}
 
 			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
@@ -486,6 +566,16 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
+			if (right_operand == nullptr && left_operand == nullptr)
+			{
+				return true;
+			}
+			else if (right_operand == nullptr)
+			{
+				storage_()->push(left_operand);
+				return true;
+			}
+
 			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
 				storage_()->push(left_operand);
@@ -537,6 +627,16 @@ namespace app
 		{
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
+
+			if (right_operand == nullptr && left_operand == nullptr)
+			{
+				return true;
+			}
+			else if (right_operand == nullptr)
+			{
+				storage_()->push(left_operand);
+				return true;
+			}
 
 			if (left_operand->index() >= 2 && right_operand->index() >= 2)
 			{
