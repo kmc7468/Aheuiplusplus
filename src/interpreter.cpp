@@ -82,6 +82,15 @@ namespace app
 				char32_t jungsung_org = get_jungsung_original(jungsung);
 				bool is_added_additional_data = app::is_added_additional_data(jungsung);
 
+				if (is_compatible_with_aheui_)
+				{
+					if (jongsung != U'ㄱ' || jongsung != U'ㅋ' || jongsung != U'ㄲ' ||
+						jongsung != U'ㅉ')
+					{
+						is_added_additional_data = false;
+					}
+				}
+
 				switch (chosung)
 				{
 				case U'ㄷ':
@@ -720,6 +729,10 @@ namespace app
 	bool interpreter::is_integer_mode() const noexcept
 	{
 		return is_integer_mode_;
+	}
+	bool app::interpreter::is_compatible_with_aheui() const noexcept
+	{
+		return is_compatible_with_aheui_;
 	}
 
 	std::FILE* interpreter::input_stream()

@@ -42,6 +42,8 @@ namespace app
 		void run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
 			char32_t& last_jungsung, bool& is_ignored, bool& is_reflection);
 
+		bool type_and_mode_(char32_t jongsung, bool is_added_additional_data);
+
 		bool add_(char32_t jongsung, bool is_added_additional_data);
 		bool mul_(char32_t jongsung, bool is_added_additional_data);
 		bool sub_(char32_t jongsung, bool is_added_additional_data);
@@ -78,6 +80,7 @@ namespace app
 		const std::vector<function*>& functions() const noexcept;
 
 		bool is_integer_mode() const noexcept;
+		bool is_compatible_with_aheui() const noexcept;
 
 		std::FILE* input_stream();
 		std::FILE* output_stream();
@@ -90,6 +93,7 @@ namespace app
 		std::vector<function*> functions_;
 
 		bool is_integer_mode_ = true;
+		bool is_compatible_with_aheui_ = true;
 
 		std::FILE* input_stream_;
 		std::FILE* output_stream_;
