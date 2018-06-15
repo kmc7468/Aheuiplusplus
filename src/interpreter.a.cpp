@@ -1,4 +1,4 @@
-#include <Aheuiplusplus/interpreter.hpp>
+ï»¿#include <Aheuiplusplus/interpreter.hpp>
 
 #include <cmath>
 #include <cctype>
@@ -19,23 +19,23 @@ namespace app
 
 		if (value != nullptr)
 		{
-			if (jongsung == U'¤·' && !is_added_additional_data) // ¼ıÀÚ(Á¤¼ö) Ãâ·Â
+			if (jongsung == U'ã…‡' && !is_added_additional_data) // ìˆ«ì(ì •ìˆ˜) ì¶œë ¥
 			{
-				if (value->index() == 0) // ¼ıÀÚÀÏ °æ¿ì
+				if (value->index() == 0) // ìˆ«ìì¼ ê²½ìš°
 				{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 					_setmode(_fileno(output_stream_), _O_TEXT);
 #endif
 					std::fprintf(output_stream_, "%lld", std::get<0>(*value).integer());
 				}
-				else if (value->index() == 1) // ¹®ÀÚÀÏ °æ¿ì
+				else if (value->index() == 1) // ë¬¸ìì¼ ê²½ìš°
 				{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 					_setmode(_fileno(output_stream_), _O_TEXT);
 #endif
 					std::fprintf(output_stream_, "%lld", static_cast<long long>(std::get<1>(*value)));
 				}
-				else if (value->index() == 2) // ¹®ÀÚ¿­ÀÏ °æ¿ì
+				else if (value->index() == 2) // ë¬¸ìì—´ì¼ ê²½ìš°
 				{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 					_setmode(_fileno(output_stream_), _O_TEXT);
@@ -51,23 +51,23 @@ namespace app
 					std::fprintf(output_stream_, "%lld", value_integer);
 				}
 			}
-			else if (jongsung == U'¤·' && is_added_additional_data) // ¼ıÀÚ(¼Ò¼ö) Ãâ·Â
+			else if (jongsung == U'ã…‡' && is_added_additional_data) // ìˆ«ì(ì†Œìˆ˜) ì¶œë ¥
 			{
-				if (value->index() == 0) // ¼ıÀÚÀÏ °æ¿ì
+				if (value->index() == 0) // ìˆ«ìì¼ ê²½ìš°
 				{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 					_setmode(_fileno(output_stream_), _O_TEXT);
 #endif
 					std::fprintf(output_stream_, "%f", std::get<0>(*value).decimal());
 				}
-				else if (value->index() == 1) // ¹®ÀÚÀÏ °æ¿ì
+				else if (value->index() == 1) // ë¬¸ìì¼ ê²½ìš°
 				{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 					_setmode(_fileno(output_stream_), _O_TEXT);
 #endif
 					std::fprintf(output_stream_, "%f", static_cast<double>(std::get<1>(*value)));
 				}
-				else if (value->index() == 2) // ¹®ÀÚ¿­ÀÏ °æ¿ì
+				else if (value->index() == 2) // ë¬¸ìì—´ì¼ ê²½ìš°
 				{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 					_setmode(_fileno(output_stream_), _O_TEXT);
@@ -83,9 +83,9 @@ namespace app
 					std::fprintf(output_stream_, "%f", value_integer);
 				}
 			}
-			else if (jongsung == U'¤¾' && !is_added_additional_data) // ¹®ÀÚ Ãâ·Â
+			else if (jongsung == U'ã…' && !is_added_additional_data) // ë¬¸ì ì¶œë ¥
 			{
-				if (value->index() == 0) // ¼ıÀÚÀÏ °æ¿ì
+				if (value->index() == 0) // ìˆ«ìì¼ ê²½ìš°
 				{
 					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 					{
@@ -100,7 +100,7 @@ namespace app
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
 					}
 				}
-				else if (value->index() == 1) // ¹®ÀÚÀÏ °æ¿ì
+				else if (value->index() == 1) // ë¬¸ìì¼ ê²½ìš°
 				{
 					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 					{
@@ -115,7 +115,7 @@ namespace app
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
 					}
 				}
-				else if (value->index() == 2) // ¹®ÀÚ¿­ÀÏ °æ¿ì
+				else if (value->index() == 2) // ë¬¸ìì—´ì¼ ê²½ìš°
 				{
 					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 					{
@@ -131,11 +131,11 @@ namespace app
 					}
 				}
 			}
-			else if (jongsung == U'¤¾' && is_added_additional_data) // ¹®ÀÚ¿­ Ãâ·Â
+			else if (jongsung == U'ã…' && is_added_additional_data) // ë¬¸ìì—´ ì¶œë ¥
 			{
 				if (value->index() == 0)
 				{
-					if constexpr (sizeof(wchar_t) == sizeof(char32_t)) // ¼ıÀÚÀÏ °æ¿ì
+					if constexpr (sizeof(wchar_t) == sizeof(char32_t)) // ìˆ«ìì¼ ê²½ìš°
 					{
 						std::fwprintf(output_stream_, L"%lc", static_cast<wchar_t>(std::get<0>(*value).integer()));
 					}
@@ -148,7 +148,7 @@ namespace app
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
 					}
 				}
-				else if (value->index() == 1) // ¹®ÀÚÀÏ °æ¿ì
+				else if (value->index() == 1) // ë¬¸ìì¼ ê²½ìš°
 				{
 					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 					{
@@ -163,7 +163,7 @@ namespace app
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
 					}
 				}
-				else if (value->index() == 2) // ¹®ÀÚ¿­ÀÏ °æ¿ì
+				else if (value->index() == 2) // ë¬¸ìì—´ì¼ ê²½ìš°
 				{
 					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 					{
@@ -203,7 +203,7 @@ namespace app
 	}
 	bool interpreter::push_(char32_t jongsung, bool is_added_additional_data)
 	{
-		if (jongsung == U'¤·' && !is_added_additional_data) // ¼ıÀÚ(Á¤¼ö) ÀÔ·Â
+		if (jongsung == U'ã…‡' && !is_added_additional_data) // ìˆ«ì(ì •ìˆ˜) ì…ë ¥
 		{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 			_setmode(_fileno(input_stream_), _O_TEXT);
@@ -221,7 +221,7 @@ namespace app
 
 			return false;
 		}
-		else if (jongsung == U'¤·' && is_added_additional_data) // ¼ıÀÚ(¼Ò¼ö) ÀÔ·Â
+		else if (jongsung == U'ã…‡' && is_added_additional_data) // ìˆ«ì(ì†Œìˆ˜) ì…ë ¥
 		{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 			_setmode(_fileno(input_stream_), _O_TEXT);
@@ -239,7 +239,7 @@ namespace app
 
 			return false;
 		}
-		else if (jongsung == U'¤¾' && !is_added_additional_data) // ¹®ÀÚ ÀÔ·Â
+		else if (jongsung == U'ã…' && !is_added_additional_data) // ë¬¸ì ì…ë ¥
 		{
 		input_char:
 			if (std::feof(input_stream_))
@@ -311,7 +311,7 @@ namespace app
 
 			return false;
 		}
-		else if (jongsung == U'¤¾' && is_added_additional_data) // ¹®ÀÚ¿­ ÀÔ·Â
+		else if (jongsung == U'ã…' && is_added_additional_data) // ë¬¸ìì—´ ì…ë ¥
 		{
 			if (std::feof(input_stream_))
 			{
@@ -437,7 +437,7 @@ namespace app
 
 			return false;
 		}
-		else if (jongsung == U'¤¡')
+		else if (jongsung == U'ã„±')
 		{
 			element* copyed = storage_()->copy();
 
@@ -462,7 +462,7 @@ namespace app
 
 			return false;
 		}
-		else if (jongsung == U'¤¤')
+		else if (jongsung == U'ã„´')
 		{
 			element* copyed = storage_()->copy();
 
@@ -479,7 +479,7 @@ namespace app
 
 			return false;
 		}
-		else if (jongsung == U'¤¥')
+		else if (jongsung == U'ã„µ')
 		{
 			element* copyed = storage_()->copy();
 
@@ -504,7 +504,7 @@ namespace app
 
 			return false;
 		}
-		else if (jongsung == U'¤¦')
+		else if (jongsung == U'ã„¶')
 		{
 			element* copyed = storage_()->copy();
 
@@ -529,7 +529,7 @@ namespace app
 
 			return false;
 		}
-		else if (jongsung == U'¤§')
+		else if (jongsung == U'ã„·')
 		{
 			element* copyed = storage_()->copy();
 

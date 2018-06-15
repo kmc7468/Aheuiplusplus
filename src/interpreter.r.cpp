@@ -1,30 +1,30 @@
-#include <Aheuiplusplus/interpreter.hpp>
+ï»¿#include <Aheuiplusplus/interpreter.hpp>
 
 namespace app
 {
 	bool interpreter::type_and_mode_(char32_t jongsung, bool is_added_additional_data)
 	{
-		if (jongsung == U'¤±' && !is_added_additional_data)
+		if (jongsung == U'ã…' && !is_added_additional_data)
 		{
 			is_integer_mode_ = true;
 		}
-		else if (jongsung == U'¤±' && is_added_additional_data)
+		else if (jongsung == U'ã…' && is_added_additional_data)
 		{
 			is_integer_mode_ = false;
 		}
-		else if (jongsung == U'¤²' && !is_added_additional_data)
+		else if (jongsung == U'ã…‚' && !is_added_additional_data)
 		{
 			is_integer_mode_ = !is_integer_mode_;
 		}
-		else if (jongsung == U'¤²' && is_added_additional_data)
+		else if (jongsung == U'ã…‚' && is_added_additional_data)
 		{
 			storage_()->push(new element(number(static_cast<long long>(!is_integer_mode_))));
 		}
-		else if (jongsung == U'¤³' && is_added_additional_data)
+		else if (jongsung == U'ã…ƒ' && is_added_additional_data)
 		{
 			is_compatible_with_aheui_ = true;
 		}
-		else if (jongsung == U'¤´' && is_added_additional_data)
+		else if (jongsung == U'ã…„' && is_added_additional_data)
 		{
 			is_compatible_with_aheui_ = false;
 		}

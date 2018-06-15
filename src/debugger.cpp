@@ -1,4 +1,4 @@
-#include <Aheuiplusplus/debugger.hpp>
+ï»¿#include <Aheuiplusplus/debugger.hpp>
 
 #include <algorithm>
 #include <exception>
@@ -51,17 +51,17 @@ namespace app
 		if (!is_connceted_debugger())
 			throw std::bad_function_call();
 
-		for (std::size_t i = 0; i < interpreter_.storages_.size() - 1; ++i) // Åë·Î´Â Á¦¿Ü
+		for (std::size_t i = 0; i < interpreter_.storages_.size() - 1; ++i) // í†µë¡œëŠ” ì œì™¸
 		{
 			std::string tab(depth * 4, ' ');
 
 			static constexpr char32_t jongsungs[] = {
-				0, U'¤¡', U'¤¢', U'¤£', U'¤¤', U'¤¥', U'¤¦', U'¤§', U'¤©', U'¤ª', U'¤«', U'¤¬', U'¤­', U'¤®',
-				U'¤¯', U'¤°', U'¤±', U'¤²', U'¤´', U'¤µ', U'¤¶', U'¤·', U'¤¸', U'¤º', U'¤»', U'¤¼', U'¤½', U'¤¾'
+				0, U'ã„±', U'ã„²', U'ã„³', U'ã„´', U'ã„µ', U'ã„¶', U'ã„·', U'ã„¹', U'ã„º', U'ã„»', U'ã„¼', U'ã„½', U'ã„¾',
+				U'ã„¿', U'ã…€', U'ã…', U'ã…‚', U'ã…„', U'ã……', U'ã…†', U'ã…‡', U'ã…ˆ', U'ã…Š', U'ã…‹', U'ã…Œ', U'ã…', U'ã…'
 			};
 
-			std::fprintf(output_stream_, "%s%lc(¼±ÅÃµÈ ¹øÈ£: %lld, ¹øÈ£ °³¼ö: %lld):\n", tab.c_str(),
-				static_cast<wchar_t>(get_complete_hangul(U'¤·', U'¤¿', jongsungs[i])),
+			std::fprintf(output_stream_, "%s%lc(ì„ íƒëœ ë²ˆí˜¸: %lld, ë²ˆí˜¸ ê°œìˆ˜: %lld):\n", tab.c_str(),
+				static_cast<wchar_t>(get_complete_hangul(U'ã…‡', U'ã…', jongsungs[i])),
 				static_cast<long long>(interpreter_.storage_indexs_[i]),
 				static_cast<long long>(interpreter_.storages_[i].size()));
 		
@@ -79,7 +79,7 @@ namespace app
 					virtual_length = reinterpret_cast<list*>(storage)->virtual_length();
 				}
 
-				std::fprintf(output_stream_, "%s[%lld](°¡»ó ±æÀÌ: %lld, ½ÇÁ¦ ±æÀÌ: %lld):\n", tab.c_str(), static_cast<long long>(j),
+				std::fprintf(output_stream_, "%s[%lld](ê°€ìƒ ê¸¸ì´: %lld, ì‹¤ì œ ê¸¸ì´: %lld):\n", tab.c_str(), static_cast<long long>(j),
 					static_cast<long long>(virtual_length), static_cast<long long>(storage->length()));
 
 				app::storage* storage_backup;
@@ -190,7 +190,7 @@ namespace app
 			breakpoints_.push_back({ x, y });
 		}
 		else
-			throw std::invalid_argument("ÀÎ¼ö {x, y}´Â ÀÌ¹Ì µî·ÏµÈ Áß´ÜÁ¡ÀÔ´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ {x, y}ëŠ” ì´ë¯¸ ë“±ë¡ëœ ì¤‘ë‹¨ì ì…ë‹ˆë‹¤.");
 	}
 	void debugger::remove_breakpoint(std::size_t x, std::size_t y)
 	{
@@ -205,7 +205,7 @@ namespace app
 			breakpoints_.erase(iterator);
 		}
 		else
-			throw std::invalid_argument("ÀÎ¼ö {x, y}´Â µî·ÏµÇÁö ¾ÊÀº Áß´ÜÁ¡ÀÔ´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ {x, y}ëŠ” ë“±ë¡ë˜ì§€ ì•Šì€ ì¤‘ë‹¨ì ì…ë‹ˆë‹¤.");
 	}
 	bool debugger::is_added_breakpoint(std::size_t x, std::size_t y)
 	{
@@ -240,8 +240,8 @@ namespace app
 		}
 		catch (const std::exception& exception)
 		{
-			std::fprintf(output_stream_, "[Debugger] %lldÁÙ %lldÇà¿¡¼­ Ã³¸®µÇÁö ¸øÇÑ ±¸ÇöÃ¼ ¿¹¿Ü°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. °³¹ßÀÚ¿¡°Ô º¸°íÇØ ÁÖ½Ê½Ã¿À.\n"
-										 "[Debugger] ¿¹¿Ü ¸Ş¼¼Áö: %s\n", static_cast<long long>(y), static_cast<long long>(x), exception.what());
+			std::fprintf(output_stream_, "[Debugger] %lldì¤„ %lldí–‰ì—ì„œ ì²˜ë¦¬ë˜ì§€ ëª»í•œ êµ¬í˜„ì²´ ì˜ˆì™¸ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ê°œë°œìì—ê²Œ ë³´ê³ í•´ ì£¼ì‹­ì‹œì˜¤.\n"
+										 "[Debugger] ì˜ˆì™¸ ë©”ì„¸ì§€: %s\n", static_cast<long long>(y), static_cast<long long>(x), exception.what());
 		}
 
 		return;

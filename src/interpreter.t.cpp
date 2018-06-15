@@ -1,4 +1,4 @@
-#include <Aheuiplusplus/interpreter.hpp>
+ï»¿#include <Aheuiplusplus/interpreter.hpp>
 
 namespace app
 {
@@ -15,14 +15,14 @@ namespace app
 		}
 		else
 		{
-			selected_index_ = jongsung - U'¤¡' + 1;
+			selected_index_ = jongsung - U'ã„±' + 1;
 		}
 
 		return false;
 	}
 	bool interpreter::move_(char32_t jongsung, bool is_added_additional_data)
 	{
-		std::size_t selected_index = jongsung == 0 ? 0 : (jongsung - U'¤¡' + 1);
+		std::size_t selected_index = jongsung == 0 ? 0 : (jongsung - U'ã„±' + 1);
 
 		element* value = storage_()->pop();
 		
