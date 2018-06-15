@@ -426,6 +426,7 @@ namespace app
 		
 				if (is_reflection)
 				{
+					last_jungsung = reflect_jungsung_(last_jungsung);
 					is_reflection = false;
 				}
 			}
@@ -548,6 +549,32 @@ namespace app
 				}
 				}
 			}
+		}
+	}
+	char32_t interpreter::reflect_jungsung_(char32_t jungsung_org) const
+	{
+		switch (jungsung_org)
+		{
+		case U'ㅏ':
+			return U'ㅓ';
+
+		case U'ㅑ':
+			return U'ㅕ';
+
+		case U'ㅗ':
+			return U'ㅜ';
+
+		case U'ㅛ':
+			return U'ㅠ';
+
+		case U'ㅜ':
+			return U'ㅗ';
+
+		case U'ㅠ':
+			return U'ㅛ';
+
+		default:
+			return jungsung_org;
 		}
 	}
 

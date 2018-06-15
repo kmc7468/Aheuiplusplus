@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <cwchar>
 #include <cwctype>
+#include <functional>
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #	include <fcntl.h>
@@ -561,21 +562,14 @@ namespace app
 	{
 		if (jongsung == 0 && !is_added_additional_data)
 		{
-			element* first = storage_()->pop();
-			element* second = storage_()->pop();
-
-			if (first == nullptr)
+			try
+			{
+				storage_()->swap();
+			}
+			catch (std::bad_function_call)
 			{
 				return true;
 			}
-			else if (second == nullptr)
-			{
-				storage_()->push(first);
-				return true;
-			}
-
-			storage_()->push(first);
-			storage_()->push(second);
 
 			return false;
 		}

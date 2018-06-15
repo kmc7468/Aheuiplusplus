@@ -31,7 +31,7 @@ namespace app
 			return true;
 		}
 
-		storages_[selected_index][storage_indexs_[selected_index]]->push(value);
+		storages_[selected_index][storage_indexs_[selected_index]]->move(value);
 
 		if (value->index() == 0 && is_added_additional_data)
 		{

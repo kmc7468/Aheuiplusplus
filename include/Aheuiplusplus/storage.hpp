@@ -74,6 +74,8 @@ namespace app
 		virtual element* pop() = 0;
 		virtual void push(element* element) = 0;
 		virtual element* copy() = 0;
+		virtual void move(element* element) = 0;
+		virtual void swap() = 0;
 		virtual std::size_t length() const = 0;
 	};
 
@@ -96,6 +98,8 @@ namespace app
 		virtual element* pop() override;
 		virtual void push(element* element) override;
 		virtual element* copy() override;
+		virtual void move(element* element) override;
+		virtual void swap() override;
 		virtual std::size_t length() const override;
 
 	public:
@@ -126,6 +130,8 @@ namespace app
 		virtual element* pop() override;
 		virtual void push(element* element) override;
 		virtual element* copy() override;
+		virtual void move(element* element) override;
+		virtual void swap() override;
 		virtual std::size_t length() const override;
 
 	private:

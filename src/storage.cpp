@@ -2,6 +2,8 @@
 
 #include <Aheuiplusplus/function.hpp>
 
+#include <algorithm>
+#include <functional>
 #include <stdexcept>
 
 namespace app
@@ -211,6 +213,21 @@ namespace app
 
 		return last;
 	}
+	void list::move(element* element)
+	{
+		push(element);
+	}
+	void list::swap()
+	{
+		if (virtual_length_ < 2)
+			throw std::bad_function_call();
+
+		element* first = pop();
+		element* second = pop();
+
+		push(first);
+		push(second);
+	}
 	std::size_t list::length() const
 	{
 		return vector_.size();
@@ -280,6 +297,21 @@ namespace app
 		}
 
 		return queue_.front();
+	}
+	void queue::move(element* element)
+	{
+		push(element);
+	}
+	void queue::swap()
+	{
+		if (length() > 2)
+			throw std::bad_function_call();
+
+		element* first = pop();
+		element* second = pop();
+
+		queue_.push_front(first);
+		queue_.push_front(second);
 	}
 	std::size_t queue::length() const
 	{

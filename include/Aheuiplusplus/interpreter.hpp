@@ -41,6 +41,7 @@ namespace app
 
 		void run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
 			char32_t& last_jungsung, bool& is_ignored, bool& is_reflection);
+		char32_t reflect_jungsung_(char32_t jungsung_org) const;
 
 		bool type_and_mode_(char32_t jongsung, bool is_added_additional_data);
 
