@@ -564,13 +564,13 @@ namespace app
 			element* first = storage_()->pop();
 			element* second = storage_()->pop();
 
-			if (first == nullptr && second == nullptr)
+			if (first == nullptr)
 			{
 				return true;
 			}
-			else if (first == nullptr)
+			else if (second == nullptr)
 			{
-				storage_()->push(second);
+				storage_()->push(first);
 				return true;
 			}
 

@@ -48,7 +48,7 @@ namespace app
 			element* left_operand = storage_()->pop();
 			element* right_operand = storage_()->pop();
 
-			if (left_operand == nullptr && right_operand == nullptr)
+			if (right_operand == nullptr)
 			{
 				return true;
 			}

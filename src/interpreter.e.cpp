@@ -11,13 +11,13 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (right_operand == nullptr && left_operand == nullptr)
+			if (right_operand == nullptr)
 			{
 				return true;
 			}
-			else if (right_operand == nullptr)
+			else if (left_operand == nullptr)
 			{
-				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 				return true;
 			}
 
@@ -74,13 +74,13 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (right_operand == nullptr && left_operand == nullptr)
+			if (right_operand == nullptr)
 			{
 				return true;
 			}
-			else if (right_operand == nullptr)
+			else if (left_operand == nullptr)
 			{
-				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 				return true;
 			}
 
@@ -152,13 +152,13 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (right_operand == nullptr && left_operand == nullptr)
+			if (right_operand == nullptr)
 			{
 				return true;
 			}
-			else if (right_operand == nullptr)
+			else if (left_operand == nullptr)
 			{
-				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 				return true;
 			}
 
@@ -214,13 +214,13 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (right_operand == nullptr && left_operand == nullptr)
+			if (right_operand == nullptr)
 			{
 				return true;
 			}
-			else if (right_operand == nullptr)
+			else if (left_operand == nullptr)
 			{
-				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 				return true;
 			}
 
@@ -290,13 +290,13 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (right_operand == nullptr && left_operand == nullptr)
+			if (right_operand == nullptr)
 			{
 				return true;
 			}
-			else if (right_operand == nullptr)
+			else if (left_operand == nullptr)
 			{
-				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 				return true;
 			}
 
@@ -352,13 +352,13 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (right_operand == nullptr && left_operand == nullptr)
+			if (right_operand == nullptr)
 			{
 				return true;
 			}
-			else if (right_operand == nullptr)
+			else if (left_operand == nullptr)
 			{
-				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 				return true;
 			}
 
@@ -428,13 +428,13 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (right_operand == nullptr && left_operand == nullptr)
+			if (right_operand == nullptr)
 			{
 				return true;
 			}
-			else if (right_operand == nullptr)
+			else if (left_operand == nullptr)
 			{
-				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 				return true;
 			}
 
@@ -490,13 +490,13 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (right_operand == nullptr && left_operand == nullptr)
+			if (right_operand == nullptr)
 			{
 				return true;
 			}
-			else if (right_operand == nullptr)
+			else if (left_operand == nullptr)
 			{
-				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 				return true;
 			}
 
@@ -566,13 +566,13 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (right_operand == nullptr && left_operand == nullptr)
+			if (right_operand == nullptr)
 			{
 				return true;
 			}
-			else if (right_operand == nullptr)
+			else if (left_operand == nullptr)
 			{
-				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 				return true;
 			}
 
@@ -628,13 +628,13 @@ namespace app
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
 
-			if (right_operand == nullptr && left_operand == nullptr)
+			if (right_operand == nullptr)
 			{
 				return true;
 			}
-			else if (right_operand == nullptr)
+			else if (left_operand == nullptr)
 			{
-				storage_()->push(left_operand);
+				storage_()->push(right_operand);
 				return true;
 			}
 
