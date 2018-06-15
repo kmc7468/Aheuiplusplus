@@ -84,9 +84,11 @@ namespace app
 
 				if (is_compatible_with_aheui_)
 				{
-					if (jongsung != U'ㄱ' || jongsung != U'ㅋ' || jongsung != U'ㄲ' ||
-						jongsung != U'ㅉ')
+					if (chosung != U'ㄱ' || chosung != U'ㅋ' || chosung != U'ㄲ' ||
+						chosung != U'ㅉ')
 					{
+						jungsung = last_jungsung;
+						jungsung_org = get_jungsung_original(jungsung);
 						is_added_additional_data = false;
 					}
 				}
