@@ -69,6 +69,14 @@ namespace app
 	{
 		app::code splited_code = code;
 
+		x = 0;
+		y = 0;
+		direction = 3;
+		last_jungsung = U'ㅜ';
+		
+		is_ignored = false;
+		is_reflection = false;
+
 		while (true)
 		{
 			char32_t command = splited_code.command(x, y);
@@ -82,13 +90,13 @@ namespace app
 				char32_t jungsung_org = get_jungsung_original(jungsung);
 				bool is_added_additional_data = app::is_added_additional_data(jungsung);
 
-				if (is_compatible_with_aheui_)
+				if (is_added_additional_data && is_compatible_with_aheui_)
 				{
 					if (chosung != U'ㄱ' || chosung != U'ㅋ' || chosung != U'ㄲ' ||
 						chosung != U'ㅉ')
 					{
 						jungsung = last_jungsung;
-						jungsung_org = get_jungsung_original(jungsung);
+						jungsung_org = last_jungsung;
 						is_added_additional_data = false;
 					}
 				}
@@ -149,7 +157,12 @@ namespace app
 					return;
 				}
 
-				if (!is_ignored)
+				if (is_ignored && is_compatible_with_aheui_)
+				{
+					last_jungsung = jungsung_org;
+					is_reflection = true;
+				}
+				else if (!is_ignored)
 				{
 					last_jungsung = jungsung_org;
 				}
@@ -410,6 +423,130 @@ namespace app
 					break;
 				}
 				}
+		
+				if (is_reflection)
+				{
+					is_reflection = false;
+				}
+			}
+			else
+			{
+				switch (last_jungsung)
+				{
+				case U'ㅏ':
+				{
+					go_right_(x, y, 1, direction, splited_code);
+					break;
+				}
+
+				case U'ㅑ':
+				{
+					go_right_(x, y, 2, direction, splited_code);
+					break;
+				}
+
+				case U'ㅓ':
+				{
+					go_left_(x, y, 1, direction, splited_code);
+					break;
+				}
+
+				case U'ㅕ':
+				{
+					go_left_(x, y, 2, direction, splited_code);
+					break;
+				}
+
+				case U'ㅗ':
+				{
+					go_up_(x, y, 1, direction, splited_code);
+					break;
+				}
+
+				case U'ㅛ':
+				{
+					go_up_(x, y, 2, direction, splited_code);
+					break;
+				}
+
+				case U'ㅜ':
+				{
+					go_down_(x, y, 1, direction, splited_code);
+					break;
+				}
+
+				case U'ㅠ':
+				{
+					go_down_(x, y, 2, direction, splited_code);
+					break;
+				}
+
+				case U'ㅡ':
+				{
+					if (direction == 0)
+					{
+						go_right_(x, y, 1, direction, splited_code);
+					}
+					else if (direction == 1)
+					{
+						go_left_(x, y, 1, direction, splited_code);
+					}
+					else if (direction == 2)
+					{
+						go_down_(x, y, 1, direction, splited_code);
+					}
+					else
+					{
+						go_up_(x, y, 1, direction, splited_code);
+					}
+
+					break;
+				}
+
+				case U'ㅣ':
+				{
+					if (direction == 0)
+					{
+						go_left_(x, y, 1, direction, splited_code);
+					}
+					else if (direction == 1)
+					{
+						go_right_(x, y, 1, direction, splited_code);
+					}
+					else if (direction == 2)
+					{
+						go_up_(x, y, 1, direction, splited_code);
+					}
+					else
+					{
+						go_down_(x, y, 1, direction, splited_code);
+					}
+
+					break;
+				}
+
+				case U'ㅢ':
+				{
+					if (direction == 0)
+					{
+						go_left_(x, y, 1, direction, splited_code);
+					}
+					else if (direction == 1)
+					{
+						go_right_(x, y, 1, direction, splited_code);
+					}
+					else if (direction == 2)
+					{
+						go_down_(x, y, 1, direction, splited_code);
+					}
+					else
+					{
+						go_up_(x, y, 1, direction, splited_code);
+					}
+
+					break;
+				}
+				}
 			}
 		}
 	}
@@ -429,7 +566,7 @@ namespace app
 	{
 		x += move;
 
-		if (x >= splited_code.line(y).size())
+		if (x >= splited_code.line(y).size() - 1)
 		{
 			x = 0;
 		}
@@ -442,7 +579,7 @@ namespace app
 
 		if (y == static_cast<std::size_t>(-1))
 		{
-			y = splited_code.codes().size() - 2;
+			y = splited_code.codes().size() - 1;
 		}
 
 		direction = 2;

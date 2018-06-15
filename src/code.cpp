@@ -82,7 +82,7 @@ namespace app
 
 		case U'ㅠ':
 		case U'ㅞ':
-			return U'ㅞ';
+			return U'ㅠ';
 
 		case U'ㅣ':
 		case U'ㅘ':
