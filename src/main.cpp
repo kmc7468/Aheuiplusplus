@@ -14,6 +14,7 @@ static_assert((sizeof(wchar_t) != sizeof(char32_t) && AHEUIPLUSPLUS_MACRO_IS_WIN
 
 #include <clocale>
 #include <cstdio>
+#include <cstdlib>
 #include <string>
 #include <vector>
 
@@ -169,14 +170,20 @@ int main(int argc, char** argv)
 
 	if (interpreting_mode)
 	{
-		static const char* help =
+		static const char* title =
 			"- 코드를 실행하려면 코드를 입력하고 엔터 키를 누르세요.\n"
 			"- 코드를 줄바꿈 하려면 줄의 맨 끝에 \\를 입력하고 엔터 키를 누르세요.\n"
-			"- 저장공간 상태를 덤프하려면 !d 또는 !dump를 입력하세요.\n"
-			"- 종료하려면 !q 또는 !quit를 입력하세요.\n"
-			"- 이 설명을 보려면 언제든지 !h 또는 !help를 입력하세요.";
+			"- 인터프리터를 종료하려면 !q 또는 !quit 명령어를 입력하세요.\n"
+			"- 더 많은 명령어 목록을 보려면 !help 명령어를 입력하세요.";
 
-		std::printf("아희++ 표준 구현체 1.0.0\n%s\n\n", help);
+		static const char* help =
+			"- !q 또는 !quit - 인터프리터를 종료합니다.\n"
+			"- !help - 명령어 목록을 봅니다.\n"
+			"- !clear - 화면을 비웁니다.\n"
+			"\n"
+			"- !d 또는 !dump - 저장공간 상태를 덤프합니다.";
+
+		std::printf("아희++ 표준 구현체 1.0.0\n%s\n\n", title);
 
 		while (true)
 		{
@@ -189,21 +196,35 @@ int main(int argc, char** argv)
 				continue;
 			}
 
-			if (code == U"!q" || code == U"!quit")
-			{
-				return 0;
-			}
-			else if (code == U"!d" || code == U"!dump")
+			if (code == U"!d" || code == U"!dump")
 			{
 				d.dump_storages(1);
 
 				continue;
 			}
-			else if (code == U"!h" || code == U"!help")
+			else if (code == U"!q" || code == U"!quit")
+			{
+				return 0;
+			}
+			else if (code == U"!clear")
+			{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+				std::system("cls");
+#else
+				std::system("clear");
+#endif
+
+				continue;
+			}
+			else if (code == U"!help")
 			{
 				std::printf("%s\n\n", help);
 
 				continue;
+			}
+			else if (code[0] == U'!')
+			{
+				std::printf("오류: 알 수 없는 명령어입니다. !help 명령어를 입력해 ");
 			}
 
 			if (*(code.end() - 1) == U'\\')
