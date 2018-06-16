@@ -1,4 +1,4 @@
-[![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://shields.io/)
+[![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://shields.io/) [![language](https://img.shields.io/badge/language-C%2B%2B17-blue.svg)](https://shields.io/)
 # 아희++
 아희와 호환성이 있는 난해한 객체지향 한글 프로그래밍 언어
 ## 사용 방법
