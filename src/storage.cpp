@@ -254,7 +254,7 @@ namespace app
 	}
 	element* queue::pop()
 	{
-		if (queue_.size() == 0)
+		if (length() == 0)
 		{
 			return nullptr;
 		}
@@ -270,12 +270,12 @@ namespace app
 	}
 	element* queue::copy()
 	{
-		element* data = queue_.front();
-
-		if (data == nullptr)
+		if (length() == 0)
 		{
 			return nullptr;
 		}
+
+		element* data = queue_.front();
 		
 		switch (data->index())
 		{

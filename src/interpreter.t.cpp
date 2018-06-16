@@ -15,14 +15,38 @@ namespace app
 		}
 		else
 		{
-			selected_index_ = jongsung - U'ㄱ' + 1;
+			static constexpr char32_t jongsungs[] = {
+				0, U'ㄱ', U'ㄲ', U'ㄳ', U'ㄴ', U'ㄵ', U'ㄶ', U'ㄷ', U'ㄹ', U'ㄺ', U'ㄻ', U'ㄼ', U'ㄽ', U'ㄾ',
+				U'ㄿ', U'ㅀ', U'ㅁ', U'ㅂ', U'ㅄ', U'ㅅ', U'ㅆ', U'ㅇ', U'ㅈ', U'ㅊ', U'ㅋ', U'ㅌ', U'ㅍ', U'ㅎ'
+			};
+
+			for (std::size_t i = 1; i < sizeof(jongsungs) / sizeof(char32_t); ++i)
+			{
+				if (jongsungs[i] == jongsung)
+				{
+					selected_index_ = i;
+				}
+			}
 		}
 
 		return false;
 	}
 	bool interpreter::move_(char32_t jongsung, bool is_added_additional_data)
 	{
-		std::size_t selected_index = jongsung == 0 ? 0 : (jongsung - U'ㄱ' + 1);
+		std::size_t selected_index;
+
+		static constexpr char32_t jongsungs[] = {
+			0, U'ㄱ', U'ㄲ', U'ㄳ', U'ㄴ', U'ㄵ', U'ㄶ', U'ㄷ', U'ㄹ', U'ㄺ', U'ㄻ', U'ㄼ', U'ㄽ', U'ㄾ',
+			U'ㄿ', U'ㅀ', U'ㅁ', U'ㅂ', U'ㅄ', U'ㅅ', U'ㅆ', U'ㅇ', U'ㅈ', U'ㅊ', U'ㅋ', U'ㅌ', U'ㅍ', U'ㅎ'
+		};
+
+		for (std::size_t i = 0; i < sizeof(jongsungs) / sizeof(char32_t); ++i)
+		{
+			if (jongsungs[i] == jongsung)
+			{
+				selected_index = i;
+			}
+		}
 
 		element* value = storage_()->pop();
 		
