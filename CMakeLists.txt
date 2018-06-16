@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.8.0)
 project(Aheuiplusplus CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
