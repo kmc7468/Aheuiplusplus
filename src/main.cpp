@@ -292,6 +292,7 @@ int main(int argc, char** argv)
 		code = code.substr(0, code.length() - 2);
 
 		i.run(code);
+		std::printf("\n");
 	}
 
 	return 0;
