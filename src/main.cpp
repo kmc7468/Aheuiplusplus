@@ -11,6 +11,7 @@ static_assert((sizeof(wchar_t) != sizeof(char32_t) && AHEUIPLUSPLUS_MACRO_IS_WIN
 #include <Aheuiplusplus/code.hpp>
 #include <Aheuiplusplus/interpreter.hpp>
 
+#include <clocale>
 #include <cstdio>
 #include <string>
 #include <vector>
@@ -157,6 +158,8 @@ int main(int argc, char** argv)
 		std::printf("오류: 실행할 파일의 경로는 하나만 필요합니다.\n");
 		return 0;
 	}
+	
+	std::setlocale(LC_ALL, "");
 
 	app::interpreter i(stdin, stdout);
 
