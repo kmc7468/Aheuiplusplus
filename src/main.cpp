@@ -213,16 +213,15 @@ int main(int argc, char** argv)
 		app::raw_code code;
 		app::raw_code line;
 
-		while (!(line = input_line(file)).empty())
+		while (!std::feof(file))
 		{
+			line = input_line(file);
+
 			code += line;
 			code += U'\n';
 		}
 
-		if (!code.empty())
-		{
-			code = code.substr(0, code.length() - 2);
-		}
+		code = code.substr(0, code.length() - 2);
 
 		i.run(code);
 	}

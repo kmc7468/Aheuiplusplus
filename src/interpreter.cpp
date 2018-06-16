@@ -82,7 +82,16 @@ namespace app
 		while (true)
 		{
 			previous_command = command;
-			command = splited_code.command(x, y);
+
+			if (y < splited_code.codes().size() &&
+				x < splited_code.line(y).size() - 1)
+			{
+				command = splited_code.command(x, y);
+			}
+			else
+			{
+				command = U' ';
+			}
 
 			if (is_complete_hangul(command))
 			{
