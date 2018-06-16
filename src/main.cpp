@@ -147,7 +147,7 @@ int main(int argc, char** argv)
 		std::printf("오류: 인터프리팅 모드일 경우에는 실행할 파일의 경로가 필요하지 않습니다.\n");
 		return 0;
 	}
-	else if (paths.size() == 0)
+	else if (!interpreting_mode && paths.size() == 0)
 	{
 		std::printf("오류: 실행할 파일의 경로가 필요합니다.\n");
 		return 0;
