@@ -216,14 +216,14 @@ namespace app
 		}) != breakpoints_.end();
 	}
 
-	void debugger::run_with_debugging(const raw_code& code)
+	long long debugger::run_with_debugging(const raw_code& code)
 	{
-		std::size_t x = 0;
-		std::size_t y = 0;
+		std::size_t x;
+		std::size_t y;
 
-		std::size_t direction = 0;
+		std::size_t direction;
+		std::size_t move;
 
-		char32_t last_jungsung = 0;
 		bool is_ignored = false;
 		bool is_reflection = false;
 
@@ -231,7 +231,7 @@ namespace app
 		{
 			if (is_connceted_debugger())
 			{
-				interpreter_.run_(code, x, y, direction, last_jungsung, is_ignored, is_reflection);
+				return interpreter_.run_(code, x, y, direction, move, is_ignored, is_reflection);
 			}
 			else
 			{
@@ -242,9 +242,9 @@ namespace app
 		{
 			std::fprintf(output_stream_, "[Debugger] %lld줄 %lld행에서 처리되지 못한 구현체 예외가 발생하였습니다. 개발자에게 보고해 주십시오.\n"
 										 "[Debugger] 예외 메세지: %s\n", static_cast<long long>(y), static_cast<long long>(x), exception.what());
+		
+			return -1;
 		}
-
-		return;
 
 	throw_bad_function_call:
 		throw std::bad_function_call();

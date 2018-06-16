@@ -39,7 +39,7 @@ namespace app
 		void remove_breakpoint(std::size_t x, std::size_t y);
 		bool is_added_breakpoint(std::size_t x, std::size_t y);
 
-		void run_with_debugging(const raw_code& code);
+		long long run_with_debugging(const raw_code& code);
 
 	public:
 		const std::vector<std::pair<std::size_t, std::size_t>>& breakpoints() const noexcept;

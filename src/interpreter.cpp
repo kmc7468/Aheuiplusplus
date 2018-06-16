@@ -18,18 +18,18 @@ namespace app
 		initialize_();
 	}
 
-	void interpreter::run(const raw_code& code)
+	long long interpreter::run(const raw_code& code)
 	{
-		std::size_t x = 0;
-		std::size_t y = 0;
+		std::size_t x;
+		std::size_t y;
 
-		std::size_t direction = 0; // 0: 왼쪽, 1: 오른쪽, 2: 위, 3: 아래
+		std::size_t direction;
+		std::size_t move;
 
-		char32_t last_jungsung = 0;
-		bool is_ignored = false;
-		bool is_reflection = false;
+		bool is_ignored;
+		bool is_reflection;
 
-		run_(code, x, y, direction, last_jungsung, is_ignored, is_reflection);
+		return run_(code, x, y, direction, move, is_ignored, is_reflection);
 	}
 
 	const app::storage* interpreter::storage(std::size_t index) const
@@ -64,25 +64,31 @@ namespace app
 		}
 	}
 
-	void interpreter::run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
-		char32_t& last_jungsung, bool& is_ignored, bool& is_reflection)
+	long long interpreter::run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
+		std::size_t& move, bool& is_ignored, bool& is_reflection)
 	{
 		app::code splited_code = code;
 
 		x = 0;
 		y = 0;
-		direction = 3;
-		last_jungsung = U'ㅜ';
-		
+		direction = 3; // 0: 왼쪽, 1: 오른쪽, 2: 위, 3: 아래
+		move = 1;
 		is_ignored = false;
 		is_reflection = false;
 
+		char32_t previous_command = 0;
+		char32_t command = 0;
+
 		while (true)
 		{
-			char32_t command = splited_code.command(x, y);
+			previous_command = command;
+			command = splited_code.command(x, y);
 
 			if (is_complete_hangul(command))
 			{
+				std::size_t new_direction;
+				std::size_t new_move;
+
 				char32_t chosung = get_chosung(command);
 				char32_t jungsung = get_jungsung(command);
 				char32_t jongsung = get_jongsung(command);
@@ -90,19 +96,136 @@ namespace app
 				char32_t jungsung_org = get_jungsung_original(jungsung);
 				bool is_added_additional_data = app::is_added_additional_data(jungsung);
 
+				switch (jungsung_org)
+				{
+				case U'ㅏ':
+					new_direction = 1;
+					new_move = 1;
+					break;
+
+				case U'ㅑ':
+					new_direction = 1;
+					new_move = 2;
+					break;
+
+				case U'ㅓ':
+					new_direction = 0;
+					new_move = 1;
+					break;
+
+				case U'ㅕ':
+					new_direction = 0;
+					new_move = 2;
+					break;
+
+				case U'ㅗ':
+					new_direction = 2;
+					new_move = 1;
+					break;
+
+				case U'ㅛ':
+					new_direction = 2;
+					new_move = 2;
+					break;
+
+				case U'ㅜ':
+					new_direction = 3;
+					new_move = 1;
+					break;
+
+				case U'ㅠ':
+					new_direction = 3;
+					new_move = 2;
+					break;
+
+				case U'ㅡ':
+				{
+					if (direction == 0 || direction == 1)
+					{
+						new_direction = direction;
+					}
+					else if (direction == 2)
+					{
+						new_direction = 3;
+					}
+					else
+					{
+						new_direction = 2;
+					}
+
+					new_move = move;
+
+					break;
+				}
+
+				case U'ㅣ':
+				{
+					if (direction == 0)
+					{
+						new_direction = 1;
+					}
+					else if (direction == 1)
+					{
+						new_direction = 0;
+					}
+					else
+					{
+						new_direction = direction;
+					}
+
+					new_move = move;
+
+					break;
+				}
+
+				case U'ㅢ':
+				{
+					if (direction == 0)
+					{
+						new_direction = 1;
+					}
+					else if (direction == 1)
+					{
+						new_direction = 0;
+					}
+					else if (direction == 2)
+					{
+						new_direction = 3;
+					}
+					else
+					{
+						new_direction = 2;
+					}
+
+					new_move = move;
+
+					break;
+				}
+
+				default:
+					new_direction = direction;
+					new_move = move;
+					break;
+				}
+
 				if (is_added_additional_data && is_compatible_with_aheui_)
 				{
 					if (chosung != U'ㄱ' || chosung != U'ㅋ' || chosung != U'ㄲ' ||
 						chosung != U'ㅉ')
 					{
-						jungsung = last_jungsung;
-						jungsung_org = last_jungsung;
+						new_direction = direction;
+						new_move = move;
+
 						is_added_additional_data = false;
 					}
 				}
 
 				switch (chosung)
 				{
+				case U'ㄲ':
+					is_ignored = type_and_mode_(jongsung, is_added_additional_data);
+					break;
+
 				case U'ㄷ':
 					is_ignored = add_(jongsung, is_added_additional_data);
 					break;
@@ -154,473 +277,184 @@ namespace app
 				case U'ㅇ':
 					break;
 				case U'ㅎ':
-					return;
+					return exit_();
 				}
 
 				if (is_ignored && is_compatible_with_aheui_)
 				{
-					last_jungsung = jungsung_org;
 					is_reflection = true;
 				}
-				else if (!is_ignored)
+				else if (is_ignored && !is_compatible_with_aheui_)
 				{
-					last_jungsung = jungsung_org;
+					new_direction = direction;
+					new_move = move;
 				}
 
-				switch (last_jungsung)
-				{
-				case U'ㅏ':
-				{
-					if (is_reflection)
-					{
-						go_left_(x, y, 1, direction, splited_code);
-					}
-					else
-					{
-						go_right_(x, y, 1, direction, splited_code);
-					}
-					break;
-				}
-
-				case U'ㅑ':
-				{
-					if (is_reflection)
-					{
-						go_left_(x, y, 2, direction, splited_code);
-					}
-					else
-					{
-						go_right_(x, y, 2, direction, splited_code);
-					}
-					break;
-				}
-
-				case U'ㅓ':
-				{
-					if (is_reflection)
-					{
-						go_right_(x, y, 1, direction, splited_code);
-					}
-					else
-					{
-						go_left_(x, y, 1, direction, splited_code);
-					}
-					break;
-				}
-
-				case U'ㅕ':
-				{
-					if (is_reflection)
-					{
-						go_right_(x, y, 2, direction, splited_code);
-					}
-					else
-					{
-						go_left_(x, y, 2, direction, splited_code);
-					}
-					break;
-				}
-
-				case U'ㅗ':
-				{
-					if (is_reflection)
-					{
-						go_down_(x, y, 1, direction, splited_code);
-					}
-					else
-					{
-						go_up_(x, y, 1, direction, splited_code);
-					}
-					break;
-				}
-
-				case U'ㅛ':
-				{
-					if (is_reflection)
-					{
-						go_down_(x, y, 2, direction, splited_code);
-					}
-					else
-					{
-						go_up_(x, y, 2, direction, splited_code);
-					}
-					break;
-				}
-
-				case U'ㅜ':
-				{
-					if (is_reflection)
-					{
-						go_up_(x, y, 1, direction, splited_code);
-					}
-					else
-					{
-						go_down_(x, y, 1, direction, splited_code);
-					}
-					break;
-				}
-
-				case U'ㅠ':
-				{
-					if (is_reflection)
-					{
-						go_up_(x, y, 2, direction, splited_code);
-					}
-					else
-					{
-						go_down_(x, y, 2, direction, splited_code);
-					}
-					break;
-				}
-
-				case U'ㅡ':
-				{
-					if (direction == 0)
-					{
-						if (is_reflection)
-						{
-							go_left_(x, y, 1, direction, splited_code);
-						}
-						else
-						{
-							go_right_(x, y, 1, direction, splited_code);
-						}
-					}
-					else if (direction == 1)
-					{
-						if (is_reflection)
-						{
-							go_right_(x, y, 1, direction, splited_code);
-						}
-						else
-						{
-							go_left_(x, y, 1, direction, splited_code);
-						}
-					}
-					else if (direction == 2)
-					{
-						if (is_reflection)
-						{
-							go_up_(x, y, 1, direction, splited_code);
-						}
-						else
-						{
-							go_down_(x, y, 1, direction, splited_code);
-						}
-					}
-					else
-					{
-						if (is_reflection)
-						{
-							go_down_(x, y, 1, direction, splited_code);
-						}
-						else
-						{
-							go_up_(x, y, 1, direction, splited_code);
-						}
-					}
-
-					break;
-				}
-
-				case U'ㅣ':
-				{
-					if (direction == 0)
-					{
-						if (is_reflection)
-						{
-							go_right_(x, y, 1, direction, splited_code);
-						}
-						else
-						{
-							go_left_(x, y, 1, direction, splited_code);
-						}
-					}
-					else if (direction == 1)
-					{
-						if (is_reflection)
-						{
-							go_left_(x, y, 1, direction, splited_code);
-						}
-						else
-						{
-							go_right_(x, y, 1, direction, splited_code);
-						}
-					}
-					else if (direction == 2)
-					{
-						if (is_reflection)
-						{
-							go_down_(x, y, 1, direction, splited_code);
-						}
-						else
-						{
-							go_up_(x, y, 1, direction, splited_code);
-						}
-					}
-					else
-					{
-						if (is_reflection)
-						{
-							go_up_(x, y, 1, direction, splited_code);
-						}
-						else
-						{
-							go_down_(x, y, 1, direction, splited_code);
-						}
-					}
-
-					break;
-				}
-
-				case U'ㅢ':
-				{
-					if (direction == 0)
-					{
-						if (is_reflection)
-						{
-							go_right_(x, y, 1, direction, splited_code);
-						}
-						else
-						{
-							go_left_(x, y, 1, direction, splited_code);
-						}
-					}
-					else if (direction == 1)
-					{
-						if (is_reflection)
-						{
-							go_left_(x, y, 1, direction, splited_code);
-						}
-						else
-						{
-							go_right_(x, y, 1, direction, splited_code);
-						}
-					}
-					else if (direction == 2)
-					{
-						if (is_reflection)
-						{
-							go_up_(x, y, 1, direction, splited_code);
-						}
-						else
-						{
-							go_down_(x, y, 1, direction, splited_code);
-						}
-					}
-					else
-					{
-						if (is_reflection)
-						{
-							go_down_(x, y, 1, direction, splited_code);
-						}
-						else
-						{
-							go_up_(x, y, 1, direction, splited_code);
-						}
-					}
-
-					break;
-				}
-				}
-		
 				if (is_reflection)
 				{
-					last_jungsung = reflect_jungsung_(last_jungsung);
+					switch (new_direction)
+					{
+					case 0:
+						new_direction = 1;
+						break;
+
+					case 1:
+						new_direction = 0;
+						break;
+
+					case 2:
+						new_direction = 3;
+						break;
+
+					case 3:
+						new_direction = 2;
+						break;
+					}
+
 					is_reflection = false;
 				}
+
+				go_(x, y, new_move, new_direction, splited_code);
+				direction = new_direction;
+				move = new_move;
 			}
 			else
 			{
-				switch (last_jungsung)
-				{
-				case U'ㅏ':
-				{
-					go_right_(x, y, 1, direction, splited_code);
-					break;
-				}
-
-				case U'ㅑ':
-				{
-					go_right_(x, y, 2, direction, splited_code);
-					break;
-				}
-
-				case U'ㅓ':
-				{
-					go_left_(x, y, 1, direction, splited_code);
-					break;
-				}
-
-				case U'ㅕ':
-				{
-					go_left_(x, y, 2, direction, splited_code);
-					break;
-				}
-
-				case U'ㅗ':
-				{
-					go_up_(x, y, 1, direction, splited_code);
-					break;
-				}
-
-				case U'ㅛ':
-				{
-					go_up_(x, y, 2, direction, splited_code);
-					break;
-				}
-
-				case U'ㅜ':
-				{
-					go_down_(x, y, 1, direction, splited_code);
-					break;
-				}
-
-				case U'ㅠ':
-				{
-					go_down_(x, y, 2, direction, splited_code);
-					break;
-				}
-
-				case U'ㅡ':
-				{
-					if (direction == 0)
-					{
-						go_right_(x, y, 1, direction, splited_code);
-					}
-					else if (direction == 1)
-					{
-						go_left_(x, y, 1, direction, splited_code);
-					}
-					else if (direction == 2)
-					{
-						go_down_(x, y, 1, direction, splited_code);
-					}
-					else
-					{
-						go_up_(x, y, 1, direction, splited_code);
-					}
-
-					break;
-				}
-
-				case U'ㅣ':
-				{
-					if (direction == 0)
-					{
-						go_left_(x, y, 1, direction, splited_code);
-					}
-					else if (direction == 1)
-					{
-						go_right_(x, y, 1, direction, splited_code);
-					}
-					else if (direction == 2)
-					{
-						go_up_(x, y, 1, direction, splited_code);
-					}
-					else
-					{
-						go_down_(x, y, 1, direction, splited_code);
-					}
-
-					break;
-				}
-
-				case U'ㅢ':
-				{
-					if (direction == 0)
-					{
-						go_left_(x, y, 1, direction, splited_code);
-					}
-					else if (direction == 1)
-					{
-						go_right_(x, y, 1, direction, splited_code);
-					}
-					else if (direction == 2)
-					{
-						go_down_(x, y, 1, direction, splited_code);
-					}
-					else
-					{
-						go_up_(x, y, 1, direction, splited_code);
-					}
-
-					break;
-				}
-				}
+				go_(x, y, move, direction, splited_code);
 			}
 		}
 	}
-	char32_t interpreter::reflect_jungsung_(char32_t jungsung_org) const
+
+	long long interpreter::exit_()
 	{
-		switch (jungsung_org)
+		if (storage_()->length() == 0)
 		{
-		case U'ㅏ':
-			return U'ㅓ';
+			return 0;
+		}
+		else
+		{
+			element* value = nullptr;
 
-		case U'ㅑ':
-			return U'ㅕ';
+			while (value = storage_()->pop())
+			{
+				switch (value->index())
+				{
+				case 0:
+					return std::get<0>(*value).integer();
+					
+				case 1:
+					return std::get<1>(*value);
+				}
+			}
 
-		case U'ㅗ':
-			return U'ㅜ';
-
-		case U'ㅛ':
-			return U'ㅠ';
-
-		case U'ㅜ':
-			return U'ㅗ';
-
-		case U'ㅠ':
-			return U'ㅛ';
-
-		default:
-			return jungsung_org;
+			return 0;
 		}
 	}
 
-	void interpreter::go_left_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code)
+	void interpreter::go_(std::size_t& x, std::size_t& y, std::size_t move, std::size_t direction, app::code& splited_code)
 	{
-		x -= move;
-
-		if (x == static_cast<std::size_t>(-1))
+		switch (direction)
 		{
-			x = splited_code.line(y).size() - 2;
+		case 0:
+		{
+			if (x == 0)
+			{
+				if (move == 1)
+				{
+					x = splited_code.line(y).size() - 2;
+				}
+				else
+				{
+					x = splited_code.line(y).size() - 3;
+				}
+			}
+			else if (x == 1 && move == 2)
+			{
+				x = splited_code.line(y).size() - 2;
+			}
+			else
+			{
+				x -= move;
+			}
+			
+			break;
 		}
 
-		direction = 0;
-	}
-	void interpreter::go_right_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code)
-	{
-		x += move;
-
-		if (x >= splited_code.line(y).size() - 1)
+		case 1:
 		{
-			x = 0;
+			if (x == splited_code.line(y).size() - 2)
+			{
+				if (move == 1)
+				{
+					x = 0;
+				}
+				else
+				{
+					x = 1;
+				}
+			}
+			else if (x == splited_code.line(y).size() - 3 && move == 2)
+			{
+				x = 0;
+			}
+			else
+			{
+				x += move;
+			}
+
+			break;
 		}
 
-		direction = 1;
-	}
-	void interpreter::go_up_(std::size_t&, std::size_t& y, std::size_t move, int direction, app::code& splited_code)
-	{
-		y -= move;
-
-		if (y == static_cast<std::size_t>(-1))
+		case 2:
 		{
-			y = splited_code.codes().size() - 1;
+			if (y == 0)
+			{
+				if (move == 1)
+				{
+					y = splited_code.codes().size() - 1;
+				}
+				else
+				{
+					y = splited_code.codes().size() - 2;
+				}
+			}
+			else if (y == 1 && move == 2)
+			{
+				y = splited_code.codes().size() - 1;
+			}
+			else
+			{
+				y -= move;
+			}
+
+			break;
 		}
 
-		direction = 2;
-	}
-	void interpreter::go_down_(std::size_t&, std::size_t& y, std::size_t move, int direction, app::code& splited_code)
-	{
-		y += move;
-
-		if (y >= splited_code.codes().size())
+		case 3:
 		{
-			y = 0;
-		}
+			if (y == splited_code.codes().size() - 1)
+			{
+				if (move == 1)
+				{
+					y = 0;
+				}
+				else
+				{
+					y = 1;
+				}
+			}
+			else if (y == splited_code.codes().size() - 2 && move == 2)
+			{
+				y = 0;
+			}
+			else
+			{
+				y += move;
+			}
 
-		direction = 3;
+			break;
+		}
+		}
 	}
 	long long app::interpreter::get_integer_(char32_t jongsung, bool is_added_additional_data)
 	{

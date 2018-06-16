@@ -31,7 +31,7 @@ namespace app
 		bool operator!=(const interpreter& interpreter) const = delete;
 
 	public:
-		void run(const raw_code& code);
+		long long run(const raw_code& code);
 
 		const app::storage* storage(std::size_t index) const;
 		std::size_t storage_index(std::size_t index) const;
@@ -39,9 +39,8 @@ namespace app
 	private:
 		void initialize_();
 
-		void run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
-			char32_t& last_jungsung, bool& is_ignored, bool& is_reflection);
-		char32_t reflect_jungsung_(char32_t jungsung_org) const;
+		long long run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
+			std::size_t& move, bool& is_ignored, bool& is_reflection);
 
 		bool type_and_mode_(char32_t jongsung, bool is_added_additional_data);
 
@@ -61,10 +60,9 @@ namespace app
 		bool compare_(char32_t jongsung, bool is_added_additional_data);
 		bool is_zero_(char32_t jongsung, bool is_added_additional_data, bool& is_reflection);
 
-		void go_left_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
-		void go_right_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
-		void go_up_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
-		void go_down_(std::size_t& x, std::size_t& y, std::size_t move, int direction, app::code& splited_code);
+		long long exit_();
+
+		void go_(std::size_t& x, std::size_t& y, std::size_t move, std::size_t direction, app::code& splited_code);
 		long long get_integer_(char32_t jongsung, bool is_added_additional_data);
 		void type_casting_arithmetic_(element* left_operand, element* right_operand,
 			std::shared_ptr<element>& left_operand_out, std::shared_ptr<element>& right_operand_out) const;
