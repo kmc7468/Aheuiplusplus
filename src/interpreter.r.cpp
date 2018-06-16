@@ -7,26 +7,38 @@ namespace app
 		if (jongsung == U'ㅁ' && !is_added_additional_data)
 		{
 			is_integer_mode_ = true;
+
+			return false;
 		}
 		else if (jongsung == U'ㅁ' && is_added_additional_data)
 		{
 			is_integer_mode_ = false;
+
+			return false;
 		}
 		else if (jongsung == U'ㅂ' && !is_added_additional_data)
 		{
 			is_integer_mode_ = !is_integer_mode_;
+
+			return false;
 		}
 		else if (jongsung == U'ㅂ' && is_added_additional_data)
 		{
 			storage_()->push(new element(number(static_cast<long long>(!is_integer_mode_))));
+
+			return false;
 		}
 		else if (jongsung == U'ㅃ' && is_added_additional_data)
 		{
 			is_compatible_with_aheui_ = true;
+
+			return false;
 		}
 		else if (jongsung == U'ㅄ' && is_added_additional_data)
 		{
 			is_compatible_with_aheui_ = false;
+
+			return false;
 		}
 
 		return true;

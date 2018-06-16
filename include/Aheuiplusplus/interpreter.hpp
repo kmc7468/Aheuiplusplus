@@ -59,6 +59,7 @@ namespace app
 		bool move_(char32_t jongsung, bool is_added_additional_data);
 		bool compare_(char32_t jongsung, bool is_added_additional_data);
 		bool is_zero_(char32_t jongsung, bool is_added_additional_data, bool& is_reflection);
+		bool expand_storage_(char32_t jongsung, bool is_added_additional_data);
 
 		long long exit_();
 

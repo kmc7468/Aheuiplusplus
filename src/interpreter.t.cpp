@@ -165,4 +165,339 @@ namespace app
 
 		return true;
 	}
+	bool interpreter::expand_storage_(char32_t jongsung, bool is_added_additional_data)
+	{
+		if (jongsung == U'ㄱ')
+		{
+			if (storage_()->type() == storage_type::list)
+			{
+				app::list* list = reinterpret_cast<app::list*>(storage_());
+
+				element* new_virtual_length = storage_()->pop();
+			
+				if (new_virtual_length == nullptr)
+				{
+					return true;
+				}
+				else if (new_virtual_length->index() >= 2)
+				{
+					storage_()->push(new_virtual_length);
+
+					return true;
+				}
+
+				long long new_virtual_length_soon;
+				
+				switch (new_virtual_length->index())
+				{
+				case 0:
+					new_virtual_length_soon = std::get<0>(*new_virtual_length).integer();
+					break;
+
+				case 1:
+					new_virtual_length_soon = static_cast<long long>(std::get<1>(*new_virtual_length));
+					break;
+				}
+
+				if (new_virtual_length_soon < 0)
+				{
+					new_virtual_length_soon = 0;
+				}
+				else if (new_virtual_length_soon > list->length())
+				{
+					new_virtual_length_soon = list->length();
+				}
+
+				list->virtual_length(new_virtual_length_soon);
+			}
+
+			return false;
+		}
+		else if (jongsung == U'ㄲ' && !is_added_additional_data)
+		{
+			if (storage_()->type() == storage_type::list)
+			{
+				app::list* list = reinterpret_cast<app::list*>(storage_());
+
+				element* new_virtual_length = storage_()->pop();
+
+				if (new_virtual_length == nullptr)
+				{
+					return true;
+				}
+				else if (new_virtual_length->index() >= 2)
+				{
+					storage_()->push(new_virtual_length);
+
+					return true;
+				}
+
+				long long new_virtual_length_soon = list->virtual_length();
+
+				switch (new_virtual_length->index())
+				{
+				case 0:
+					new_virtual_length_soon += std::get<0>(*new_virtual_length).integer();
+					break;
+
+				case 1:
+					new_virtual_length_soon += static_cast<long long>(std::get<1>(*new_virtual_length));
+					break;
+				}
+
+				if (new_virtual_length_soon < 0)
+				{
+					new_virtual_length_soon = 0;
+				}
+				else if (new_virtual_length_soon > list->length())
+				{
+					new_virtual_length_soon = list->length();
+				}
+
+				list->virtual_length(new_virtual_length_soon);
+			}
+
+			return false;
+		}
+		else if (jongsung == U'ㄳ' && !is_added_additional_data)
+		{
+			if (storage_()->type() == storage_type::list)
+			{
+				app::list* list = reinterpret_cast<app::list*>(storage_());
+
+				element* new_virtual_length = storage_()->pop();
+
+				if (new_virtual_length == nullptr)
+				{
+					return true;
+				}
+				else if (new_virtual_length->index() >= 2)
+				{
+					storage_()->push(new_virtual_length);
+
+					return true;
+				}
+
+				long long new_virtual_length_soon = list->virtual_length();
+
+				switch (new_virtual_length->index())
+				{
+				case 0:
+					new_virtual_length_soon -= std::get<0>(*new_virtual_length).integer();
+					break;
+
+				case 1:
+					new_virtual_length_soon -= static_cast<long long>(std::get<1>(*new_virtual_length));
+					break;
+				}
+
+				if (new_virtual_length_soon < 0)
+				{
+					new_virtual_length_soon = 0;
+				}
+				else if (new_virtual_length_soon > list->length())
+				{
+					new_virtual_length_soon = list->length();
+				}
+
+				list->virtual_length(new_virtual_length_soon);
+			}
+
+			return false;
+		}
+		else if (jongsung == U'ㄲ' && is_added_additional_data)
+		{
+			if (storage_()->type() == storage_type::list)
+			{
+				app::list* list = reinterpret_cast<app::list*>(storage_());
+
+				list->push(new element(number(static_cast<long long>(list->virtual_length()))));
+			}
+			else
+			{
+				storage_()->push(new element(number(static_cast<long long>(storage_()->length()))));
+			}
+
+			return false;
+		}
+		else if (jongsung == U'ㄳ' && is_added_additional_data)
+		{
+			storage_()->push(new element(number(static_cast<long long>(storage_()->length()))));
+
+			return false;
+		}
+		else if (jongsung == U'ㄴ')
+		{
+			element* index = storage_()->pop();
+
+			if (index == nullptr)
+			{
+				return true;
+			}
+			else if (index->index() >= 2)
+			{
+				storage_()->push(index);
+
+				return true;
+			}
+
+			long long new_index;
+
+			switch (index->index())
+			{
+			case 0:
+				new_index = std::get<0>(*index).integer();
+				break;
+
+			case 1:
+				new_index = static_cast<long long>(std::get<1>(*index));
+				break;
+			}
+
+			if (new_index < 0)
+			{
+				new_index = 0;
+			}
+			else if (new_index > storages_[selected_index_].size())
+			{
+				new_index = storages_[selected_index_].size();
+			}
+
+			if (new_index == storages_[selected_index_].size())
+			{
+				if (storages_[selected_index_][0]->type() == storage_type::list)
+				{
+					storages_[selected_index_].push_back(new list());
+				}
+				else if (storages_[selected_index_][0]->type() == storage_type::queue)
+				{
+					storages_[selected_index_].push_back(new queue());
+				}
+			}
+
+			storage_indexs_[selected_index_] = new_index;
+
+			return false;
+		}
+		else if (jongsung == U'ㄵ' && !is_added_additional_data)
+		{
+			element* index = storage_()->pop();
+
+			if (index == nullptr)
+			{
+				return true;
+			}
+			else if (index->index() >= 2)
+			{
+				storage_()->push(index);
+
+				return true;
+			}
+
+			long long new_index = storage_indexs_[selected_index_];
+
+			switch (index->index())
+			{
+			case 0:
+				new_index += std::get<0>(*index).integer();
+				break;
+
+			case 1:
+				new_index += static_cast<long long>(std::get<1>(*index));
+				break;
+			}
+
+			if (new_index < 0)
+			{
+				new_index = 0;
+			}
+			else if (new_index > storages_[selected_index_].size())
+			{
+				new_index = storages_[selected_index_].size();
+			}
+
+			if (new_index == storages_[selected_index_].size())
+			{
+				if (storages_[selected_index_][0]->type() == storage_type::list)
+				{
+					storages_[selected_index_].push_back(new list());
+				}
+				else if (storages_[selected_index_][0]->type() == storage_type::queue)
+				{
+					storages_[selected_index_].push_back(new queue());
+				}
+			}
+
+			storage_indexs_[selected_index_] = new_index;
+
+			return false;
+		}
+		else if (jongsung == U'ㄶ' && !is_added_additional_data)
+		{
+			element* index = storage_()->pop();
+
+			if (index == nullptr)
+			{
+				return true;
+			}
+			else if (index->index() >= 2)
+			{
+				storage_()->push(index);
+
+				return true;
+			}
+
+			long long new_index = storage_indexs_[selected_index_];
+
+			switch (index->index())
+			{
+			case 0:
+				new_index -= std::get<0>(*index).integer();
+				break;
+
+			case 1:
+				new_index -= static_cast<long long>(std::get<1>(*index));
+				break;
+			}
+
+			if (new_index < 0)
+			{
+				new_index = 0;
+			}
+			else if (new_index > storages_[selected_index_].size())
+			{
+				new_index = storages_[selected_index_].size();
+			}
+
+			if (new_index == storages_[selected_index_].size())
+			{
+				if (storages_[selected_index_][0]->type() == storage_type::list)
+				{
+					storages_[selected_index_].push_back(new list());
+				}
+				else if (storages_[selected_index_][0]->type() == storage_type::queue)
+				{
+					storages_[selected_index_].push_back(new queue());
+				}
+			}
+
+			storage_indexs_[selected_index_] = new_index;
+
+			return false;
+		}
+		else if (jongsung == U'ㄵ' && is_added_additional_data)
+		{
+			storage_()->push(new element(number(static_cast<long long>(storage_indexs_[selected_index_]))));
+		
+			return false;
+		}
+		else if (jongsung == U'ㄶ' && is_added_additional_data)
+		{
+			storage_()->push(new element(number(static_cast<long long>(storages_[selected_index_].size()))));
+		
+			return false;
+		}
+
+		return true;
+	}
 }

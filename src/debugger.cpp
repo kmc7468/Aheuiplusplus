@@ -100,6 +100,13 @@ namespace app
 
 				++depth;
 
+				if (storage_backup->length() == 0)
+				{
+					tab = std::string(depth * 4, ' ');
+
+					std::fprintf(output_stream_, "%s(비어 있음)\n", tab.c_str());
+				}
+
 				for (std::size_t k = 0; k < storage_backup->length(); ++k)
 				{
 					tab = std::string(depth * 4, ' ');
@@ -172,11 +179,14 @@ namespace app
 					}
 					}
 				}
+
+				delete storage_backup;
 			
 				--depth;
 			}
 		
 			--depth;
+			std::printf("\n");
 		}
 	}
 

@@ -9,6 +9,7 @@ static_assert((sizeof(wchar_t) != sizeof(char32_t) && AHEUIPLUSPLUS_MACRO_IS_WIN
 	"The size of wchar_t and char32_t can be different from each other on Windows.");
 
 #include <Aheuiplusplus/code.hpp>
+#include <Aheuiplusplus/debugger.hpp>
 #include <Aheuiplusplus/interpreter.hpp>
 
 #include <clocale>
@@ -162,12 +163,20 @@ int main(int argc, char** argv)
 	std::setlocale(LC_ALL, "");
 
 	app::interpreter i(stdin, stdout);
+	app::debugger d(stdout, i);
+
+	d.connect_debugger();
 
 	if (interpreting_mode)
 	{
-		std::printf("코드를 실행하려면 코드를 입력하고 엔터 키를 누르세요.\n"
-					"코드를 줄바꿈 하려면 줄의 맨 끝에 \\를 입력하고 엔터 키를 누르세요.\n"
-					"종료하려면 !q 또는 !quit를 입력하세요.\n\n");
+		static const char* help =
+			"- 코드를 실행하려면 코드를 입력하고 엔터 키를 누르세요.\n"
+			"- 코드를 줄바꿈 하려면 줄의 맨 끝에 \\를 입력하고 엔터 키를 누르세요.\n"
+			"- 저장공간 상태를 덤프하려면 !d 또는 !dump를 입력하세요.\n"
+			"- 종료하려면 !q 또는 !quit를 입력하세요.\n"
+			"- 이 설명을 보려면 언제든지 !h 또는 !help를 입력하세요.";
+
+		std::printf("아희++ 표준 구현체 1.0.0\n%s\n\n", help);
 
 		while (true)
 		{
@@ -183,6 +192,18 @@ int main(int argc, char** argv)
 			if (code == U"!q" || code == U"!quit")
 			{
 				return 0;
+			}
+			else if (code == U"!d" || code == U"!dump")
+			{
+				d.dump_storages(1);
+
+				continue;
+			}
+			else if (code == U"!h" || code == U"!help")
+			{
+				std::printf("%s\n\n", help);
+
+				continue;
 			}
 
 			if (*(code.end() - 1) == U'\\')

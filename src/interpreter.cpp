@@ -219,8 +219,8 @@ namespace app
 
 				if (is_added_additional_data && is_compatible_with_aheui_)
 				{
-					if (chosung != U'ㄱ' || chosung != U'ㅋ' || chosung != U'ㄲ' ||
-						chosung != U'ㅉ')
+					if (!(chosung == U'ㄱ' || chosung == U'ㅋ' || chosung == U'ㄲ' ||
+						chosung == U'ㅉ'))
 					{
 						new_direction = direction;
 						new_move = move;
@@ -280,9 +280,12 @@ namespace app
 				case U'ㅊ':
 					is_ignored = is_zero_(jongsung, is_added_additional_data, is_reflection);
 					break;
+				case U'ㅉ':
+					is_ignored = expand_storage_(jongsung, is_added_additional_data);
+					break;
 
 
-
+					
 				case U'ㅇ':
 					break;
 				case U'ㅎ':
