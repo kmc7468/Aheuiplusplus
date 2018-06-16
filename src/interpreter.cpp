@@ -357,18 +357,7 @@ namespace app
 		{
 		case 0:
 		{
-			if (x == 0)
-			{
-				if (move == 1)
-				{
-					x = splited_code.line(y).size() - 2;
-				}
-				else
-				{
-					x = splited_code.line(y).size() - 3;
-				}
-			}
-			else if (x == 1 && move == 2)
+			if (x == 0 || (x == 1 && move == 2))
 			{
 				x = splited_code.line(y).size() - 2;
 			}
@@ -382,18 +371,7 @@ namespace app
 
 		case 1:
 		{
-			if (x == splited_code.line(y).size() - 2)
-			{
-				if (move == 1)
-				{
-					x = 0;
-				}
-				else
-				{
-					x = 1;
-				}
-			}
-			else if (x == splited_code.line(y).size() - 3 && move == 2)
+			if (x == splited_code.line(y).size() - 2 || (x == splited_code.line(y).size() - 3 && move == 2))
 			{
 				x = 0;
 			}
@@ -407,18 +385,7 @@ namespace app
 
 		case 2:
 		{
-			if (y == 0)
-			{
-				if (move == 1)
-				{
-					y = splited_code.codes().size() - 1;
-				}
-				else
-				{
-					y = splited_code.codes().size() - 2;
-				}
-			}
-			else if (y == 1 && move == 2)
+			if (y == 0 || (y == 1 && move == 2))
 			{
 				y = splited_code.codes().size() - 1;
 			}
@@ -432,18 +399,7 @@ namespace app
 
 		case 3:
 		{
-			if (y == splited_code.codes().size() - 1)
-			{
-				if (move == 1)
-				{
-					y = 0;
-				}
-				else
-				{
-					y = 1;
-				}
-			}
-			else if (y == splited_code.codes().size() - 2 && move == 2)
+			if (y == splited_code.codes().size() - 1 || (y == splited_code.codes().size() - 2 && move == 2))
 			{
 				y = 0;
 			}
