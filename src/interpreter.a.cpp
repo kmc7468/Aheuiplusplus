@@ -240,12 +240,13 @@ namespace app
 
 			storage_()->push(new element(number(temp)));
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 			if (debugger_ != nullptr)
 			{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 				debugger_->is_last_input_utf16_ = false;
-			}
 #endif
+				debugger_->is_inputed_ = true;
+			}
 
 			return false;
 		}
@@ -265,12 +266,13 @@ namespace app
 
 			storage_()->push(new element(number(temp)));
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 			if (debugger_ != nullptr)
 			{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 				debugger_->is_last_input_utf16_ = false;
-			}
 #endif
+				debugger_->is_inputed_ = true;
+			}
 
 			return false;
 		}
@@ -344,13 +346,16 @@ namespace app
 				}
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				_setmode(_fileno(output_stream_), _O_TEXT);
+				_setmode(_fileno(input_stream_), _O_TEXT);
+#endif
 
 				if (debugger_ != nullptr)
 				{
-					debugger_->is_last_input_utf16_ = true;
-				}
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					debugger_->is_last_input_utf16_ = false;
 #endif
+					debugger_->is_inputed_ = true;
+				}
 			}
 
 			return false;
@@ -450,13 +455,16 @@ namespace app
 				storage_()->push(new element(temp));
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				_setmode(_fileno(output_stream_), _O_TEXT);
+				_setmode(_fileno(input_stream_), _O_TEXT);
+#endif
 
 				if (debugger_ != nullptr)
 				{
-					debugger_->is_last_input_utf16_ = true;
-				}
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					debugger_->is_last_input_utf16_ = false;
 #endif
+					debugger_->is_inputed_ = true;
+				}
 			}
 
 			return false;

@@ -28,8 +28,12 @@ namespace app
 
 		bool is_ignored;
 		bool is_reflection;
+		bool is_out_of_version;
 
-		return run_(code, x, y, direction, move, is_ignored, is_reflection);
+		char32_t start_of_expression;
+
+		return run_(code, x, y, direction, move, is_ignored, is_reflection, start_of_expression,
+			is_out_of_version);
 	}
 
 	const app::storage* interpreter::storage(std::size_t index) const
@@ -65,7 +69,8 @@ namespace app
 	}
 
 	long long interpreter::run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
-		std::size_t& move, bool& is_ignored, bool& is_reflection)
+		std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
+		bool& is_out_of_version)
 	{
 		app::code splited_code = code;
 
@@ -75,12 +80,21 @@ namespace app
 		move = 1;
 		is_ignored = false;
 		is_reflection = false;
+		start_of_expression = 0;
+		is_out_of_version = false;
+
+		std::size_t processed_command_without_expression = 0;
 
 		char32_t previous_command = 0;
 		char32_t command = 0;
 
 		while (true)
 		{
+			if (start_of_expression == 0)
+			{
+				++processed_command_without_expression;
+			}
+
 			previous_command = command;
 
 			if (y < splited_code.codes().size() &&
@@ -239,7 +253,8 @@ namespace app
 				switch (chosung)
 				{
 				case U'ㄲ':
-					is_ignored = type_and_mode_(jongsung, is_added_additional_data);
+					is_ignored = type_and_mode_(jongsung, is_added_additional_data, start_of_expression,
+						processed_command_without_expression, is_out_of_version);
 					break;
 
 				case U'ㄷ':
@@ -297,6 +312,11 @@ namespace app
 					break;
 				case U'ㅎ':
 					return exit_();
+				}
+
+				if (is_out_of_version)
+				{
+					return 0;
 				}
 
 				if (is_ignored && is_compatible_with_aheui_)

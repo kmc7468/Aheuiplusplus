@@ -273,24 +273,27 @@ int main(int argc, char** argv)
 			d.run_with_debugging(code);
 			std::printf("\n");
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-			if (!std::feof(stdin))
+			if (d.is_inputed())
 			{
-				if (d.is_last_input_utf16())
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+				if (!std::feof(stdin))
 				{
-					std::fgetwc(stdin);
+					if (d.is_last_input_utf16())
+					{
+						std::fgetwc(stdin);
+					}
+					else
+					{
+						std::fgetc(stdin);
+					}
 				}
-				else
+#else
+				if (!std::feof(stdin))
 				{
 					std::fgetc(stdin);
 				}
-			}
-#else
-			while (!std::feof(stdin))
-			{
-				std::fgetc(stdin);
-			}
 #endif
+			}
 		}
 	}
 	else

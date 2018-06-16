@@ -40,9 +40,11 @@ namespace app
 		void initialize_();
 
 		long long run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
-			std::size_t& move, bool& is_ignored, bool& is_reflection);
+			std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
+			bool& is_out_of_version);
 
-		bool type_and_mode_(char32_t jongsung, bool is_added_additional_data);
+		bool type_and_mode_(char32_t jongsung, bool is_added_additional_data, char32_t& start_of_expression,
+			std::size_t processed_command_without_expression, bool& is_out_of_version);
 
 		bool add_(char32_t jongsung, bool is_added_additional_data);
 		bool mul_(char32_t jongsung, bool is_added_additional_data);

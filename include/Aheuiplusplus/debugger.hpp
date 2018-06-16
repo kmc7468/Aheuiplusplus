@@ -46,6 +46,7 @@ namespace app
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 		bool is_last_input_utf16() const noexcept;
 #endif
+		bool is_inputed() const noexcept;
 
 		std::FILE* output_stream() const noexcept;
 
@@ -54,6 +55,7 @@ namespace app
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 		bool is_last_input_utf16_ = false;
 #endif
+		bool is_inputed_ = false;
 
 		std::FILE* output_stream_;
 		app::interpreter& interpreter_;

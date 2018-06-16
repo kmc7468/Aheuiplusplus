@@ -234,14 +234,29 @@ namespace app
 		std::size_t direction;
 		std::size_t move;
 
-		bool is_ignored = false;
-		bool is_reflection = false;
-
+		bool is_ignored;
+		bool is_reflection;
+		bool is_out_of_version;
+		char32_t start_of_expression = 0;
+		
 		try
 		{
 			if (is_connceted_debugger())
 			{
-				return interpreter_.run_(code, x, y, direction, move, is_ignored, is_reflection);
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+				is_last_input_utf16_ = false;
+#endif
+				is_inputed_ = false;
+
+				long long result = interpreter_.run_(code, x, y, direction, move, is_ignored, is_reflection,
+					start_of_expression, is_out_of_version);
+
+				if (is_out_of_version)
+				{
+					std::fprintf(output_stream_, "[Debugger] 실행하고자 하는 코드가 현재 버전을 지원하지 않습니다.\n");
+				}
+
+				return result;
 			}
 			else
 			{
@@ -270,6 +285,10 @@ namespace app
 		return is_last_input_utf16_;
 	}
 #endif
+	bool debugger::is_inputed() const noexcept
+	{
+		return is_inputed_;
+	}
 
 	std::FILE* debugger::output_stream() const noexcept
 	{

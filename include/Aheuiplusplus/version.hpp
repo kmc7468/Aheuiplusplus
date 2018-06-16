@@ -7,6 +7,8 @@ namespace app
 	{
 		v1_0,
 	};
+
+	long long get_major(app::version version) noexcept;
 }
 
 #endif
