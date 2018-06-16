@@ -78,7 +78,7 @@ namespace app
 			}
 			else if (left_operand == nullptr)
 			{
-				storage_()->push(right_operand);
+				storage_()->unpop(right_operand);
 				return true;
 			}
 

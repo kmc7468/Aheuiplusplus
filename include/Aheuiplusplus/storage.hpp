@@ -72,6 +72,7 @@ namespace app
 	public:
 		virtual storage_type type() const noexcept = 0;
 		virtual element* pop() = 0;
+		virtual void unpop(element* element) = 0;
 		virtual void push(element* element) = 0;
 		virtual element* copy() = 0;
 		virtual void move(element* element) = 0;
@@ -96,6 +97,7 @@ namespace app
 	public:
 		virtual storage_type type() const noexcept override;
 		virtual element* pop() override;
+		virtual void unpop(element* element) override;
 		virtual void push(element* element) override;
 		virtual element* copy() override;
 		virtual void move(element* element) override;
@@ -128,6 +130,7 @@ namespace app
 	public:
 		virtual storage_type type() const noexcept override;
 		virtual element* pop() override;
+		virtual void unpop(element* element) override;
 		virtual void push(element* element) override;
 		virtual element* copy() override;
 		virtual void move(element* element) override;

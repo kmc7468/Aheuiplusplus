@@ -173,9 +173,13 @@ namespace app
 
 		return data;
 	}
+	void list::unpop(element* element)
+	{
+		push(element);
+	}
 	void list::push(element* element)
 	{
-		vector_.push_back(element);
+		vector_.insert(vector_.begin() + virtual_length(), element);
 		virtual_length(virtual_length() + 1);
 	}
 	element* list::copy()
@@ -263,6 +267,10 @@ namespace app
 		queue_.pop_front();
 
 		return data;
+	}
+	void queue::unpop(element* element)
+	{
+		queue_.push_front(element);
 	}
 	void queue::push(element* element)
 	{

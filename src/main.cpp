@@ -270,7 +270,7 @@ int main(int argc, char** argv)
 				}
 			}
 
-			i.run(code);
+			d.run_with_debugging(code);
 			std::printf("\n");
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
@@ -310,7 +310,7 @@ int main(int argc, char** argv)
 
 		code = code.substr(0, code.length() - 2);
 
-		i.run(code);
+		d.run_with_debugging(code);
 		std::printf("\n");
 
 		std::fclose(file);
