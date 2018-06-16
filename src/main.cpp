@@ -27,18 +27,23 @@ namespace
 {
 	app::raw_code input_string()
 	{
-		while (!std::feof(stdin))
-		{
-			std::fgetc(stdin);
-		}
-
 		app::raw_code result;
+
+		bool is_first = true;
 
 		if constexpr (sizeof(wchar_t) == sizeof(char32_t))
 		{
 			while (!std::feof(stdin))
 			{
 				char32_t value = std::fgetwc(stdin);
+				
+				if (is_first && value == U'\n')
+				{
+					is_first = false;
+					continue;
+				}
+
+				is_first = false;
 
 				if (value == U'\n')
 				{
@@ -65,6 +70,14 @@ namespace
 				}
 				else
 				{
+					if (is_first && high_surrogate == U'\n')
+					{
+						is_first = false;
+						continue;
+					}
+
+					is_first = false;
+
 					if (high_surrogate == L'\n')
 					{
 						break;
