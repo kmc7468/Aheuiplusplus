@@ -152,7 +152,7 @@ int main(int argc, char** argv)
 		std::printf("오류: 실행할 파일의 경로가 필요합니다.\n");
 		return 0;
 	}
-	else if (paths.size() != 1)
+	else if (!interpreting_mode && paths.size() != 1)
 	{
 		std::printf("오류: 실행할 파일의 경로는 하나만 필요합니다.\n");
 		return 0;
