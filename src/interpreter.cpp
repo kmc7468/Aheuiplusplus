@@ -83,7 +83,7 @@ namespace app
 		{
 			previous_command = command;
 			command = splited_code.command(x, y);
-			
+
 			if (is_complete_hangul(command))
 			{
 				std::size_t new_direction;

@@ -99,6 +99,9 @@ namespace app
 #endif
 						std::wstring converted = char32_to_wchar(static_cast<char32_t>(std::get<0>(*value).integer()));
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 					}
 				}
 				else if (value->index() == 1) // 문자일 경우
@@ -114,6 +117,9 @@ namespace app
 #endif
 						std::wstring converted = char32_to_wchar(std::get<1>(*value));
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 					}
 				}
 				else if (value->index() == 2) // 문자열일 경우
@@ -129,6 +135,9 @@ namespace app
 #endif
 						std::wstring converted = char32_to_wchar(std::get<2>(*value).empty() ? 0 : std::get<2>(*value)[0]);
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 					}
 				}
 			}
@@ -147,6 +156,9 @@ namespace app
 #endif
 						std::wstring converted = char32_to_wchar(static_cast<char32_t>(std::get<0>(*value).integer()));
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 					}
 				}
 				else if (value->index() == 1) // 문자일 경우
@@ -162,6 +174,9 @@ namespace app
 #endif
 						std::wstring converted = char32_to_wchar(std::get<1>(*value));
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 					}
 				}
 				else if (value->index() == 2) // 문자열일 경우
@@ -185,6 +200,9 @@ namespace app
 						}
 
 						std::fwprintf(output_stream_, L"%ls", converted.c_str());
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 					}
 				}
 			}
@@ -308,6 +326,10 @@ namespace app
 					is_processed_space_char_ = false;
 					storage_()->push(new element(static_cast<char32_t>(high_surrogate)));
 				}
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+				_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 			}
 
 			return false;
@@ -405,6 +427,10 @@ namespace app
 				}
 
 				storage_()->push(new element(temp));
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+				_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 			}
 
 			return false;
