@@ -217,6 +217,13 @@ namespace app
 					break;
 				}
 
+				if (chosung == U'ㄱ' || chosung == U'ㅋ') // 예약
+				{
+					is_ignored = true;
+
+					goto reserved;
+				}
+
 				if (is_added_additional_data && is_compatible_with_aheui_)
 				{
 					if (!(chosung == U'ㄱ' || chosung == U'ㅋ' || chosung == U'ㄲ' ||
@@ -298,6 +305,7 @@ namespace app
 				}
 				else if (is_ignored && !is_compatible_with_aheui_)
 				{
+				reserved:
 					new_direction = direction;
 					new_move = move;
 				}

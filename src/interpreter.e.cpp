@@ -6,7 +6,7 @@ namespace app
 {
 	bool interpreter::add_(char32_t jongsung, bool is_added_additional_data)
 	{
-		if (jongsung == 0 && !is_added_additional_data)
+		if (!is_added_additional_data)
 		{
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
@@ -147,7 +147,7 @@ namespace app
 	}
 	bool interpreter::mul_(char32_t jongsung, bool is_added_additional_data)
 	{
-		if (jongsung == 0 && !is_added_additional_data)
+		if (!is_added_additional_data)
 		{
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
@@ -285,7 +285,7 @@ namespace app
 	}
 	bool interpreter::sub_(char32_t jongsung, bool is_added_additional_data)
 	{
-		if (jongsung == 0 && !is_added_additional_data)
+		if (!is_added_additional_data)
 		{
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
@@ -423,7 +423,7 @@ namespace app
 	}
 	bool interpreter::div_(char32_t jongsung, bool is_added_additional_data)
 	{
-		if (jongsung == 0 && !is_added_additional_data)
+		if (!is_added_additional_data)
 		{
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
@@ -561,7 +561,7 @@ namespace app
 	}
 	bool interpreter::mod_(char32_t jongsung, bool is_added_additional_data)
 	{
-		if (jongsung == 0 && !is_added_additional_data)
+		if (!is_added_additional_data)
 		{
 			element* right_operand = storage_()->pop();
 			element* left_operand = storage_()->pop();
