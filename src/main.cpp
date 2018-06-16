@@ -27,7 +27,10 @@ namespace
 {
 	app::raw_code input_string()
 	{
-		std::rewind(stdin);
+		while (!std::feof(stdin))
+		{
+			std::fgetc(stdin);
+		}
 
 		app::raw_code result;
 
