@@ -199,7 +199,7 @@ int main(int argc, char** argv)
 			"\n"
 			"- !d 또는 !dump - 저장공간 상태를 덤프합니다.";
 
-		std::printf("아희++ 표준 구현체 1.0.0\n%s\n\n", title);
+		std::printf("아희++ 표준 인터프리터 1.0.1\n%s\n\n", title);
 
 		while (true)
 		{

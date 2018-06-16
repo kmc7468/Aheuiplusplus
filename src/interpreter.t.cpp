@@ -328,6 +328,11 @@ namespace app
 		}
 		else if (jongsung == U'ㄴ')
 		{
+			if (selected_index_ == 0)
+			{
+				return true;
+			}
+
 			element* index = storage_()->pop();
 
 			if (index == nullptr)
@@ -381,6 +386,11 @@ namespace app
 		}
 		else if (jongsung == U'ㄵ' && !is_added_additional_data)
 		{
+			if (selected_index_ == 0)
+			{
+				return true;
+			}
+
 			element* index = storage_()->pop();
 
 			if (index == nullptr)
@@ -434,6 +444,11 @@ namespace app
 		}
 		else if (jongsung == U'ㄶ' && !is_added_additional_data)
 		{
+			if (selected_index_ == 0)
+			{
+				return true;
+			}
+
 			element* index = storage_()->pop();
 
 			if (index == nullptr)
