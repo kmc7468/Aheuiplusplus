@@ -272,6 +272,25 @@ int main(int argc, char** argv)
 
 			i.run(code);
 			std::printf("\n");
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			if (!std::feof(stdin))
+			{
+				if (d.is_last_input_utf16())
+				{
+					std::fgetwc(stdin);
+				}
+				else
+				{
+					std::fgetc(stdin);
+				}
+			}
+#else
+			while (!std::feof(stdin))
+			{
+				std::fgetc(stdin);
+			}
+#endif
 		}
 	}
 	else
@@ -293,6 +312,8 @@ int main(int argc, char** argv)
 
 		i.run(code);
 		std::printf("\n");
+
+		std::fclose(file);
 	}
 
 	return 0;

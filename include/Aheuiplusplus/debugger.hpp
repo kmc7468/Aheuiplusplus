@@ -43,11 +43,17 @@ namespace app
 
 	public:
 		const std::vector<std::pair<std::size_t, std::size_t>>& breakpoints() const noexcept;
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		bool is_last_input_utf16() const noexcept;
+#endif
 
 		std::FILE* output_stream() const noexcept;
 
 	private:
 		std::vector<std::pair<std::size_t, std::size_t>> breakpoints_;
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		bool is_last_input_utf16_ = false;
+#endif
 
 		std::FILE* output_stream_;
 		app::interpreter& interpreter_;

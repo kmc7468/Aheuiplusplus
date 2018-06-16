@@ -1,5 +1,7 @@
 ﻿#include <Aheuiplusplus/interpreter.hpp>
 
+#include <Aheuiplusplus/debugger.hpp>
+
 #include <cmath>
 #include <cctype>
 #include <cstdio>
@@ -227,7 +229,7 @@ namespace app
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 			_setmode(_fileno(input_stream_), _O_TEXT);
 #endif
-			if (std::feof(input_stream_))
+			if (input_stream_ != stdin && std::feof(input_stream_))
 			{
 				storage_()->push(new element(number(0ll)));
 				return false;
@@ -238,6 +240,13 @@ namespace app
 
 			storage_()->push(new element(number(temp)));
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			if (debugger_ != nullptr)
+			{
+				debugger_->is_last_input_utf16_ = false;
+			}
+#endif
+
 			return false;
 		}
 		else if (jongsung == U'ㅇ' && is_added_additional_data) // 숫자(소수) 입력
@@ -245,7 +254,7 @@ namespace app
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 			_setmode(_fileno(input_stream_), _O_TEXT);
 #endif
-			if (std::feof(input_stream_))
+			if (input_stream_ != stdin && std::feof(input_stream_))
 			{
 				storage_()->push(new element(number(0.0)));
 				return false;
@@ -256,12 +265,19 @@ namespace app
 
 			storage_()->push(new element(number(temp)));
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			if (debugger_ != nullptr)
+			{
+				debugger_->is_last_input_utf16_ = false;
+			}
+#endif
+
 			return false;
 		}
 		else if (jongsung == U'ㅎ' && !is_added_additional_data) // 문자 입력
 		{
 		input_char:
-			if (std::feof(input_stream_))
+			if (input_stream_ != stdin && std::feof(input_stream_))
 			{
 				storage_()->push(new element(0));
 				return false;
@@ -329,6 +345,11 @@ namespace app
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 				_setmode(_fileno(output_stream_), _O_TEXT);
+
+				if (debugger_ != nullptr)
+				{
+					debugger_->is_last_input_utf16_ = true;
+				}
 #endif
 			}
 
@@ -336,7 +357,7 @@ namespace app
 		}
 		else if (jongsung == U'ㅎ' && is_added_additional_data) // 문자열 입력
 		{
-			if (std::feof(input_stream_))
+			if (input_stream_ != stdin && std::feof(input_stream_))
 			{
 				storage_()->push(new element(0));
 				return false;
@@ -430,6 +451,11 @@ namespace app
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 				_setmode(_fileno(output_stream_), _O_TEXT);
+
+				if (debugger_ != nullptr)
+				{
+					debugger_->is_last_input_utf16_ = true;
+				}
 #endif
 			}
 

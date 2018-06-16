@@ -264,6 +264,12 @@ namespace app
 	{
 		return breakpoints_;
 	}
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+	bool debugger::is_last_input_utf16() const noexcept
+	{
+		return is_last_input_utf16_;
+	}
+#endif
 
 	std::FILE* debugger::output_stream() const noexcept
 	{
