@@ -191,19 +191,26 @@ int main(int argc, char** argv)
 					std::printf("    ");
 					app::raw_code new_line = input_string();
 
-					if (*(new_line.end() - 1) == U'\\')
+					if (new_line.empty())
 					{
 						code += U'\n';
-						code += new_line;
+						break;
 					}
 					else
 					{
-						break;
+						code += U'\n';
+						code += new_line;
+
+						if (*(new_line.end() - 1) != U'\\')
+						{
+							break;
+						}
 					}
 				}
 			}
 
 			i.run(code);
+			std::printf("\n");
 		}
 	}
 	else
