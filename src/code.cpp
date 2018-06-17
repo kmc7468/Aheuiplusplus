@@ -3,6 +3,11 @@
 #include <stdexcept>
 #include <utility>
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+#	include <fcntl.h>
+#	include <io.h>
+#endif
+
 namespace app
 {
 	bool is_complete_hangul(char32_t character) noexcept
@@ -317,6 +322,128 @@ namespace app
 		{
 			return -1;
 		}
+	}
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+	std::wstring read_wchar(std::FILE* input_stream)
+	{
+		wchar_t high_surrogate = std::fgetwc(input_stream);
+
+		if (high_surrogate >= 0xD800 && high_surrogate <= 0xDBFF)
+		{
+			wchar_t low_surrogate = std::fgetwc(input_stream);
+
+			return { high_surrogate, low_surrogate };
+		}
+		else
+		{
+			return { high_surrogate };
+		}
+	}
+	void write_wchar(std::FILE* output_stream, const std::wstring& character)
+	{
+		for (std::size_t i = 0; i < character.length(); ++i)
+		{
+			std::fputwc(character[i], output_stream);
+		}
+	}
+#endif
+	std::string read_u8char(std::FILE* input_stream)
+	{
+		std::string result;
+
+		unsigned char first = static_cast<unsigned char>(std::fgetc(input_stream));
+		int length = app::u8char_length(first);
+
+		if (length == 1)
+		{
+			result.push_back(first);
+		}
+		else if (length == 2)
+		{
+			unsigned char second = std::fgetc(input_stream);
+
+			result.push_back(app::u8char_to_char32(first, second));
+		}
+		else if (length == 3)
+		{
+			unsigned char second = std::fgetc(input_stream);
+			unsigned char third = std::fgetc(input_stream);
+
+			result.push_back(app::u8char_to_char32(first, second, third));
+		}
+		else
+		{
+			unsigned char second = std::fgetc(input_stream);
+			unsigned char third = std::fgetc(input_stream);
+			unsigned char fourth = std::fgetc(input_stream);
+
+			result.push_back(app::u8char_to_char32(first, second, third, fourth));
+		}
+
+		return result;
+	}
+	void write_u8char(std::FILE* output_stream, const std::string& character)
+	{
+		for (std::size_t i = 0; i < character.length(); ++i)
+		{
+			std::fputc(character[i], output_stream);
+		}
+	}
+
+	char32_t read_char(std::FILE* input_stream)
+	{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		_setmode(_fileno(input_stream), _O_U16TEXT);
+
+		wchar_t high_surrogate = std::fgetwc(input_stream);
+
+		if (wchar_length(high_surrogate) == 1)
+		{
+			return high_surrogate;
+		}
+		else
+		{
+			wchar_t low_surroagte = std::fgetwc(input_stream);
+
+			return wchar_to_char32(high_surrogate, low_surroagte);
+		}
+#else
+		std::string input = read_u8char(input_stream);
+
+		if (input.length() == 1)
+		{
+			return u8char_to_char32(input[0]);
+		}
+		else if (input.length() == 2)
+		{
+			return u8char_to_char32(input[0], input[1]);
+		}
+		else if (input.length() == 3)
+		{
+			return u8char_to_char32(input[0], input[1], input[2]);
+		}
+		else
+		{
+			return u8char_to_char32(input[0], input[1], input[2], input[3]);
+		}
+#endif
+	}
+	void write_char(std::FILE* output_stream, char32_t character)
+	{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		_setmode(_fileno(output_stream), _O_U16TEXT);
+
+		std::wstring utf16 = char32_to_wchar(character);
+
+		write_wchar(output_stream, utf16);
+
+		_setmode(_fileno(output_stream), _O_TEXT);
+#else
+		std::string utf8 = char32_to_u8char(character);
+
+		write_u8char(output_stream, utf8);
+#endif
 	}
 }
 

@@ -1,6 +1,7 @@
 ﻿#ifndef AHEUIPLUSPLUS_HEADER_CODE_HPP
 #define AHEUIPLUSPLUS_HEADER_CODE_HPP
 
+#include <cstdio>
 #include <string>
 #include <vector>
 
@@ -24,14 +25,23 @@ namespace app
 #endif
 	std::string char32_to_u8char(char32_t character);
 	char32_t u8char_to_char32(unsigned char first, unsigned char second = 0, unsigned char third = 0, unsigned char fourth = 0);
-
-
+	
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 	int wchar_length(char32_t character);
 	int wchar_length(wchar_t first);
 #endif
 	int u8char_length(char32_t character);
 	int u8char_length(unsigned char first);
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+	std::wstring read_wchar(std::FILE* input_stream);
+	void write_wchar(std::FILE* output_stream, const std::wstring& character);
+#endif
+	std::string read_u8char(std::FILE* input_stream);
+	void write_u8char(std::FILE* input_stream, const std::string& character);
+
+	char32_t read_char(std::FILE* input_stream);
+	void write_char(std::FILE* input_stream, char32_t character);
 
 	class code final
 	{

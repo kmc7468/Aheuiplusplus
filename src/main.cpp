@@ -30,66 +30,16 @@ namespace
 	{
 		app::raw_code result;
 
-		bool is_first = true;
-
-		if constexpr (sizeof(wchar_t) == sizeof(char32_t))
+		while (true)
 		{
-			while (!std::feof(stdin))
+			char32_t c = app::read_char(stdin);
+
+			if (c == U'\n')
 			{
-				char32_t value = std::fgetwc(stdin);
-				
-				if (is_first && value == U'\n')
-				{
-					is_first = false;
-					continue;
-				}
-
-				is_first = false;
-
-				if (value == U'\n')
-				{
-					break;
-				}
-
-				result.push_back(value);
-			}
-		}
-		else
-		{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-			_setmode(_fileno(stdin), _O_U16TEXT);
-
-			while (!std::feof(stdin))
-			{
-				wchar_t high_surrogate = std::fgetwc(stdin);
-
-				if (high_surrogate >= 0xD800 && high_surrogate <= 0xDBFF)
-				{
-					wchar_t low_surrogate = std::fgetwc(stdin);
-
-					result.push_back(app::wchar_to_char32(high_surrogate, low_surrogate));
-				}
-				else
-				{
-					if (is_first && high_surrogate == U'\n')
-					{
-						is_first = false;
-						continue;
-					}
-
-					is_first = false;
-
-					if (high_surrogate == L'\n')
-					{
-						break;
-					}
-
-					result.push_back(high_surrogate);
-				}
+				break;
 			}
 
-			_setmode(_fileno(stdin), _O_TEXT);
-#endif
+			result += c;
 		}
 
 		return result;
@@ -100,38 +50,28 @@ namespace
 
 		while (!std::feof(file))
 		{
-			unsigned char first = static_cast<unsigned char>(std::fgetc(file));
-			int length = app::u8char_length(first);
+			std::string c = app::read_u8char(file);
 
-			if (length == 1)
+			if (c.length() == 1 && (c.front() == '\n' || c.front() == '\r'))
 			{
-				if (first == '\r' || first == '\n')
-				{
-					break;
-				}
-
-				result.push_back(first);
+				break;
 			}
-			else if (length == 2)
-			{
-				unsigned char second = std::fgetc(file);
 
-				result.push_back(app::u8char_to_char32(first, second));
+			if (c.length() == 1)
+			{
+				result += app::u8char_to_char32(c[0]);
 			}
-			else if (length == 3)
+			else if (c.length() == 2)
 			{
-				unsigned char second = std::fgetc(file);
-				unsigned char third = std::fgetc(file);
-
-				result.push_back(app::u8char_to_char32(first, second, third));
+				result += app::u8char_to_char32(c[0], c[1]);
+			}
+			else if (c.length() == 3)
+			{
+				result += app::u8char_to_char32(c[0], c[1], c[2]);
 			}
 			else
 			{
-				unsigned char second = std::fgetc(file);
-				unsigned char third = std::fgetc(file);
-				unsigned char fourth = std::fgetc(file);
-
-				result.push_back(app::u8char_to_char32(first, second, third, fourth));
+				result += app::u8char_to_char32(c[0], c[1], c[2], c[3]);
 			}
 		}
 
