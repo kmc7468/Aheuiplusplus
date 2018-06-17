@@ -292,11 +292,6 @@ namespace app
 		{
 			if (is_connceted_debugger())
 			{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				is_last_input_utf16_ = false;
-#endif
-				is_inputed_ = false;
-
 				long long result = interpreter_.run_(code, x, y, direction, move, is_ignored, is_reflection,
 					start_of_expression, is_out_of_version);
 
@@ -324,19 +319,48 @@ namespace app
 		throw std::bad_function_call();
 	}
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+	bool debugger::is_last_input_utf16() const
+	{
+		if (!is_connceted_debugger())
+			throw std::bad_function_call();
+
+		return interpreter_.is_last_input_utf16_;
+	}
+	void debugger::is_last_input_utf16(bool new_is_last_input_utf16)
+	{
+		if (!is_connceted_debugger())
+			throw std::bad_function_call();
+
+		interpreter_.is_last_input_utf16_ = new_is_last_input_utf16;
+	}
+#endif
+	bool debugger::is_processed_space() const
+	{
+		if (!is_connceted_debugger())
+			throw std::bad_function_call();
+
+		return interpreter_.is_processed_space_char_;
+	}
+	void debugger::is_processed_space(bool new_is_proecessed_space)
+	{
+		if (!is_connceted_debugger())
+			throw std::bad_function_call();
+
+		interpreter_.is_processed_space_char_ = new_is_proecessed_space;
+	}
+
 	const std::vector<std::pair<std::size_t, std::size_t>>& debugger::breakpoints() const noexcept
 	{
 		return breakpoints_;
 	}
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-	bool debugger::is_last_input_utf16() const noexcept
-	{
-		return is_last_input_utf16_;
-	}
-#endif
 	bool debugger::is_inputed() const noexcept
 	{
 		return is_inputed_;
+	}
+	void debugger::is_inputed(bool new_is_inputed) noexcept
+	{
+		is_inputed_ = new_is_inputed;
 	}
 
 	std::FILE* debugger::output_stream() const noexcept

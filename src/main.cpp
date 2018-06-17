@@ -100,35 +100,38 @@ namespace
 
 		while (!std::feof(file))
 		{
-			unsigned char first_byte = static_cast<unsigned char>(std::fgetc(file));
+			unsigned char first = static_cast<unsigned char>(std::fgetc(file));
+			int length = app::u8char_length(first);
 
-			if (first_byte < 0x80)
+			if (length == 1)
 			{
-				if (first_byte == '\r')
-				{
-					break;
-				}
-				if (first_byte == '\n')
+				if (first == '\r' || first == '\n')
 				{
 					break;
 				}
 
-				result.push_back(first_byte);
+				result.push_back(first);
 			}
-			else if ((first_byte & 0xF0) == 0xF0)
+			else if (length == 2)
 			{
-				result.push_back(
-					((first_byte & 0x07) << 18) + ((static_cast<unsigned char>(std::fgetc(file)) & 0x3F) << 12) + ((static_cast<unsigned char>(std::fgetc(file)) & 0x3F) << 6) + (static_cast<unsigned char>(std::fgetc(file)) & 0x3F));
+				unsigned char second = std::fgetc(file);
+
+				result.push_back(app::u8char_to_char32(first, second));
 			}
-			else if ((first_byte & 0xE0) == 0xE0)
+			else if (length == 3)
 			{
-				result.push_back(
-					((first_byte & 0x0F) << 12) + ((static_cast<unsigned char>(std::fgetc(file)) & 0x3F) << 6) + (static_cast<unsigned char>(std::fgetc(file)) & 0x3F));
+				unsigned char second = std::fgetc(file);
+				unsigned char third = std::fgetc(file);
+
+				result.push_back(app::u8char_to_char32(first, second, third));
 			}
-			else if ((first_byte & 0xC0) == 0xC0)
+			else
 			{
-				result.push_back(
-					((first_byte & 0x1F) << 6) + (static_cast<unsigned char>(std::fgetc(file)) & 0x3F));
+				unsigned char second = std::fgetc(file);
+				unsigned char third = std::fgetc(file);
+				unsigned char fourth = std::fgetc(file);
+
+				result.push_back(app::u8char_to_char32(first, second, third, fourth));
 			}
 		}
 
@@ -292,28 +295,28 @@ int main(int argc, char** argv)
 				}
 			}
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			d.is_last_input_utf16(false);
+#endif
+			d.is_processed_space(true);
+			d.is_inputed(false);
+
 			d.run_with_debugging(code);
 			std::printf("\n");
 
-			if (d.is_inputed())
+			if (d.is_inputed() && !d.is_processed_space())
 			{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				if (!std::feof(stdin))
+				if (d.is_last_input_utf16())
 				{
-					if (d.is_last_input_utf16())
-					{
-						std::fgetwc(stdin);
-					}
-					else
-					{
-						std::fgetc(stdin);
-					}
+					std::fgetwc(stdin);
 				}
-#else
-				if (!std::feof(stdin))
+				else
 				{
 					std::fgetc(stdin);
 				}
+#else
+				std::fgetc(stdin);
 #endif
 			}
 		}

@@ -163,6 +163,7 @@ namespace app
 		}
 	}
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 	std::wstring char32_to_wchar(char32_t character)
 	{
 		if (character <= 65'535)
@@ -185,10 +186,137 @@ namespace app
 	}
 	char32_t wchar_to_char32(wchar_t high_surrogate, wchar_t low_surrogate)
 	{
-		char32_t temp_high = (high_surrogate - 0xD800) * 0x400;
-		char32_t temp_low = low_surrogate - 0xDC00;
+		if (high_surrogate >= 0xD800 && high_surrogate <= 0xDBFF)
+		{
+			char32_t temp_high = (high_surrogate - 0xD800) * 0x400;
+			char32_t temp_low = low_surrogate - 0xDC00;
 
-		return temp_high + temp_low + 0x10000;
+			return temp_high + temp_low + 0x10000;
+		}
+		else
+		{
+			return high_surrogate;
+		}
+	}
+	std::string char32_to_u8char(char32_t character)
+	{
+		std::string result;
+
+		if (character < 0x80)
+		{
+			result.push_back(character);
+		}
+		else if (character < 0x0800)
+		{
+			result.push_back(0xC0 | (character >> 6));
+			result.push_back(0x80 | (character & 0x3F));
+		}
+		else if (character < 0x10000)
+		{
+			result.push_back(0xE0 | (character >> 12));
+			result.push_back(0x80 | ((character >> 6) & 0x3F));
+			result.push_back(0x80 | (character & 0x3F));
+		}
+		else
+		{
+			result.push_back(0xF0 | (character >> 18));
+			result.push_back(0x80 | ((character >> 12) & 0x3F));
+			result.push_back(0x80 | ((character >> 6) & 0x3F));
+			result.push_back(0x80 | (character & 0x3F));
+		}
+
+		return result;
+	}
+#endif
+	char32_t u8char_to_char32(unsigned char first, unsigned char second, unsigned char third, unsigned char fourth)
+	{
+		if (first < 0x80)
+		{
+			return first;
+		}
+		else if ((first & 0xF0) == 0xF0)
+		{
+			return ((first & 0x07) << 18) + ((second & 0x3F) << 12) + ((third & 0x3F) << 6) + (fourth & 0x3F);
+		}
+		else if ((first & 0xE0) == 0xE0)
+		{
+			return (first << 12) + ((second & 0x3F) << 6) + (third & 0x3F);
+		}
+		else if ((first & 0xC0) == 0xC0)
+		{
+			return ((first & 0x1F) << 6) + (second & 0x3F);
+		}
+	}
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+	int wchar_length(char32_t character)
+	{
+		if (character < 65'536)
+		{
+			return 1;
+		}
+		else
+		{
+			return 2;
+		}
+	}
+	int wchar_length(wchar_t first)
+	{
+		if (first >= 0xD800 && first <= 0xDBFF)
+		{
+			return 2;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+#endif
+	int u8char_length(char32_t character)
+	{
+		if (character < 0x80)
+		{
+			return 1;
+		}
+		else if (character < 0x0800)
+		{
+			return 2;
+		}
+		else if (character < 0x10000)
+		{
+			return 3;
+		}
+		else if (character < 0x110000)
+		{
+			return 4;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	int u8char_length(unsigned char first)
+	{
+		if (first < 0x80)
+		{
+			return 1;
+		}
+		else if ((first & 0xF0) == 0xF0)
+		{
+			return 4;
+		}
+		else if ((first & 0xE0) == 0xE0)
+		{
+			return 3;
+		}
+		else if ((first & 0xC0) == 0xC0)
+		{
+			return 2;
+		}
+		else
+		{
+			return -1;
+		}
 	}
 }
 
