@@ -345,14 +345,10 @@ namespace app
 					storage_()->push(new element(static_cast<char32_t>(high_surrogate)));
 				}
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				_setmode(_fileno(input_stream_), _O_TEXT);
-#endif
-
 				if (debugger_ != nullptr)
 				{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-					debugger_->is_last_input_utf16_ = false;
+					debugger_->is_last_input_utf16_ = true;
 #endif
 					debugger_->is_inputed_ = true;
 				}
@@ -454,14 +450,10 @@ namespace app
 
 				storage_()->push(new element(temp));
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				_setmode(_fileno(input_stream_), _O_TEXT);
-#endif
-
 				if (debugger_ != nullptr)
 				{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-					debugger_->is_last_input_utf16_ = false;
+					debugger_->is_last_input_utf16_ = true;
 #endif
 					debugger_->is_inputed_ = true;
 				}
