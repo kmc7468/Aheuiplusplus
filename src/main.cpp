@@ -198,7 +198,10 @@ int main(int argc, char** argv)
 			"- !help - 명령어 목록을 봅니다.\n"
 			"- !clear - 화면을 비웁니다.\n"
 			"\n"
-			"- !d 또는 !dump - 저장공간 상태를 덤프합니다.";
+			"- !d 또는 !dump - 전체 저장공간 상태를 덤프합니다.\n"
+			"- !d 또는 !dump [storage] - 해당 저장공간의 상태를 덤프합니다. storage는 완성된 현대 한글이여야 하며, 종성만이 결과에 영향을 미칩니다.";
+
+		static const char* invalid_argument = "오류: 올바르지 않은 인수입니다. !help 명령어를 입력해 올바른 인수 형태를 확인하실 수 있습니다.";
 
 		std::printf("아희++ 표준 인터프리터 %s\n%s\n\n", app::interpreter::version_string, title);
 
@@ -239,11 +242,28 @@ int main(int argc, char** argv)
 
 				continue;
 			}
-			else if (code[0] == U'!')
+			else if (code.front() == U'!')
 			{
-				std::printf("오류: 알 수 없는 명령어입니다. !help 명령어를 입력해 ");
-			}
+				if (code.substr(0, 3) == U"!d " || code.substr(0, 6) == U"!dump ")
+				{
+					if ((code.length() != 4 && code.length() != 7) ||
+						!app::is_complete_hangul(code.back()))
+					{
+						std::printf("%s\n\n", invalid_argument);
+					}
+					else
+					{
+						d.dump_storage(code.back());
+					}
+				}
+				else
+				{
+					std::printf("오류: 알 수 없는 명령어입니다. !help 명령어를 입력해 올바른 명령어 목록을 확인하실 수 있습니다.\n\n");
+				}
 
+				continue;
+			}
+			
 			if (*(code.end() - 1) == U'\\')
 			{
 				*(code.end() - 1) = U'\n';
