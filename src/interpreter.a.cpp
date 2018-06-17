@@ -297,6 +297,11 @@ namespace app
 				}
 
 				storage_()->push(new element(temp));
+
+				if (debugger_ != nullptr)
+				{
+					debugger_->is_inputed_ = true;
+				}
 			}
 			else
 			{
@@ -381,6 +386,11 @@ namespace app
 				} while (!std::feof(input_stream_));
 
 				storage_()->push(new element(temp));
+
+				if (debugger_ != nullptr)
+				{
+					debugger_->is_inputed_ = false;
+				}
 			}
 			else
 			{
@@ -453,9 +463,9 @@ namespace app
 				if (debugger_ != nullptr)
 				{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-					debugger_->is_last_input_utf16_ = true;
+					debugger_->is_last_input_utf16_ = false;
 #endif
-					debugger_->is_inputed_ = true;
+					debugger_->is_inputed_ = false;
 				}
 			}
 
