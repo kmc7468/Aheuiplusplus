@@ -241,15 +241,15 @@ namespace app
 		}
 		else if ((first & 0xF0) == 0xF0)
 		{
-			return ((first & 0x07) << 18) + ((second & 0x3F) << 12) + ((third & 0x3F) << 6) + (fourth & 0x3F);
+			return ((static_cast<char32_t>(first) & 0x07) << 18) + ((second & 0x3F) << 12) + ((third & 0x3F) << 6) + (fourth & 0x3F);
 		}
 		else if ((first & 0xE0) == 0xE0)
 		{
-			return (first << 12) + ((second & 0x3F) << 6) + (third & 0x3F);
+			return (static_cast<char32_t>(first) << 12) + ((second & 0x3F) << 6) + (third & 0x3F);
 		}
 		else if ((first & 0xC0) == 0xC0)
 		{
-			return ((first & 0x1F) << 6) + (second & 0x3F);
+			return ((static_cast<char32_t>(first) & 0x1F) << 6) + (second & 0x3F);
 		}
 	}
 
