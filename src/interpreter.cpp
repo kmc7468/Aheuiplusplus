@@ -17,6 +17,23 @@ namespace app
 	{
 		initialize_();
 	}
+	interpreter::~interpreter()
+	{
+		for (std::vector<app::storage*>& storages : storages_)
+		{
+			for (app::storage* storage : storages)
+			{
+				element* value;
+
+				while (value = storage->pop())
+				{
+					delete value;
+				}
+
+				delete storage;
+			}
+		}
+	}
 
 	long long interpreter::run(const raw_code& code)
 	{

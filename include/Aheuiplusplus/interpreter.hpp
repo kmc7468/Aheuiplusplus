@@ -22,7 +22,7 @@ namespace app
 		interpreter(app::version version, std::FILE* input_stream, std::FILE* output_stream);
 		interpreter(const interpreter& interpreter) = delete;
 		interpreter(interpreter&& interpreter) noexcept = delete;
-		~interpreter() = default;
+		~interpreter();
 
 	public:
 		interpreter& operator=(const interpreter& interpreter) = delete;
