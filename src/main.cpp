@@ -203,7 +203,8 @@ int main(int argc, char** argv)
 
 		static const char* invalid_argument = "오류: 올바르지 않은 인수입니다. !help 명령어를 입력해 올바른 인수 형태를 확인하실 수 있습니다.";
 
-		std::printf("아희++ 표준 인터프리터 %s\n%s\n\n", app::interpreter::version_string, title);
+		std::printf("아희++ 표준 인터프리터 %s (%s)\n%s\n\n",
+			app::interpreter::version_string, "https://github.com/kmc7468/Aheuiplusplus", title);
 
 		while (true)
 		{
