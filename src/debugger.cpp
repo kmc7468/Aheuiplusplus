@@ -188,10 +188,10 @@ namespace app
 					{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 						_setmode(_fileno(output_stream_), _O_U16TEXT);
-#endif
+
 						std::wstring converted = char32_to_wchar(std::get<1>(*value));
 						std::fwprintf(output_stream_, L"character(%ls)\n", converted.c_str());
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+
 						_setmode(_fileno(output_stream_), _O_TEXT);
 #endif
 					}
@@ -209,7 +209,7 @@ namespace app
 					{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 						_setmode(_fileno(output_stream_), _O_U16TEXT);
-#endif
+
 						raw_code convert_value = std::get<2>(*value);
 						std::wstring converted;
 
@@ -219,7 +219,7 @@ namespace app
 						}
 
 						std::fwprintf(output_stream_, L"string(%ls)\n", converted.c_str());
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+
 						_setmode(_fileno(output_stream_), _O_TEXT);
 #endif
 					}
