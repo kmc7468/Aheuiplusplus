@@ -283,10 +283,12 @@ int main(int argc, char** argv)
 
 		code = code.substr(0, code.length() - 2);
 
-		d.run_with_debugging(code);
+		long long result = d.run_with_debugging(code);
 		std::printf("\n");
 
 		std::fclose(file);
+
+		return static_cast<int>(result);
 	}
 
 	return 0;
