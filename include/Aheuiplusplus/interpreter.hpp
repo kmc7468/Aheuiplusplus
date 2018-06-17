@@ -78,7 +78,7 @@ namespace app
 		void type_casting_compare_(element* left_operand, element* right_operand,
 			std::shared_ptr<element>& left_operand_out, std::shared_ptr<element>& right_operand_out) const;
 
-		void stroage_backup_and_restore_();
+		void storage_backup_and_restore_();
 		void delete_storage_();
 
 		app::storage* storage_();

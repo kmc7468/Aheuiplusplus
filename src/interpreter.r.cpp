@@ -41,7 +41,7 @@ namespace app
 			}
 
 			start_of_expression = U'ㅄ';
-			stroage_backup_and_restore_();
+			storage_backup_and_restore_();
 
 			return false;
 		}
@@ -57,7 +57,7 @@ namespace app
 			}
 
 			start_of_expression = U'ㅅ';
-			stroage_backup_and_restore_();
+			storage_backup_and_restore_();
 
 			return false;
 		}
@@ -98,7 +98,7 @@ namespace app
 
 			start_of_expression = 0;
 
-			stroage_backup_and_restore_();
+			storage_backup_and_restore_();
 
 			return false;
 		}
@@ -139,7 +139,7 @@ namespace app
 
 			start_of_expression = 0;
 
-			stroage_backup_and_restore_();
+			storage_backup_and_restore_();
 
 			return false;
 		}

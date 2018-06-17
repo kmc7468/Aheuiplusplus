@@ -312,11 +312,18 @@ namespace app
 					break;
 
 
-					
+
 				case U'ㅇ':
 					break;
 				case U'ㅎ':
+				{
+					if (start_of_expression != 0)
+					{
+						storage_backup_and_restore_();
+					}
+
 					return exit_();
+				}
 				}
 
 				if (is_out_of_version)
@@ -700,7 +707,7 @@ namespace app
 		}
 	}
 
-	void interpreter::stroage_backup_and_restore_()
+	void interpreter::storage_backup_and_restore_()
 	{
 		static std::map<app::interpreter*, std::vector<std::vector<app::storage*>>> backup_storages;
 		static std::map<app::interpreter*, std::vector<std::size_t>> backup_storage_indexs;
