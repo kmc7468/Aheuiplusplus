@@ -105,6 +105,7 @@ namespace app
 		virtual std::size_t length() const override;
 
 	public:
+		std::vector<element*>& original() noexcept;
 		std::size_t virtual_length() const noexcept;
 		void virtual_length(std::size_t new_virtual_length);
 
@@ -136,6 +137,9 @@ namespace app
 		virtual void move(element* element) override;
 		virtual void swap() override;
 		virtual std::size_t length() const override;
+
+	public:
+		std::deque<element*>& original() noexcept;
 
 	private:
 		std::deque<element*> queue_;
