@@ -87,15 +87,28 @@ namespace app
 				if (storage->type() == storage_type::list)
 				{
 					storage_backup = new list();
+
+					list* storage_converted = reinterpret_cast<list*>(storage);
+
+					for (std::size_t k = 0; k < storage->length(); ++k)
+					{
+						reinterpret_cast<list*>(storage_backup)->original().push_back(
+							new element(*storage_converted->original()[k]));
+
+						reinterpret_cast<list*>(storage_backup)->virtual_length(storage_converted->length());
+					}
 				}
 				else
 				{
 					storage_backup = new queue();
-				}
 
-				for (std::size_t k = 0; k < storage->length(); ++k)
-				{
-					storage_backup->push(storage->pop());
+					queue* storage_converted = reinterpret_cast<queue*>(storage);
+
+					for (std::size_t k = 0; k < storage->length(); ++k)
+					{
+						reinterpret_cast<list*>(storage_backup)->original().push_back(
+							new element(*storage_converted->original()[k]));
+					}
 				}
 
 				++depth;
@@ -178,6 +191,8 @@ namespace app
 						break;
 					}
 					}
+				
+					delete value;
 				}
 
 				delete storage_backup;

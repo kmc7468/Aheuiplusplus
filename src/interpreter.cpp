@@ -745,7 +745,7 @@ namespace app
 						for (std::size_t k = 0; k < old_storage_converted->original().size(); ++k)
 						{
 							backup_storages[this][i][j]->push(
-								new element(*old_storage_converted->original()[k]));
+								new element(*old_storage_converted->pop()));
 						}
 					}
 				}
