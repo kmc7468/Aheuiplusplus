@@ -1,5 +1,6 @@
 ﻿#include <Aheuiplusplus/code.hpp>
 
+#include <cstdint>
 #include <stdexcept>
 #include <utility>
 
@@ -241,17 +242,17 @@ namespace app
 		}
 		else if ((first & 0xF0) == 0xF0)
 		{
-			return ((static_cast<char32_t>(first) & 0x07) << 18) + ((static_cast<char32_t>(second) & 0x3F) << 12)
-				+ ((static_cast<char32_t>(third) & 0x3F) << 6) + (static_cast<char32_t>(fourth) & 0x3F);
+			return ((static_cast<std::int32_t>(first) & 0x07) << 18) + ((static_cast<std::int32_t>(second) & 0x3F) << 12)
+				+ ((static_cast<std::int32_t>(third) & 0x3F) << 6) + (static_cast<std::int32_t>(fourth) & 0x3F);
 		}
 		else if ((first & 0xE0) == 0xE0)
 		{
-			return ((static_cast<char32_t>(first) & 0x0F) << 12) + ((static_cast<char32_t>(second) & 0x3F) << 6)
-				+ (static_cast<char32_t>(third) & 0x3F);
+			return ((static_cast<std::int32_t>(first) & 0x0F) << 12) + ((static_cast<std::int32_t>(second) & 0x3F) << 6)
+				+ (static_cast<std::int32_t>(third) & 0x3F);
 		}
 		else if ((first & 0xC0) == 0xC0)
 		{
-			return ((static_cast<char32_t>(first) & 0x1F) << 6) + (static_cast<char32_t>(second) & 0x3F);
+			return ((static_cast<std::int32_t>(first) & 0x1F) << 6) + (static_cast<std::int32_t>(second) & 0x3F);
 		}
 	}
 
