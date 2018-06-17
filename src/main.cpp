@@ -215,7 +215,7 @@ int main(int argc, char** argv)
 			
 			if (*(code.end() - 1) == U'\\')
 			{
-				*(code.end() - 1) = U'\n';
+				code.erase(code.end() - 1);
 
 				while (true)
 				{
@@ -235,6 +235,10 @@ int main(int argc, char** argv)
 						if (*(new_line.end() - 1) != U'\\')
 						{
 							break;
+						}
+						else
+						{
+							code.erase(code.end() - 1);
 						}
 					}
 				}

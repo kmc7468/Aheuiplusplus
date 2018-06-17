@@ -316,7 +316,7 @@ namespace app
 	}
 	void queue::swap()
 	{
-		if (length() > 2)
+		if (length() < 2)
 			throw std::bad_function_call();
 
 		element* first = pop();
