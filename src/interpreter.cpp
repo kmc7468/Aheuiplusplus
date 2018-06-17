@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <map>
 
 namespace app
 {
@@ -16,6 +17,10 @@ namespace app
 		: version_(version), input_stream_(input_stream), output_stream_(output_stream)
 	{
 		initialize_();
+	}
+	interpreter::~interpreter()
+	{
+		delete_storage_();
 	}
 
 	long long interpreter::run(const raw_code& code)
@@ -307,11 +312,18 @@ namespace app
 					break;
 
 
-					
+
 				case U'ㅇ':
 					break;
 				case U'ㅎ':
+				{
+					if (start_of_expression != 0)
+					{
+						storage_backup_and_restore_();
+					}
+
 					return exit_();
+				}
 				}
 
 				if (is_out_of_version)
@@ -691,6 +703,119 @@ namespace app
 				}
 				break;
 			}
+			}
+		}
+	}
+
+	void interpreter::storage_backup_and_restore_()
+	{
+		static std::map<app::interpreter*, std::vector<std::vector<app::storage*>>> backup_storages;
+		static std::map<app::interpreter*, std::vector<std::size_t>> backup_storage_indexs;
+		static std::map<app::interpreter*, std::size_t> backup_selected_index;
+
+		static std::map<app::interpreter*, bool> backup_is_integer_mode;
+		static std::map<app::interpreter*, bool> backup_is_compatible_with_aheui;
+
+		if (backup_is_integer_mode.find(this) == backup_is_integer_mode.end()) // 백업
+		{
+			// 저장공간 백업
+			backup_storages.insert(
+				std::make_pair<app::interpreter*, std::vector<std::vector<app::storage*>>>(
+					this, std::vector<std::vector<app::storage*>>{}));
+
+			for (std::size_t i = 0; i < storages_.size(); ++i)
+			{
+				backup_storages[this].push_back({});
+
+				for (std::size_t j = 0; j < storages_[i].size(); ++j)
+				{
+					app::storage* old_storage = storages_[i][j];
+
+					if (old_storage->type() == storage_type::list)
+					{
+						backup_storages[this][i].push_back(new list());
+
+						list* old_storage_converted = reinterpret_cast<list*>(old_storage);
+
+						for (std::size_t k = 0; k < old_storage_converted->original().size(); ++k)
+						{
+							backup_storages[this][i][j]->push(
+								new element(*old_storage_converted->original()[k]));
+						}
+					}
+					else
+					{
+						backup_storages[this][i].push_back(new queue());
+
+						queue* old_storage_converted = reinterpret_cast<queue*>(old_storage);
+
+						for (std::size_t k = 0; k < old_storage_converted->original().size(); ++k)
+						{
+							backup_storages[this][i][j]->push(
+								new element(*old_storage_converted->pop()));
+						}
+					}
+				}
+			}
+
+			// 저장공간 번호 백업
+			backup_storage_indexs.insert(
+				std::make_pair<app::interpreter*, std::vector<std::size_t>>(
+					this, std::vector<std::size_t>{}));
+
+			for (std::size_t index : storage_indexs_)
+			{
+				backup_storage_indexs[this].push_back(index);
+			}
+
+			// 선택된 저장공간 백업
+			backup_selected_index.insert(
+				std::make_pair<app::interpreter*, std::size_t>(
+					this, std::size_t(selected_index_)));
+
+			// 연산 모드 백업
+			backup_is_integer_mode.insert(
+				std::make_pair<app::interpreter*, bool>(
+					this, bool(is_integer_mode_)));
+
+			// 아희 호환 모드 백업
+			backup_is_compatible_with_aheui.insert(std::make_pair<app::interpreter*, bool>(
+				this, bool(is_compatible_with_aheui_)));
+		}
+		else // 복원
+		{
+			delete_storage_();
+			
+			storages_ = backup_storages[this];
+			storage_indexs_ = backup_storage_indexs[this];
+			selected_index_ = backup_selected_index[this];
+			
+			is_integer_mode_ = backup_is_integer_mode[this];
+			is_compatible_with_aheui_ = backup_is_compatible_with_aheui[this];
+
+			// 맵에서 삭제
+			backup_storages.erase(backup_storages.find(this));
+			backup_storage_indexs.erase(backup_storage_indexs.find(this));
+			backup_selected_index.erase(backup_selected_index.find(this));
+
+			backup_is_integer_mode.erase(backup_is_integer_mode.find(this));
+			backup_is_compatible_with_aheui.erase(backup_is_compatible_with_aheui.find(this));
+		}
+	}
+	void interpreter::delete_storage_()
+	{
+		for (std::vector<app::storage*>& storages : storages_)
+		{
+			for (app::storage* storage : storages)
+			{
+				element* value;
+
+				while (value = storage->pop())
+				{
+					delete value;
+				}
+
+				delete storage;
 			}
 		}
 	}

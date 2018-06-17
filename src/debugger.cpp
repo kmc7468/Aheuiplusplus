@@ -53,141 +53,190 @@ namespace app
 
 		for (std::size_t i = 0; i < interpreter_.storages_.size() - 1; ++i) // 통로는 제외
 		{
-			std::string tab(depth * 4, ' ');
-
 			static constexpr char32_t jongsungs[] = {
 				0, U'ㄱ', U'ㄲ', U'ㄳ', U'ㄴ', U'ㄵ', U'ㄶ', U'ㄷ', U'ㄹ', U'ㄺ', U'ㄻ', U'ㄼ', U'ㄽ', U'ㄾ',
 				U'ㄿ', U'ㅀ', U'ㅁ', U'ㅂ', U'ㅄ', U'ㅅ', U'ㅆ', U'ㅇ', U'ㅈ', U'ㅊ', U'ㅋ', U'ㅌ', U'ㅍ', U'ㅎ'
 			};
 
-			std::fprintf(output_stream_, "%s%lc(선택된 번호: %lld, 번호 개수: %lld):\n", tab.c_str(),
-				static_cast<wchar_t>(get_complete_hangul(U'ㅇ', U'ㅏ', jongsungs[i])),
-				static_cast<long long>(interpreter_.storage_indexs_[i]),
-				static_cast<long long>(interpreter_.storages_[i].size()));
-		
-			++depth;
+			dump_storage(depth, get_complete_hangul(U'ㅇ', U'ㅏ', jongsungs[i]));
+		}
+	}
+	void debugger::dump_storage(char32_t storage) const
+	{
+		dump_storage(0, storage);
+	}
+	void debugger::dump_storage(std::size_t depth, char32_t storage) const
+	{
+		if (!is_connceted_debugger())
+			throw std::bad_function_call();
+		if (!is_complete_hangul(storage))
+			throw std::invalid_argument("인수 storage는 완성된 현대 한글이여야 합니다.");
+		if (get_jongsung(storage) == U'ㅎ')
+		{
+			std::printf("[Debugger] 현재 버전에서는 통로는 지원되지 않습니다.\n\n");
+			return;
+		}
 
-			for (std::size_t j = 0; j < interpreter_.storages_[i].size(); ++j)
+		std::string tab(depth * 4, ' ');
+
+		static constexpr char32_t jongsungs[] = {
+			0, U'ㄱ', U'ㄲ', U'ㄳ', U'ㄴ', U'ㄵ', U'ㄶ', U'ㄷ', U'ㄹ', U'ㄺ', U'ㄻ', U'ㄼ', U'ㄽ', U'ㄾ',
+			U'ㄿ', U'ㅀ', U'ㅁ', U'ㅂ', U'ㅄ', U'ㅅ', U'ㅆ', U'ㅇ', U'ㅈ', U'ㅊ', U'ㅋ', U'ㅌ', U'ㅍ', U'ㅎ'
+		};
+
+		std::size_t i = 0;
+
+		for (std::size_t j = 0; j < sizeof(jongsungs) / sizeof(char32_t); ++j)
+		{
+			if (get_jongsung(storage) == jongsungs[j])
 			{
-				tab = std::string(depth * 4, ' ');
+				i = j;
+				break;
+			}
+		}
+		
+		std::fprintf(output_stream_, "%s%lc(선택된 번호: %lld, 번호 개수: %lld):\n", tab.c_str(),
+			static_cast<wchar_t>(storage),
+			static_cast<long long>(interpreter_.storage_indexs_[i]),
+			static_cast<long long>(interpreter_.storages_[i].size()));
 
-				app::storage* storage = interpreter_.storages_[i][j];
-				std::size_t virtual_length = storage->length();
+		++depth;
 
-				if (storage->type() == storage_type::list)
-				{
-					virtual_length = reinterpret_cast<list*>(storage)->virtual_length();
-				}
+		for (std::size_t j = 0; j < interpreter_.storages_[i].size(); ++j)
+		{
+			tab = std::string(depth * 4, ' ');
 
-				std::fprintf(output_stream_, "%s[%lld](가상 길이: %lld, 실제 길이: %lld):\n", tab.c_str(), static_cast<long long>(j),
-					static_cast<long long>(virtual_length), static_cast<long long>(storage->length()));
+			app::storage* storage = interpreter_.storages_[i][j];
+			std::size_t virtual_length = storage->length();
 
-				app::storage* storage_backup;
-				
-				if (storage->type() == storage_type::list)
-				{
-					storage_backup = new list();
-				}
-				else
-				{
-					storage_backup = new queue();
-				}
+			if (storage->type() == storage_type::list)
+			{
+				virtual_length = reinterpret_cast<list*>(storage)->virtual_length();
+			}
+
+			std::fprintf(output_stream_, "%s[%lld](가상 길이: %lld, 실제 길이: %lld):\n", tab.c_str(), static_cast<long long>(j),
+				static_cast<long long>(virtual_length), static_cast<long long>(storage->length()));
+
+			app::storage* storage_backup;
+
+			if (storage->type() == storage_type::list)
+			{
+				storage_backup = new list();
+
+				list* storage_converted = reinterpret_cast<list*>(storage);
 
 				for (std::size_t k = 0; k < storage->length(); ++k)
 				{
-					storage_backup->push(storage->pop());
+					reinterpret_cast<list*>(storage_backup)->original().push_back(
+						new element(*storage_converted->original()[k]));
+
+					reinterpret_cast<list*>(storage_backup)->virtual_length(storage_converted->length());
 				}
-
-				++depth;
-
-				if (storage_backup->length() == 0)
-				{
-					tab = std::string(depth * 4, ' ');
-
-					std::fprintf(output_stream_, "%s(비어 있음)\n", tab.c_str());
-				}
-
-				for (std::size_t k = 0; k < storage_backup->length(); ++k)
-				{
-					tab = std::string(depth * 4, ' ');
-
-					std::fprintf(output_stream_, "%s[%lld] = ", tab.c_str(), static_cast<long long>(k));
-
-					element* value = storage_backup->pop();
-
-					switch (value->index())
-					{
-					case 0:
-					{
-						if (std::get<0>(*value).is_integer())
-						{
-							std::fprintf(output_stream_, "number(%lld)\n", std::get<0>(*value).integer());
-						}
-						else
-						{
-							std::fprintf(output_stream_, "number(%f)\n", std::get<0>(*value).decimal());
-						}
-						break;
-					}
-
-					case 1:
-					{
-						if constexpr (sizeof(char32_t) == sizeof(wchar_t))
-						{
-							std::fprintf(output_stream_, "character(%lc)\n", std::get<1>(*value));
-						}
-						else
-						{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-							_setmode(_fileno(output_stream_), _O_U16TEXT);
-#endif
-							std::wstring converted = char32_to_wchar(std::get<1>(*value));
-							std::fwprintf(output_stream_, L"character(%ls)\n", converted.c_str());
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-							_setmode(_fileno(output_stream_), _O_TEXT);
-#endif
-						}
-						break;
-					}
-
-					case 2:
-					{
-						if constexpr (sizeof(wchar_t) == sizeof(char32_t))
-						{
-							raw_code print_value = std::get<2>(*value);
-							std::fwprintf(output_stream_, L"string(%ls)\n", print_value.c_str());
-						}
-						else
-						{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-							_setmode(_fileno(output_stream_), _O_U16TEXT);
-#endif
-							raw_code convert_value = std::get<2>(*value);
-							std::wstring converted;
-
-							for (char32_t c : convert_value)
-							{
-								converted += char32_to_wchar(c);
-							}
-
-							std::fwprintf(output_stream_, L"string(%ls)\n", converted.c_str());
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-							_setmode(_fileno(output_stream_), _O_TEXT);
-#endif
-						}
-						break;
-					}
-					}
-				}
-
-				delete storage_backup;
-			
-				--depth;
 			}
-		
+			else
+			{
+				storage_backup = new queue();
+
+				queue* storage_converted = reinterpret_cast<queue*>(storage);
+
+				for (std::size_t k = 0; k < storage->length(); ++k)
+				{
+					reinterpret_cast<list*>(storage_backup)->original().push_back(
+						new element(*storage_converted->original()[k]));
+				}
+			}
+
+			++depth;
+
+			if (storage_backup->length() == 0)
+			{
+				tab = std::string(depth * 4, ' ');
+
+				std::fprintf(output_stream_, "%s(비어 있음)\n", tab.c_str());
+			}
+
+			for (std::size_t k = 0; k < storage_backup->length(); ++k)
+			{
+				tab = std::string(depth * 4, ' ');
+
+				std::fprintf(output_stream_, "%s[%lld] = ", tab.c_str(), static_cast<long long>(k));
+
+				element* value = storage_backup->pop();
+
+				switch (value->index())
+				{
+				case 0:
+				{
+					if (std::get<0>(*value).is_integer())
+					{
+						std::fprintf(output_stream_, "number(%lld)\n", std::get<0>(*value).integer());
+					}
+					else
+					{
+						std::fprintf(output_stream_, "number(%f)\n", std::get<0>(*value).decimal());
+					}
+					break;
+				}
+
+				case 1:
+				{
+					if constexpr (sizeof(char32_t) == sizeof(wchar_t))
+					{
+						std::fprintf(output_stream_, "character(%lc)\n", std::get<1>(*value));
+					}
+					else
+					{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
+						std::wstring converted = char32_to_wchar(std::get<1>(*value));
+						std::fwprintf(output_stream_, L"character(%ls)\n", converted.c_str());
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
+					}
+					break;
+				}
+
+				case 2:
+				{
+					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
+					{
+						raw_code print_value = std::get<2>(*value);
+						std::fwprintf(output_stream_, L"string(%ls)\n", print_value.c_str());
+					}
+					else
+					{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
+						raw_code convert_value = std::get<2>(*value);
+						std::wstring converted;
+
+						for (char32_t c : convert_value)
+						{
+							converted += char32_to_wchar(c);
+						}
+
+						std::fwprintf(output_stream_, L"string(%ls)\n", converted.c_str());
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+						_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
+					}
+					break;
+				}
+				}
+
+				delete value;
+			}
+
+			delete storage_backup;
+
 			--depth;
-			std::printf("\n");
 		}
+
+		--depth;
+		std::printf("\n");
 	}
 
 	void debugger::add_breakpoint(std::size_t x, std::size_t y)

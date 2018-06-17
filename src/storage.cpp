@@ -237,6 +237,10 @@ namespace app
 		return vector_.size();
 	}
 
+	std::vector<element*>& list::original() noexcept
+	{
+		return vector_;
+	}
 	std::size_t list::virtual_length() const noexcept
 	{
 		return virtual_length_;
@@ -324,5 +328,10 @@ namespace app
 	std::size_t queue::length() const
 	{
 		return queue_.size();
+	}
+
+	std::deque<element*>& queue::original() noexcept
+	{
+		return queue_;
 	}
 }

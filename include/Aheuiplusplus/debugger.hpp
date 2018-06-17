@@ -34,6 +34,8 @@ namespace app
 
 		void dump_storages() const;
 		void dump_storages(std::size_t depth) const;
+		void dump_storage(char32_t storage) const;
+		void dump_storage(std::size_t depth, char32_t storage) const;
 
 		void add_breakpoint(std::size_t x, std::size_t y);
 		void remove_breakpoint(std::size_t x, std::size_t y);

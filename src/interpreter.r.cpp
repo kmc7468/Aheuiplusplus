@@ -35,8 +35,13 @@ namespace app
 			{
 				return true;
 			}
+			else if (start_of_expression != 0)
+			{
+				return true;
+			}
 
 			start_of_expression = U'ㅄ';
+			storage_backup_and_restore_();
 
 			return false;
 		}
@@ -46,8 +51,13 @@ namespace app
 			{
 				return true;
 			}
+			else if (start_of_expression != 0)
+			{
+				return true;
+			}
 
 			start_of_expression = U'ㅅ';
+			storage_backup_and_restore_();
 
 			return false;
 		}
@@ -88,11 +98,7 @@ namespace app
 
 			start_of_expression = 0;
 
-			storages_.clear();
-			storage_indexs_.clear();
-			selected_index_ = 0;
-
-			initialize_();
+			storage_backup_and_restore_();
 
 			return false;
 		}
@@ -133,11 +139,7 @@ namespace app
 
 			start_of_expression = 0;
 
-			storages_.clear();
-			storage_indexs_.clear();
-			selected_index_ = 0;
-
-			initialize_();
+			storage_backup_and_restore_();
 
 			return false;
 		}

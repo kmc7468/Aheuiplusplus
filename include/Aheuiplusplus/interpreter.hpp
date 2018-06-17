@@ -1,6 +1,12 @@
 ﻿#ifndef AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 #define AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 
+#define AHEUIPLUSPLUS_VERSION_STRING ("1.1.0")
+#define AHEUIPLUSPLUS_VERSION (1)
+#define AHEUIPLUSPLUS_VERSION_MAJOR AHEUIPLUSPLUS_VERSION
+#define AHEUIPLUSPLUS_VERSION_MINOR (1)
+#define AHEUIPLUSPLUS_VERSION_PATCH (0)
+
 #include <Aheuiplusplus/code.hpp>
 #include <Aheuiplusplus/function.hpp>
 #include <Aheuiplusplus/storage.hpp>
@@ -22,7 +28,7 @@ namespace app
 		interpreter(app::version version, std::FILE* input_stream, std::FILE* output_stream);
 		interpreter(const interpreter& interpreter) = delete;
 		interpreter(interpreter&& interpreter) noexcept = delete;
-		~interpreter() = default;
+		~interpreter();
 
 	public:
 		interpreter& operator=(const interpreter& interpreter) = delete;
@@ -72,6 +78,9 @@ namespace app
 		void type_casting_compare_(element* left_operand, element* right_operand,
 			std::shared_ptr<element>& left_operand_out, std::shared_ptr<element>& right_operand_out) const;
 
+		void storage_backup_and_restore_();
+		void delete_storage_();
+
 		app::storage* storage_();
 
 	public:
@@ -101,6 +110,12 @@ namespace app
 		std::FILE* output_stream_;
 		bool is_processed_space_char_ = true;
 		app::debugger* debugger_ = nullptr;
+
+	public:
+		static constexpr const char* version_string = AHEUIPLUSPLUS_VERSION_STRING;
+		static constexpr int version_major = AHEUIPLUSPLUS_VERSION_MAJOR;
+		static constexpr int version_minor = AHEUIPLUSPLUS_VERSION_MINOR;
+		static constexpr int version_patch = AHEUIPLUSPLUS_VERSION_PATCH;
 	};
 }
 
