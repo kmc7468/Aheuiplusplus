@@ -30,66 +30,16 @@ namespace
 	{
 		app::raw_code result;
 
-		bool is_first = true;
-
-		if constexpr (sizeof(wchar_t) == sizeof(char32_t))
+		while (true)
 		{
-			while (!std::feof(stdin))
+			char32_t c = app::read_char(stdin);
+
+			if (c == U'\n')
 			{
-				char32_t value = std::fgetwc(stdin);
-				
-				if (is_first && value == U'\n')
-				{
-					is_first = false;
-					continue;
-				}
-
-				is_first = false;
-
-				if (value == U'\n')
-				{
-					break;
-				}
-
-				result.push_back(value);
+				break;
 			}
-		}
-		else
-		{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-			_setmode(_fileno(stdin), _O_U16TEXT);
-#endif
-			while (!std::feof(stdin))
-			{
-				wchar_t high_surrogate = std::fgetwc(stdin);
 
-				if (high_surrogate >= 0xD800 && high_surrogate <= 0xDBFF)
-				{
-					wchar_t low_surrogate = std::fgetwc(stdin);
-
-					result.push_back(app::wchar_to_char32(high_surrogate, low_surrogate));
-				}
-				else
-				{
-					if (is_first && high_surrogate == U'\n')
-					{
-						is_first = false;
-						continue;
-					}
-
-					is_first = false;
-
-					if (high_surrogate == L'\n')
-					{
-						break;
-					}
-
-					result.push_back(high_surrogate);
-				}
-			}
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-			_setmode(_fileno(stdin), _O_TEXT);
-#endif
+			result += c;
 		}
 
 		return result;
@@ -100,35 +50,33 @@ namespace
 
 		while (!std::feof(file))
 		{
-			unsigned char first_byte = static_cast<unsigned char>(std::fgetc(file));
+			std::string c = app::read_u8char(file);
 
-			if (first_byte < 0x80)
+			if (c.length() == 1 && (c.front() == '\n' || c.front() == '\r'))
 			{
-				if (first_byte == '\r')
+				if (c.front() == '\r')
 				{
-					break;
-				}
-				if (first_byte == '\n')
-				{
-					break;
+					app::read_u8char(file);
 				}
 
-				result.push_back(first_byte);
+				break;
 			}
-			else if ((first_byte & 0xF0) == 0xF0)
+
+			if (c.length() == 1)
 			{
-				result.push_back(
-					((first_byte & 0x07) << 18) + ((static_cast<unsigned char>(std::fgetc(file)) & 0x3F) << 12) + ((static_cast<unsigned char>(std::fgetc(file)) & 0x3F) << 6) + (static_cast<unsigned char>(std::fgetc(file)) & 0x3F));
+				result += app::u8char_to_char32(c[0]);
 			}
-			else if ((first_byte & 0xE0) == 0xE0)
+			else if (c.length() == 2)
 			{
-				result.push_back(
-					((first_byte & 0x0F) << 12) + ((static_cast<unsigned char>(std::fgetc(file)) & 0x3F) << 6) + (static_cast<unsigned char>(std::fgetc(file)) & 0x3F));
+				result += app::u8char_to_char32(c[0], c[1]);
 			}
-			else if ((first_byte & 0xC0) == 0xC0)
+			else if (c.length() == 3)
 			{
-				result.push_back(
-					((first_byte & 0x1F) << 6) + (static_cast<unsigned char>(std::fgetc(file)) & 0x3F));
+				result += app::u8char_to_char32(c[0], c[1], c[2]);
+			}
+			else
+			{
+				result += app::u8char_to_char32(c[0], c[1], c[2], c[3]);
 			}
 		}
 
@@ -267,7 +215,7 @@ int main(int argc, char** argv)
 			
 			if (*(code.end() - 1) == U'\\')
 			{
-				*(code.end() - 1) = U'\n';
+				code.erase(code.end() - 1);
 
 				while (true)
 				{
@@ -288,32 +236,36 @@ int main(int argc, char** argv)
 						{
 							break;
 						}
+						else
+						{
+							code.erase(code.end() - 1);
+						}
 					}
 				}
 			}
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			d.is_last_input_utf16(false);
+#endif
+			d.is_processed_space(true);
+			d.is_inputed(false);
+
 			d.run_with_debugging(code);
 			std::printf("\n");
 
-			if (d.is_inputed())
+			if (d.is_inputed() && !d.is_processed_space())
 			{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				if (!std::feof(stdin))
+				if (d.is_last_input_utf16())
 				{
-					if (d.is_last_input_utf16())
-					{
-						std::fgetwc(stdin);
-					}
-					else
-					{
-						std::fgetc(stdin);
-					}
+					std::fgetwc(stdin);
 				}
-#else
-				if (!std::feof(stdin))
+				else
 				{
 					std::fgetc(stdin);
 				}
+#else
+				std::fgetc(stdin);
 #endif
 			}
 		}
@@ -321,6 +273,12 @@ int main(int argc, char** argv)
 	else
 	{
 		std::FILE* file = std::fopen(paths[0].c_str(), "r");
+
+		if (file == nullptr)
+		{
+			std::printf("오류: 파일을 여는데에 실패했습니다. 경로 또는 권한을 확인해 보십시오.\n");
+			return 0;
+		}
 
 		app::raw_code code;
 		app::raw_code line;
@@ -335,10 +293,12 @@ int main(int argc, char** argv)
 
 		code = code.substr(0, code.length() - 2);
 
-		d.run_with_debugging(code);
+		long long result = d.run_with_debugging(code);
 		std::printf("\n");
 
 		std::fclose(file);
+
+		return static_cast<int>(result);
 	}
 
 	return 0;

@@ -90,121 +90,34 @@ namespace app
 			{
 				if (value->index() == 0) // 숫자일 경우
 				{
-					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
-					{
-						std::fwprintf(output_stream_, L"%lc", static_cast<wchar_t>(std::get<0>(*value).integer()));
-					}
-					else
-					{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(output_stream_), _O_U16TEXT);
-#endif
-						std::wstring converted = char32_to_wchar(static_cast<char32_t>(std::get<0>(*value).integer()));
-						std::fwprintf(output_stream_, L"%ls", converted.c_str());
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(output_stream_), _O_TEXT);
-#endif
-					}
+					write_char(output_stream_, std::get<0>(*value).integer());
 				}
 				else if (value->index() == 1) // 문자일 경우
 				{
-					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
-					{
-						std::fwprintf(output_stream_, L"%lc", std::get<1>(*value));
-					}
-					else
-					{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(output_stream_), _O_U16TEXT);
-#endif
-						std::wstring converted = char32_to_wchar(std::get<1>(*value));
-						std::fwprintf(output_stream_, L"%ls", converted.c_str());
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(output_stream_), _O_TEXT);
-#endif
-					}
+					write_char(output_stream_, std::get<1>(*value));
 				}
 				else if (value->index() == 2) // 문자열일 경우
 				{
-					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
-					{
-						std::fwprintf(output_stream_, L"%lc", std::get<2>(*value).empty() ? 0 : std::get<2>(*value)[0]);
-					}
-					else
-					{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(output_stream_), _O_U16TEXT);
-#endif
-						std::wstring converted = char32_to_wchar(std::get<2>(*value).empty() ? 0 : std::get<2>(*value)[0]);
-						std::fwprintf(output_stream_, L"%ls", converted.c_str());
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(output_stream_), _O_TEXT);
-#endif
-					}
+					write_char(output_stream_, std::get<2>(*value).empty() ? 0 : std::get<2>(*value).front());
 				}
 			}
 			else if (jongsung == U'ㅎ' && is_added_additional_data) // 문자열 출력
 			{
 				if (value->index() == 0)
 				{
-					if constexpr (sizeof(wchar_t) == sizeof(char32_t)) // 숫자일 경우
-					{
-						std::fwprintf(output_stream_, L"%lc", static_cast<wchar_t>(std::get<0>(*value).integer()));
-					}
-					else
-					{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(output_stream_), _O_U16TEXT);
-#endif
-						std::wstring converted = char32_to_wchar(static_cast<char32_t>(std::get<0>(*value).integer()));
-						std::fwprintf(output_stream_, L"%ls", converted.c_str());
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(output_stream_), _O_TEXT);
-#endif
-					}
+					write_char(output_stream_, std::get<0>(*value).integer());
 				}
 				else if (value->index() == 1) // 문자일 경우
 				{
-					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
-					{
-						std::fwprintf(output_stream_, L"%lc", std::get<1>(*value));
-					}
-					else
-					{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(output_stream_), _O_U16TEXT);
-#endif
-						std::wstring converted = char32_to_wchar(std::get<1>(*value));
-						std::fwprintf(output_stream_, L"%ls", converted.c_str());
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(output_stream_), _O_TEXT);
-#endif
-					}
+					write_char(output_stream_, std::get<1>(*value));
 				}
 				else if (value->index() == 2) // 문자열일 경우
 				{
-					if constexpr (sizeof(wchar_t) == sizeof(char32_t))
-					{
-						raw_code print_value = std::get<2>(*value);
-						std::fwprintf(output_stream_, L"%ls", print_value.c_str());
-					}
-					else
-					{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(output_stream_), _O_U16TEXT);
-#endif
-						raw_code convert_value = std::get<2>(*value);
-						std::wstring converted;
+					raw_code value_string = std::get<2>(*value);
 
-						for (char32_t c : convert_value)
-						{
-							converted += char32_to_wchar(c);
-						}
-
-						std::fwprintf(output_stream_, L"%ls", converted.c_str());
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(output_stream_), _O_TEXT);
-#endif
+					for (char32_t c : value_string)
+					{
+						write_char(output_stream_, c);
 					}
 				}
 			}
@@ -226,25 +139,44 @@ namespace app
 	{
 		if (jongsung == U'ㅇ' && !is_added_additional_data) // 숫자(정수) 입력
 		{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-			_setmode(_fileno(input_stream_), _O_TEXT);
-#endif
 			if (input_stream_ != stdin && std::feof(input_stream_))
 			{
 				storage_()->push(new element(number(0ll)));
 				return false;
 			}
 
+			if (!is_processed_space_char_)
+			{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+				if (is_last_input_utf16_)
+				{
+					std::fgetwc(input_stream_);
+				}
+				else
+				{
+					std::fgetc(input_stream_);
+				}
+#else
+				read_char(input_stream_);
+#endif
+			}
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			_setmode(_fileno(input_stream_), _O_TEXT);
+#endif
+
 			long long temp;
-			std::fscanf(input_stream_, " %lld", &temp);
+			std::fscanf(input_stream_, "%lld", &temp);
 
 			storage_()->push(new element(number(temp)));
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			is_last_input_utf16_ = false;
+#endif
+			is_processed_space_char_ = false;
+
 			if (debugger_ != nullptr)
 			{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				debugger_->is_last_input_utf16_ = false;
-#endif
 				debugger_->is_inputed_ = true;
 			}
 
@@ -252,25 +184,44 @@ namespace app
 		}
 		else if (jongsung == U'ㅇ' && is_added_additional_data) // 숫자(소수) 입력
 		{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-			_setmode(_fileno(input_stream_), _O_TEXT);
-#endif
 			if (input_stream_ != stdin && std::feof(input_stream_))
 			{
 				storage_()->push(new element(number(0.0)));
 				return false;
 			}
 
+			if (!is_processed_space_char_)
+			{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+				if (is_last_input_utf16_)
+				{
+					std::fgetwc(input_stream_);
+				}
+				else
+				{
+					std::fgetc(input_stream_);
+				}
+#else
+				read_char(input_stream_);
+#endif
+			}
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			_setmode(_fileno(input_stream_), _O_TEXT);
+#endif
+
 			double temp;
-			std::fscanf(input_stream_, " %lf", &temp);
+			std::fscanf(input_stream_, "%lf", &temp);
 
 			storage_()->push(new element(number(temp)));
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			is_last_input_utf16_ = false;
+#endif
+			is_processed_space_char_ = false;
+
 			if (debugger_ != nullptr)
 			{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				debugger_->is_last_input_utf16_ = false;
-#endif
 				debugger_->is_inputed_ = true;
 			}
 
@@ -285,78 +236,42 @@ namespace app
 				return false;
 			}
 
-			if constexpr (sizeof(wchar_t) == sizeof(char32_t))
-			{
-				char32_t temp;
-
-				std::fwscanf(input_stream_, L" %lc", &temp);
-
-				if (std::iswspace(temp))
-				{
-					goto input_char;
-				}
-
-				storage_()->push(new element(temp));
-
-				if (debugger_ != nullptr)
-				{
-					debugger_->is_inputed_ = true;
-				}
-			}
-			else
+			if (!is_processed_space_char_)
 			{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				_setmode(_fileno(input_stream_), _O_U16TEXT);
-#endif
-				wchar_t high_surrogate = std::fgetwc(input_stream_);
-
-				if (!is_processed_space_char_ && std::isspace(*reinterpret_cast<char*>(&high_surrogate)))
+				if (is_last_input_utf16_)
 				{
-					if (*(reinterpret_cast<char*>(&high_surrogate) + 1) == 0)
-					{
-						is_processed_space_char_ = true;
-						goto input_char;
-					}
-
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-					_setmode(_fileno(input_stream_), _O_TEXT);
-#endif
-					char high_surrogate_low = std::fgetc(input_stream_);
-
-					if (high_surrogate_low == 0)
-					{
-						is_processed_space_char_ = true;
-						goto input_char;
-					}
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-					_setmode(_fileno(input_stream_), _O_U16TEXT);
-#endif
-
-					char temp = *(reinterpret_cast<char*>(&high_surrogate) + 1);
-					*reinterpret_cast<char*>(&high_surrogate) = temp;
-					*(reinterpret_cast<char*>(&high_surrogate) + 1) = high_surrogate_low;
-				}
-
-				if (high_surrogate >= 0xD800 && high_surrogate <= 0xDBFF)
-				{
-					wchar_t low_surrogate = std::fgetwc(input_stream_);
-
-					is_processed_space_char_ = false;
-					storage_()->push(new element(wchar_to_char32(high_surrogate, low_surrogate)));
+					std::fgetwc(input_stream_);
 				}
 				else
 				{
-					is_processed_space_char_ = false;
-					storage_()->push(new element(static_cast<char32_t>(high_surrogate)));
+					std::fgetc(input_stream_);
 				}
-
-				if (debugger_ != nullptr)
-				{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-					debugger_->is_last_input_utf16_ = true;
+#else
+				read_char(input_stream_);
 #endif
-					debugger_->is_inputed_ = true;
+			}
+
+			char32_t input = read_char(input_stream_);
+
+			if (input < 128)
+			{
+				if (std::isspace(static_cast<unsigned char>(input)))
+				{
+					goto input_char;
 				}
+			}
+
+			storage_()->push(new element(input));
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			is_last_input_utf16_ = true;
+#endif
+			is_processed_space_char_ = false;
+
+			if (debugger_ != nullptr)
+			{
+				debugger_->is_inputed_ = true;
 			}
 
 			return false;
@@ -369,104 +284,49 @@ namespace app
 				return false;
 			}
 
-			if constexpr (sizeof(wchar_t) == sizeof(char32_t))
+			if (!is_processed_space_char_)
 			{
-				raw_code temp;
-
-				do
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+				if (is_last_input_utf16_)
 				{
-					char32_t input = std::fgetwc(input_stream_);
+					std::fgetwc(input_stream_);
+				}
+				else
+				{
+					std::fgetc(input_stream_);
+				}
+#else
+				read_char(input_stream_);
+#endif
+			}
 
-					if (std::iswspace(input))
+			raw_code input;
+
+			while (true)
+			{
+				char32_t c = read_char(input_stream_);
+
+				if (c < 128)
+				{
+					if (std::isspace(static_cast<unsigned char>(c)))
 					{
 						break;
 					}
-
-					temp += input;
-				} while (!std::feof(input_stream_));
-
-				storage_()->push(new element(temp));
-
-				if (debugger_ != nullptr)
-				{
-					debugger_->is_inputed_ = false;
 				}
+
+				input += c;
 			}
-			else
+
+			storage_()->push(new element(input));
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			is_last_input_utf16_ = true;
+#endif
+			is_processed_space_char_ = true;
+
+			if (debugger_ != nullptr)
 			{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				_setmode(_fileno(input_stream_), _O_U16TEXT);
-#endif
-				raw_code temp;
-
-				bool is_first = true;
-
-				while (!std::feof(input_stream_))
-				{
-					wchar_t high_surrogate = std::fgetwc(input_stream_);
-
-					if (!is_processed_space_char_ && std::isspace(*reinterpret_cast<char*>(&high_surrogate)))
-					{
-						if (*(reinterpret_cast<char*>(&high_surrogate) + 1) == 0)
-						{
-							is_processed_space_char_ = true;
-
-							if (is_first)
-							{
-								is_first = false;
-								continue;
-							}
-							else
-							{
-								break;
-							}
-						}
-
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(input_stream_), _O_TEXT);
-#endif
-						char high_surrogate_low = std::fgetc(input_stream_);
-
-						if (high_surrogate_low == 0)
-						{
-							is_processed_space_char_ = true;
-						}
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-						_setmode(_fileno(input_stream_), _O_U16TEXT);
-#endif
-
-						char temp2 = *(reinterpret_cast<char*>(&high_surrogate) + 1);
-						*reinterpret_cast<char*>(&high_surrogate) = temp2;
-						*(reinterpret_cast<char*>(&high_surrogate) + 1) = high_surrogate_low;
-					}
-
-					if (high_surrogate >= 0xD800 && high_surrogate <= 0xDBFF)
-					{
-						wchar_t low_surrogate = std::fgetwc(input_stream_);
-
-						temp += wchar_to_char32(high_surrogate, low_surrogate);
-					}
-					else
-					{
-						if (std::iswspace(high_surrogate))
-						{
-							is_processed_space_char_ = true;
-							break;
-						}
-
-						temp += high_surrogate;
-					}
-				}
-
-				storage_()->push(new element(temp));
-
-				if (debugger_ != nullptr)
-				{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-					debugger_->is_last_input_utf16_ = false;
-#endif
-					debugger_->is_inputed_ = false;
-				}
+				debugger_->is_inputed_ = false;
 			}
 
 			return false;

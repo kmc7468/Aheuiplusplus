@@ -1,11 +1,11 @@
 ﻿#ifndef AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 #define AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 
-#define AHEUIPLUSPLUS_VERSION_STRING ("1.1.1")
+#define AHEUIPLUSPLUS_VERSION_STRING ("1.1.2")
 #define AHEUIPLUSPLUS_VERSION (1)
 #define AHEUIPLUSPLUS_VERSION_MAJOR AHEUIPLUSPLUS_VERSION
 #define AHEUIPLUSPLUS_VERSION_MINOR (1)
-#define AHEUIPLUSPLUS_VERSION_PATCH (1)
+#define AHEUIPLUSPLUS_VERSION_PATCH (2)
 
 #include <Aheuiplusplus/code.hpp>
 #include <Aheuiplusplus/function.hpp>
@@ -109,6 +109,9 @@ namespace app
 		std::FILE* input_stream_;
 		std::FILE* output_stream_;
 		bool is_processed_space_char_ = true;
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		bool is_last_input_utf16_ = false;
+#endif
 		app::debugger* debugger_ = nullptr;
 
 	public:
