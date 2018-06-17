@@ -365,14 +365,17 @@ namespace app
 		{
 			unsigned char second = std::fgetc(input_stream);
 
-			result.push_back(app::u8char_to_char32(first, second));
+			result.push_back(first);
+			result.push_back(second);
 		}
 		else if (length == 3)
 		{
 			unsigned char second = std::fgetc(input_stream);
 			unsigned char third = std::fgetc(input_stream);
 
-			result.push_back(app::u8char_to_char32(first, second, third));
+			result.push_back(first);
+			result.push_back(second);
+			result.push_back(third);
 		}
 		else
 		{
@@ -380,7 +383,10 @@ namespace app
 			unsigned char third = std::fgetc(input_stream);
 			unsigned char fourth = std::fgetc(input_stream);
 
-			result.push_back(app::u8char_to_char32(first, second, third, fourth));
+			result.push_back(first);
+			result.push_back(second);
+			result.push_back(third);
+			result.push_back(fourth);
 		}
 
 		return result;
