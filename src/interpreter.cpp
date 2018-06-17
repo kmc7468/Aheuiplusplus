@@ -236,17 +236,11 @@ namespace app
 					break;
 				}
 
-				if (chosung == U'ㄱ' || chosung == U'ㅋ') // 예약
-				{
-					is_ignored = true;
-
-					goto reserved;
-				}
-
 				if (is_added_additional_data && is_compatible_with_aheui_)
 				{
-					if (!(chosung == U'ㄱ' || chosung == U'ㅋ' || chosung == U'ㄲ' ||
-						chosung == U'ㅉ'))
+					if (!(chosung == U'ㄲ' &&
+						(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
+							jongsung == U'ㅅ'))) // 예외 명령
 					{
 						new_direction = direction;
 						new_move = move;
@@ -262,6 +256,19 @@ namespace app
 					{
 						jongsung = 0;
 					}
+					else if (chosung == U'ㄱ' || chosung == U'ㅋ' || chosung == U'ㅉ' ||
+						(chosung == U'ㄲ' && !(jongsung == U'ㅁ' || jongsung == U'ㅂ' ||
+							jongsung == U'ㅄ' || jongsung == U'ㅅ')))
+					{
+						chosung = U'ㅇ';
+					}
+				}
+
+				if (chosung == U'ㄱ' || chosung == U'ㅋ') // 예약
+				{
+					is_ignored = true;
+
+					goto reserved;
 				}
 
 				switch (chosung)
