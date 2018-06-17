@@ -270,6 +270,12 @@ int main(int argc, char** argv)
 	{
 		std::FILE* file = std::fopen(paths[0].c_str(), "r");
 
+		if (file == nullptr)
+		{
+			std::printf("오류: 파일을 여는데에 실패했습니다. 경로 또는 권한을 확인해 보십시오.\n");
+			return 0;
+		}
+
 		app::raw_code code;
 		app::raw_code line;
 
