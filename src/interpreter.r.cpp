@@ -35,6 +35,10 @@ namespace app
 			{
 				return true;
 			}
+			else if (start_of_expression != 0)
+			{
+				return true;
+			}
 
 			start_of_expression = U'ㅄ';
 
@@ -43,6 +47,10 @@ namespace app
 		else if (jongsung == U'ㅅ' && !is_added_additional_data)
 		{
 			if (processed_command_without_expression > 2)
+			{
+				return true;
+			}
+			else if (start_of_expression != 0)
 			{
 				return true;
 			}
