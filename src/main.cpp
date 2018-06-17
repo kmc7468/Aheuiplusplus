@@ -54,6 +54,11 @@ namespace
 
 			if (c.length() == 1 && (c.front() == '\n' || c.front() == '\r'))
 			{
+				if (c.front() == '\r')
+				{
+					app::read_u8char(file);
+				}
+
 				break;
 			}
 
