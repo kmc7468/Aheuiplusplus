@@ -104,33 +104,23 @@ namespace app
 				return wchar_to_char32(high_surrogate, low_surroagte);
 			}
 #else
-			unsigned char first = static_cast<unsigned char>(std::fgetc(file));
-			int length = app::u8char_length(first);
+			std::string input = read_u8char(input_stream);
 
-			if (length == 1)
+			if (input.length() == 1)
 			{
-				result.push_back(first);
+				return u8char_to_char32(input[0]);
 			}
-			else if (length == 2)
+			else if (input.length() == 2)
 			{
-				unsigned char second = std::fgetc(file);
-
-				result.push_back(app::u8char_to_char32(first, second));
+				return u8char_to_char32(input[0], input[1]);
 			}
-			else if (length == 3)
+			else if (input.length() == 3)
 			{
-				unsigned char second = std::fgetc(file);
-				unsigned char third = std::fgetc(file);
-
-				result.push_back(app::u8char_to_char32(first, second, third));
+				return u8char_to_char32(input[0], input[1], input[2]);
 			}
 			else
 			{
-				unsigned char second = std::fgetc(file);
-				unsigned char third = std::fgetc(file);
-				unsigned char fourth = std::fgetc(file);
-
-				result.push_back(app::u8char_to_char32(first, second, third, fourth));
+				return u8char_to_char32(input[0], input[1], input[2], input[3]);
 			}
 #endif
 		}
