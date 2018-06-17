@@ -198,6 +198,7 @@ namespace app
 			return high_surrogate;
 		}
 	}
+#endif
 	std::string char32_to_u8char(char32_t character)
 	{
 		std::string result;
@@ -227,7 +228,6 @@ namespace app
 
 		return result;
 	}
-#endif
 	char32_t u8char_to_char32(unsigned char first, unsigned char second, unsigned char third, unsigned char fourth)
 	{
 		if (first < 0x80)
