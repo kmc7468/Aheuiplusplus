@@ -58,7 +58,7 @@ namespace
 		{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 			_setmode(_fileno(stdin), _O_U16TEXT);
-#endif
+
 			while (!std::feof(stdin))
 			{
 				wchar_t high_surrogate = std::fgetwc(stdin);
@@ -87,7 +87,7 @@ namespace
 					result.push_back(high_surrogate);
 				}
 			}
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+
 			_setmode(_fileno(stdin), _O_TEXT);
 #endif
 		}
