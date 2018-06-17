@@ -255,6 +255,15 @@ namespace app
 					}
 				}
 
+				if (is_compatible_with_aheui_)
+				{
+					if (chosung == U'ㅃ' || chosung == U'ㅍ' || chosung == U'ㅈ' ||
+						chosung == U'ㅊ')
+					{
+						jongsung = 0;
+					}
+				}
+
 				switch (chosung)
 				{
 				case U'ㄲ':
