@@ -9,10 +9,10 @@
 namespace app
 {
 	number::number(long long integer) noexcept
-		: integer_(integer), decimal_(integer)
+		: integer_(integer), decimal_(static_cast<double>(integer))
 	{}
 	number::number(double decimal) noexcept
-		: integer_(decimal), decimal_(decimal), is_integer_(false)
+		: integer_(static_cast<long long>(decimal)), decimal_(decimal), is_integer_(false)
 	{}
 	number::number(const number& number) noexcept
 		: integer_(number.integer_), decimal_(number.decimal_), is_integer_(number.is_integer_)
@@ -126,7 +126,7 @@ namespace app
 		}
 
 		integer_ = new_integer;
-		decimal_ = new_integer;
+		decimal_ = static_cast<double>(new_integer);
 	}
 	double number::decimal() const noexcept
 	{
@@ -139,7 +139,7 @@ namespace app
 			is_integer_ = false;
 		}
 
-		integer_ = new_decimal;
+		integer_ = static_cast<long long>(new_decimal);
 		decimal_ = new_decimal;
 	}
 	bool number::is_integer() const noexcept

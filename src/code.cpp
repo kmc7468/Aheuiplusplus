@@ -128,7 +128,7 @@ namespace app
 
 		char32_t chosung_id = static_cast<char32_t>(-1);
 
-		for (std::size_t i = 0; i < 19; ++i)
+		for (char32_t i = 0; i < sizeof(chosungs) / sizeof(char32_t); ++i)
 		{
 			if (chosungs[i] == chosung)
 			{
@@ -153,7 +153,7 @@ namespace app
 
 			char32_t jongsung_id = static_cast<char32_t>(-1);
 
-			for (std::size_t i = 0; i < 28; ++i)
+			for (char32_t i = 0; i < sizeof(jongsungs) / sizeof(char32_t); ++i)
 			{
 				if (jongsungs[i] == jongsung)
 				{
@@ -182,8 +182,8 @@ namespace app
 
 		char32_t temp = character - 0x10000;
 
-		wchar_t high_surrogate = (temp / 0x400) + 0xD800;
-		wchar_t low_surrogate = (temp % 0x400) + 0xDC00;
+		wchar_t high_surrogate = static_cast<wchar_t>((temp / 0x400) + 0xD800);
+		wchar_t low_surrogate = static_cast<wchar_t>((temp % 0x400) + 0xDC00);
 
 		result[0] = low_surrogate;
 		result[1] = high_surrogate;
@@ -211,25 +211,25 @@ namespace app
 
 		if (character < 0x80)
 		{
-			result.push_back(character);
+			result.push_back(static_cast<char>(character));
 		}
 		else if (character < 0x0800)
 		{
-			result.push_back(0xC0 | (character >> 6));
-			result.push_back(0x80 | (character & 0x3F));
+			result.push_back(static_cast<char>(0xC0 | (character >> 6)));
+			result.push_back(static_cast<char>(0x80 | (character & 0x3F)));
 		}
 		else if (character < 0x10000)
 		{
-			result.push_back(0xE0 | (character >> 12));
-			result.push_back(0x80 | ((character >> 6) & 0x3F));
-			result.push_back(0x80 | (character & 0x3F));
+			result.push_back(static_cast<char>(0xE0 | (character >> 12)));
+			result.push_back(static_cast<char>(0x80 | ((character >> 6) & 0x3F)));
+			result.push_back(static_cast<char>(0x80 | (character & 0x3F)));
 		}
 		else
 		{
-			result.push_back(0xF0 | (character >> 18));
-			result.push_back(0x80 | ((character >> 12) & 0x3F));
-			result.push_back(0x80 | ((character >> 6) & 0x3F));
-			result.push_back(0x80 | (character & 0x3F));
+			result.push_back(static_cast<char>(0xF0 | (character >> 18)));
+			result.push_back(static_cast<char>(0x80 | ((character >> 12) & 0x3F)));
+			result.push_back(static_cast<char>(0x80 | ((character >> 6) & 0x3F)));
+			result.push_back(static_cast<char>(0x80 | (character & 0x3F)));
 		}
 
 		return result;
@@ -364,15 +364,15 @@ namespace app
 		}
 		else if (length == 2)
 		{
-			unsigned char second = std::fgetc(input_stream);
+			unsigned char second = static_cast<unsigned char>(std::fgetc(input_stream));
 
 			result.push_back(first);
 			result.push_back(second);
 		}
 		else if (length == 3)
 		{
-			unsigned char second = std::fgetc(input_stream);
-			unsigned char third = std::fgetc(input_stream);
+			unsigned char second = static_cast<unsigned char>(std::fgetc(input_stream));
+			unsigned char third = static_cast<unsigned char>(std::fgetc(input_stream));
 
 			result.push_back(first);
 			result.push_back(second);
@@ -380,9 +380,9 @@ namespace app
 		}
 		else
 		{
-			unsigned char second = std::fgetc(input_stream);
-			unsigned char third = std::fgetc(input_stream);
-			unsigned char fourth = std::fgetc(input_stream);
+			unsigned char second = static_cast<unsigned char>(std::fgetc(input_stream));
+			unsigned char third = static_cast<unsigned char>(std::fgetc(input_stream));
+			unsigned char fourth = static_cast<unsigned char>(std::fgetc(input_stream));
 
 			result.push_back(first);
 			result.push_back(second);

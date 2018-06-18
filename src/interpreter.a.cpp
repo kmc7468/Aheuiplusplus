@@ -90,7 +90,7 @@ namespace app
 			{
 				if (value->index() == 0) // 숫자일 경우
 				{
-					write_char(output_stream_, std::get<0>(*value).integer());
+					write_char(output_stream_, static_cast<char32_t>(std::get<0>(*value).integer()));
 				}
 				else if (value->index() == 1) // 문자일 경우
 				{
@@ -105,7 +105,7 @@ namespace app
 			{
 				if (value->index() == 0)
 				{
-					write_char(output_stream_, std::get<0>(*value).integer());
+					write_char(output_stream_, static_cast<char32_t>(std::get<0>(*value).integer()));
 				}
 				else if (value->index() == 1) // 문자일 경우
 				{
