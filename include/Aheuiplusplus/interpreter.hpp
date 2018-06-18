@@ -1,11 +1,12 @@
 ﻿#ifndef AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 #define AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 
-#define AHEUIPLUSPLUS_VERSION_STRING ("1.1.2")
+#define AHEUIPLUSPLUS_VERSION_STRING ("1.2.0-pre1")
+#define AHEUIPLUSPLUS_VERSION_PRE ("pre1")
 #define AHEUIPLUSPLUS_VERSION (1)
 #define AHEUIPLUSPLUS_VERSION_MAJOR AHEUIPLUSPLUS_VERSION
-#define AHEUIPLUSPLUS_VERSION_MINOR (1)
-#define AHEUIPLUSPLUS_VERSION_PATCH (2)
+#define AHEUIPLUSPLUS_VERSION_MINOR (2)
+#define AHEUIPLUSPLUS_VERSION_PATCH (0)
 
 #include <Aheuiplusplus/code.hpp>
 #include <Aheuiplusplus/function.hpp>
@@ -116,6 +117,7 @@ namespace app
 
 	public:
 		static constexpr const char* version_string = AHEUIPLUSPLUS_VERSION_STRING;
+		static constexpr const char* version_pre = AHEUIPLUSPLUS_VERSION_PRE;
 		static constexpr int version_major = AHEUIPLUSPLUS_VERSION_MAJOR;
 		static constexpr int version_minor = AHEUIPLUSPLUS_VERSION_MINOR;
 		static constexpr int version_patch = AHEUIPLUSPLUS_VERSION_PATCH;
