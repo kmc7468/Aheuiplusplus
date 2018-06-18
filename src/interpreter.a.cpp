@@ -167,7 +167,8 @@ namespace app
 
 			if (is_loud_mode_)
 			{
-				std::fprintf(output_stream_, "숫자(정수)를 입력하세요: ");
+				storage_()->push(new element(U"숫자(정수)를 입력하세요: "));
+				pop_(U'ㅎ', true);
 			}
 
 			bool is_first = true;
@@ -222,7 +223,8 @@ namespace app
 
 			if (is_loud_mode_)
 			{
-				std::fprintf(output_stream_, "숫자(정수 또는 소수)를 입력하세요: ");
+				storage_()->push(new element(U"숫자(정수 또는 소수)를 입력하세요: "));
+				pop_(U'ㅎ', true);
 			}
 
 			bool is_first = true;
@@ -284,7 +286,8 @@ namespace app
 
 			if (is_loud_mode_)
 			{
-				std::fprintf(output_stream_, "문자를 입력하세요: ");
+				storage_()->push(new element(U"문자를 입력하세요: "));
+				pop_(U'ㅎ', true);
 			}
 
 			char32_t input = read_char(input_stream_);
@@ -311,7 +314,8 @@ namespace app
 
 			if (is_loud_mode_)
 			{
-				std::fprintf(output_stream_, "문자열을 입력하세요: ");
+				storage_()->push(new element(U"문자열을 입력하세요: "));
+				pop_(U'ㅎ', true);
 			}
 
 			raw_code input;

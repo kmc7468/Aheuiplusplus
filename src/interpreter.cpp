@@ -102,6 +102,10 @@ namespace app
 		std::size_t& x, std::size_t& y, std::size_t& direction, std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
 		bool& is_out_of_version)
 	{
+		if (command_aheui)
+		{
+			is_compatible_with_aheui_ = true;
+		}
 		is_loud_mode_ = command_loud_mode;
 
 		app::code splited_code = code;
@@ -267,12 +271,25 @@ namespace app
 				{
 					if (!(chosung == U'ㄲ' &&
 						(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
-							jongsung == U'ㅅ')) || command_aheui) // 예외 명령(command_aheui == true일 경우 제외)
+							jongsung == U'ㅅ'))) // 예외 명령
 					{
 						new_direction = direction;
 						new_move = move;
 
 						is_added_additional_data = false;
+					}
+
+					if (command_aheui)
+					{
+						if ((chosung == U'ㄲ' &&
+							(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
+								jongsung == U'ㅅ')))
+						{
+							new_direction = direction;
+							new_move = move;
+
+							is_added_additional_data = false;
+						}
 					}
 				}
 
@@ -283,11 +300,22 @@ namespace app
 					{
 						jongsung = 0;
 					}
-					else if (chosung == U'ㄱ' || chosung == U'ㅋ' || chosung == U'ㅉ' ||
-						((chosung == U'ㄲ' && !(jongsung == U'ㅁ' || jongsung == U'ㅂ' ||
-							jongsung == U'ㅄ' || jongsung == U'ㅅ')) || command_aheui))
+					
+					if (chosung == U'ㄱ' || chosung == U'ㅋ' || chosung == U'ㅉ' ||
+						(chosung == U'ㄲ' && !(jongsung == U'ㅁ' || jongsung == U'ㅂ' ||
+							jongsung == U'ㅄ' || jongsung == U'ㅅ')))
 					{
 						chosung = U'ㅇ';
+					}
+
+					if (command_aheui)
+					{
+						if ((chosung == U'ㄲ' &&
+							(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
+								jongsung == U'ㅅ')))
+						{
+							chosung = U'ㅇ';
+						}
 					}
 				}
 

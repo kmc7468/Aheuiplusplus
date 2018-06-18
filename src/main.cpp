@@ -370,6 +370,9 @@ int main(int argc, char** argv)
 			"- 인터프리터를 종료하려면 !q 또는 !quit 명령어를 입력하세요.\n"
 			"- 더 많은 명령어 목록을 보려면 !help 명령어를 입력하세요.";
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		_setmode(_fileno(stdout), _O_TEXT);
+#endif
 		std::printf("아희++ 표준 인터프리터 %s (%s)\n%s\n\n",
 			app::interpreter::version_string, "https://github.com/kmc7468/Aheuiplusplus", title_message);
 
@@ -429,8 +432,15 @@ int main(int argc, char** argv)
 				}
 			}
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			_setmode(_fileno(stdin), _O_U16TEXT);
+			_setmode(_fileno(stdout), _O_U16TEXT);
+#endif
 			d.run_with_debugging(code,
 				command_aheui, command_loud_mode);
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+			_setmode(_fileno(stdout), _O_TEXT);
+#endif
 			std::printf("\n");
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
