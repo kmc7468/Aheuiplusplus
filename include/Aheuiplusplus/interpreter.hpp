@@ -39,7 +39,7 @@ namespace app
 
 	public:
 		long long run(const raw_code& code);
-		long long run(const raw_code& code, bool command_aheui);
+		long long run(const raw_code& code, bool command_aheui, bool command_loud_mode);
 
 		const app::storage* storage(std::size_t index) const;
 		std::size_t storage_index(std::size_t index) const;
@@ -47,7 +47,7 @@ namespace app
 	private:
 		void initialize_();
 
-		long long run_(const raw_code& code, bool command_aheui,
+		long long run_(const raw_code& code, bool command_aheui, bool command_loud_mode,
 			std::size_t& x, std::size_t& y, std::size_t& direction,
 			std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
 			bool& is_out_of_version);
@@ -108,6 +108,8 @@ namespace app
 
 		bool is_integer_mode_ = true;
 		bool is_compatible_with_aheui_ = true;
+
+		bool is_loud_mode_ = false;
 
 		std::FILE* input_stream_;
 		std::FILE* output_stream_;

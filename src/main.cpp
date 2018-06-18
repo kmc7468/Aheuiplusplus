@@ -28,7 +28,8 @@ static_assert((sizeof(wchar_t) != sizeof(char32_t) && AHEUIPLUSPLUS_MACRO_IS_WIN
 namespace
 {
 	bool parse_command_line(int argc, char** argv,
-		bool& command_aheui, bool& command_interpreting, app::version& version, std::string& path)
+		bool& command_aheui, bool& command_interpreting, app::version& version, std::string& path,
+		bool& command_loud_mode)
 	{
 		if (argc == 1)
 		{
@@ -45,6 +46,7 @@ namespace
 		command_interpreting = false;
 		path.clear();
 		version = app::version::none;
+		command_loud_mode = false;
 
 		for (int i = 1; i < argc; ++i)
 		{
@@ -148,6 +150,16 @@ namespace
 					}
 				}
 			}
+			else if (argument == "-l")
+			{
+				if (command_loud_mode)
+				{
+					std::printf("오류: %s%s\n", "-l", duplicate_message);
+					return false;
+				}
+
+				command_loud_mode = true;
+			}
 			else
 			{
 				if (argument.front() == '-')
@@ -173,7 +185,8 @@ namespace
 						"--version - 프로그램의 버전을 봅니다.\n\n"
 						"-A - 아희 표준대로만 작동합니다(아희++의 기능을 이용할 수 없습니다.). -std 옵션과 함께 쓰일 수 없습니다.\n"
 						"-std=<version> - 어떤 버전의 아희++ 표준을 따를지 설정합니다. version은 m 또는 m.n 형태로 구성됩니다(이때 m은 주 버전, n은 부 버전입니다.). -A 옵션과 함께 쓰일 수 없습니다.\n"
-						"-i - 인터프리팅 모드로 전환합니다.\n", argv[0]);
+						"-i - 인터프리팅 모드로 전환합니다.\n\n"
+						"-l - 입력을 받아야 할 때 입력을 요청하는 메세지를 출력합니다.\n", argv[0]);
 			return false;
 		}
 		if (command_version)
@@ -333,9 +346,11 @@ int main(int argc, char** argv)
 	bool command_interpreting;
 	std::string path;
 	app::version version;
+	bool command_loud_mode;
 
 	if (!parse_command_line(argc, argv,
-		command_aheui, command_interpreting, version, path))
+		command_aheui, command_interpreting, version, path,
+		command_loud_mode))
 	{
 		return 0;
 	}
@@ -420,7 +435,8 @@ int main(int argc, char** argv)
 			d.is_processed_space(true);
 			d.is_inputed(false);
 
-			d.run_with_debugging(code);
+			d.run_with_debugging(code,
+				command_aheui, command_loud_mode);
 			std::printf("\n");
 
 			if (d.is_inputed() && !d.is_processed_space())
@@ -463,7 +479,8 @@ int main(int argc, char** argv)
 
 		code = code.substr(0, code.length() - 2);
 
-		long long result = d.run_with_debugging(code);
+		long long result = d.run_with_debugging(code,
+			command_aheui, command_loud_mode);
 		std::printf("\n");
 
 		std::fclose(file);

@@ -25,9 +25,9 @@ namespace app
 
 	long long interpreter::run(const raw_code& code)
 	{
-		return run(code, false);
+		return run(code, false, false);
 	}
-	long long interpreter::run(const raw_code& code, bool command_aheui)
+	long long interpreter::run(const raw_code& code, bool command_aheui, bool command_loud_mode)
 	{
 		std::size_t x;
 		std::size_t y;
@@ -41,7 +41,7 @@ namespace app
 
 		char32_t start_of_expression;
 
-		return run_(code, command_aheui,
+		return run_(code, command_aheui, command_loud_mode,
 			x, y, direction, move, is_ignored, is_reflection, start_of_expression,
 			is_out_of_version);
 	}
@@ -78,10 +78,12 @@ namespace app
 		}
 	}
 
-	long long interpreter::run_(const raw_code& code, bool command_aheui,
+	long long interpreter::run_(const raw_code& code, bool command_aheui, bool command_loud_mode,
 		std::size_t& x, std::size_t& y, std::size_t& direction, std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
 		bool& is_out_of_version)
 	{
+		is_loud_mode_ = command_loud_mode;
+
 		app::code splited_code = code;
 
 		x = 0;

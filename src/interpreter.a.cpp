@@ -159,11 +159,18 @@ namespace app
 #else
 				read_char(input_stream_);
 #endif
+
+				is_processed_space_char_ = true;
 			}
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 			_setmode(_fileno(input_stream_), _O_TEXT);
 #endif
+
+			if (is_loud_mode_)
+			{
+				std::fprintf(output_stream_, "숫자(정수)를 입력하세요: ");
+			}
 
 			long long temp;
 			std::fscanf(input_stream_, "%lld", &temp);
@@ -204,11 +211,18 @@ namespace app
 #else
 				read_char(input_stream_);
 #endif
+
+				is_processed_space_char_ = true;
 			}
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 			_setmode(_fileno(input_stream_), _O_TEXT);
 #endif
+
+			if (is_loud_mode_)
+			{
+				std::fprintf(output_stream_, "숫자(정수 또는 소수)를 입력하세요: ");
+			}
 
 			double temp;
 			std::fscanf(input_stream_, "%lf", &temp);
@@ -250,13 +264,20 @@ namespace app
 #else
 				read_char(input_stream_);
 #endif
+
+				is_processed_space_char_ = true;
+			}
+
+			if (is_loud_mode_)
+			{
+				std::fprintf(output_stream_, "문자를 입력하세요: ");
 			}
 
 			char32_t input = read_char(input_stream_);
 
 			if (input < 128)
 			{
-				if (std::isspace(static_cast<unsigned char>(input)))
+				if (std::isspace(static_cast<unsigned char>(input)) && input != U' ')
 				{
 					goto input_char;
 				}
@@ -298,6 +319,13 @@ namespace app
 #else
 				read_char(input_stream_);
 #endif
+
+				is_processed_space_char_ = true;
+			}
+
+			if (is_loud_mode_)
+			{
+				std::fprintf(output_stream_, "문자열을 입력하세요: ");
 			}
 
 			raw_code input;
