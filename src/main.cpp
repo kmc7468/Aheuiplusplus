@@ -429,31 +429,18 @@ int main(int argc, char** argv)
 				}
 			}
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-			d.is_last_input_utf16(false);
-#endif
-			d.is_processed_space(true);
-			d.is_inputed(false);
-
 			d.run_with_debugging(code,
 				command_aheui, command_loud_mode);
 			std::printf("\n");
 
-			if (d.is_inputed() && !d.is_processed_space())
-			{
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				if (d.is_last_input_utf16())
-				{
-					std::fgetwc(stdin);
-				}
-				else
-				{
-					std::fgetc(stdin);
-				}
+			std::rewind(stdin);
 #else
-				std::fgetc(stdin);
-#endif
+			while (!std::feof(stdin))
+			{
+				app::read_char(stdin);
 			}
+#endif
 		}
 	}
 	else

@@ -27,11 +27,11 @@ namespace app
 	char32_t u8char_to_char32(unsigned char first, unsigned char second = 0, unsigned char third = 0, unsigned char fourth = 0);
 	
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-	int wchar_length(char32_t character);
-	int wchar_length(wchar_t first);
+	int get_wchar_length(char32_t character);
+	int get_wchar_length(wchar_t first);
 #endif
-	int u8char_length(char32_t character);
-	int u8char_length(unsigned char first);
+	int get_u8char_length(char32_t character);
+	int get_u8char_length(unsigned char first);
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 	std::wstring read_wchar(std::FILE* input_stream);
@@ -42,6 +42,7 @@ namespace app
 
 	char32_t read_char(std::FILE* input_stream);
 	void write_char(std::FILE* input_stream, char32_t character);
+	void unread_char(std::FILE* input_stream, char32_t character);
 
 	class code final
 	{

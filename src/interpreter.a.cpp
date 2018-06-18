@@ -30,6 +30,9 @@ namespace app
 					_setmode(_fileno(output_stream_), _O_TEXT);
 #endif
 					std::fprintf(output_stream_, "%lld", std::get<0>(*value).integer());
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
 				}
 				else if (value->index() == 1) // 문자일 경우
 				{
@@ -37,6 +40,9 @@ namespace app
 					_setmode(_fileno(output_stream_), _O_TEXT);
 #endif
 					std::fprintf(output_stream_, "%lld", static_cast<long long>(std::get<1>(*value)));
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
 				}
 				else if (value->index() == 2) // 문자열일 경우
 				{
@@ -52,6 +58,10 @@ namespace app
 					}
 
 					std::fprintf(output_stream_, "%lld", value_integer);
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
 				}
 			}
 			else if (jongsung == U'ㅇ' && is_added_additional_data) // 숫자(소수) 출력
@@ -62,6 +72,9 @@ namespace app
 					_setmode(_fileno(output_stream_), _O_TEXT);
 #endif
 					std::fprintf(output_stream_, "%f", std::get<0>(*value).decimal());
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
 				}
 				else if (value->index() == 1) // 문자일 경우
 				{
@@ -69,6 +82,9 @@ namespace app
 					_setmode(_fileno(output_stream_), _O_TEXT);
 #endif
 					std::fprintf(output_stream_, "%f", static_cast<double>(std::get<1>(*value)));
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
 				}
 				else if (value->index() == 2) // 문자열일 경우
 				{
@@ -84,6 +100,10 @@ namespace app
 					}
 
 					std::fprintf(output_stream_, "%f", value_integer);
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+					_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
 				}
 			}
 			else if (jongsung == U'ㅎ' && !is_added_additional_data) // 문자 출력
@@ -145,48 +165,51 @@ namespace app
 				return false;
 			}
 
-			if (!is_processed_space_char_)
-			{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				if (is_last_input_utf16_)
-				{
-					std::fgetwc(input_stream_);
-				}
-				else
-				{
-					std::fgetc(input_stream_);
-				}
-#else
-				read_char(input_stream_);
-#endif
-
-				is_processed_space_char_ = true;
-			}
-
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-			_setmode(_fileno(input_stream_), _O_TEXT);
-#endif
-
 			if (is_loud_mode_)
 			{
 				std::fprintf(output_stream_, "숫자(정수)를 입력하세요: ");
 			}
 
-			long long temp;
-			std::fscanf(input_stream_, "%lld", &temp);
+			bool is_first = true;
 
-			storage_()->push(new element(number(temp)));
+			std::string number;
+			char32_t digit;
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-			is_last_input_utf16_ = false;
-#endif
-			is_processed_space_char_ = false;
-
-			if (debugger_ != nullptr)
+			while (digit = read_char(input_stream_))
 			{
-				debugger_->is_inputed_ = true;
+				if (is_first)
+				{
+					is_first = false;
+					
+					if (digit == U' ')
+					{
+						continue;
+					}
+				}
+
+				if (digit >= 0x80)
+				{
+					unread_char(input_stream_, digit);
+					break;
+				}
+
+				if (std::isdigit(static_cast<char>(digit)))
+				{
+					number += static_cast<char>(digit);
+				}
+				else
+				{
+					if (!(std::isspace(digit) && digit != U' '))
+					{
+						unread_char(input_stream_, digit);
+					}
+
+					break;
+				}
 			}
 
+			storage_()->push(new element(app::number(std::stoll(number))));
+			
 			return false;
 		}
 		else if (jongsung == U'ㅇ' && is_added_additional_data) // 숫자(소수) 입력
@@ -197,48 +220,57 @@ namespace app
 				return false;
 			}
 
-			if (!is_processed_space_char_)
-			{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				if (is_last_input_utf16_)
-				{
-					std::fgetwc(input_stream_);
-				}
-				else
-				{
-					std::fgetc(input_stream_);
-				}
-#else
-				read_char(input_stream_);
-#endif
-
-				is_processed_space_char_ = true;
-			}
-
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-			_setmode(_fileno(input_stream_), _O_TEXT);
-#endif
-
 			if (is_loud_mode_)
 			{
 				std::fprintf(output_stream_, "숫자(정수 또는 소수)를 입력하세요: ");
 			}
 
-			double temp;
-			std::fscanf(input_stream_, "%lf", &temp);
+			bool is_first = true;
 
-			storage_()->push(new element(number(temp)));
+			std::string number;
+			char32_t digit;
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-			is_last_input_utf16_ = false;
-#endif
-			is_processed_space_char_ = false;
-
-			if (debugger_ != nullptr)
+			while (digit = read_char(input_stream_))
 			{
-				debugger_->is_inputed_ = true;
+				if (is_first)
+				{
+					is_first = false;
+
+					if (digit == U' ')
+					{
+						continue;
+					}
+				}
+
+				if (digit >= 0x80)
+				{
+					unread_char(input_stream_, digit);
+					break;
+				}
+
+				if (std::isdigit(static_cast<char>(digit)) || digit == U'.')
+				{
+					if (number.find('.') != std::string::npos)
+					{
+						unread_char(input_stream_, digit);
+						break;
+					}
+
+					number += static_cast<char>(digit);
+				}
+				else
+				{
+					if (!(std::isspace(digit) && digit != U' '))
+					{
+						unread_char(input_stream_, digit);
+					}
+
+					break;
+				}
 			}
 
+			storage_()->push(new element(app::number(std::stod(number))));
+			
 			return false;
 		}
 		else if (jongsung == U'ㅎ' && !is_added_additional_data) // 문자 입력
@@ -248,24 +280,6 @@ namespace app
 			{
 				storage_()->push(new element(0));
 				return false;
-			}
-
-			if (!is_processed_space_char_)
-			{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				if (is_last_input_utf16_)
-				{
-					std::fgetwc(input_stream_);
-				}
-				else
-				{
-					std::fgetc(input_stream_);
-				}
-#else
-				read_char(input_stream_);
-#endif
-
-				is_processed_space_char_ = true;
 			}
 
 			if (is_loud_mode_)
@@ -285,16 +299,6 @@ namespace app
 
 			storage_()->push(new element(input));
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-			is_last_input_utf16_ = true;
-#endif
-			is_processed_space_char_ = false;
-
-			if (debugger_ != nullptr)
-			{
-				debugger_->is_inputed_ = true;
-			}
-
 			return false;
 		}
 		else if (jongsung == U'ㅎ' && is_added_additional_data) // 문자열 입력
@@ -303,24 +307,6 @@ namespace app
 			{
 				storage_()->push(new element(0));
 				return false;
-			}
-
-			if (!is_processed_space_char_)
-			{
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-				if (is_last_input_utf16_)
-				{
-					std::fgetwc(input_stream_);
-				}
-				else
-				{
-					std::fgetc(input_stream_);
-				}
-#else
-				read_char(input_stream_);
-#endif
-
-				is_processed_space_char_ = true;
 			}
 
 			if (is_loud_mode_)
@@ -334,7 +320,7 @@ namespace app
 			{
 				char32_t c = read_char(input_stream_);
 
-				if (c < 128)
+				if (c < 0x80)
 				{
 					if (std::isspace(static_cast<unsigned char>(c)))
 					{
@@ -346,16 +332,6 @@ namespace app
 			}
 
 			storage_()->push(new element(input));
-
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-			is_last_input_utf16_ = true;
-#endif
-			is_processed_space_char_ = true;
-
-			if (debugger_ != nullptr)
-			{
-				debugger_->is_inputed_ = false;
-			}
 
 			return false;
 		}

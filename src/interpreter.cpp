@@ -6,21 +6,41 @@
 #include <cstdint>
 #include <map>
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+#	include <fcntl.h>
+#	include <io.h>
+#endif
+
 namespace app
 {
 	interpreter::interpreter(std::FILE* input_stream, std::FILE* output_stream)
 		: input_stream_(input_stream), output_stream_(output_stream)
 	{
 		initialize_();
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		_setmode(_fileno(input_stream_), _O_U16TEXT);
+		_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
 	}
 	interpreter::interpreter(app::version version, std::FILE* input_stream, std::FILE* output_stream)
 		: version_(version), input_stream_(input_stream), output_stream_(output_stream)
 	{
 		initialize_();
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		_setmode(_fileno(input_stream_), _O_U16TEXT);
+		_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
 	}
 	interpreter::~interpreter()
 	{
 		delete_storage_();
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		_setmode(_fileno(input_stream_), _O_TEXT);
+		_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 	}
 
 	long long interpreter::run(const raw_code& code)

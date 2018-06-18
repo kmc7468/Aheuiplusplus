@@ -45,23 +45,13 @@ namespace app
 		long long run_with_debugging(const raw_code& code,
 			bool command_aheui, bool command_loud_mode);
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-		bool is_last_input_utf16() const;
-		void is_last_input_utf16(bool new_is_last_input_utf16);
-#endif
-		bool is_processed_space() const;
-		void is_processed_space(bool new_is_proecessed_space);
-
 	public:
 		const std::vector<std::pair<std::size_t, std::size_t>>& breakpoints() const noexcept;
-		bool is_inputed() const noexcept;
-		void is_inputed(bool new_is_inputed) noexcept;
 
 		std::FILE* output_stream() const noexcept;
 
 	private:
 		std::vector<std::pair<std::size_t, std::size_t>> breakpoints_;
-		bool is_inputed_ = false;
 
 		std::FILE* output_stream_;
 		app::interpreter& interpreter_;

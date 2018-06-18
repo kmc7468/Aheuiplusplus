@@ -257,7 +257,7 @@ namespace app
 	}
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-	int wchar_length(char32_t character)
+	int get_wchar_length(char32_t character)
 	{
 		if (character < 65'536)
 		{
@@ -268,7 +268,7 @@ namespace app
 			return 2;
 		}
 	}
-	int wchar_length(wchar_t first)
+	int get_wchar_length(wchar_t first)
 	{
 		if (first >= 0xD800 && first <= 0xDBFF)
 		{
@@ -280,7 +280,7 @@ namespace app
 		}
 	}
 #endif
-	int u8char_length(char32_t character)
+	int get_u8char_length(char32_t character)
 	{
 		if (character < 0x80)
 		{
@@ -303,7 +303,7 @@ namespace app
 			return -1;
 		}
 	}
-	int u8char_length(unsigned char first)
+	int get_u8char_length(unsigned char first)
 	{
 		if (first < 0x80)
 		{
@@ -356,7 +356,7 @@ namespace app
 		std::string result;
 
 		unsigned char first = static_cast<unsigned char>(std::fgetc(input_stream));
-		int length = app::u8char_length(first);
+		int length = app::get_u8char_length(first);
 
 		if (length == 1)
 		{
@@ -407,7 +407,7 @@ namespace app
 
 		wchar_t high_surrogate = std::fgetwc(input_stream);
 
-		if (wchar_length(high_surrogate) == 1)
+		if (get_wchar_length(high_surrogate) == 1)
 		{
 			return high_surrogate;
 		}
@@ -452,6 +452,55 @@ namespace app
 		std::string utf8 = char32_to_u8char(character);
 
 		write_u8char(output_stream, utf8);
+#endif
+	}
+	void unread_char(std::FILE* input_stream, char32_t character)
+	{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		int length = get_wchar_length(character);
+
+		if (length == 1)
+		{
+			std::ungetwc(static_cast<wchar_t>(character), input_stream);
+		}
+		else
+		{
+			std::wstring converted = char32_to_wchar(character);
+
+			std::ungetwc(converted[1], input_stream);
+			std::ungetwc(converted[0], input_stream);
+		}
+#else
+		int length = get_u8char_length(character);
+
+		if (length == 1)
+		{
+			std::ungetc(static_cast<char>(character), input_stream);
+		}
+		else if (length == 2)
+		{
+			std::string converted = char32_to_u8char(character);
+
+			std::ungetc(converted[1], input_stream);
+			std::ungetc(converted[0], input_stream);
+		}
+		else if (length == 3)
+		{
+			std::string converted = char32_to_u8char(character);
+
+			std::ungetc(converted[2], input_stream);
+			std::ungetc(converted[1], input_stream);
+			std::ungetc(converted[0], input_stream);
+		}
+		else
+		{
+			std::string converted = char32_to_u8char(character);
+
+			std::ungetc(converted[3], input_stream);
+			std::ungetc(converted[2], input_stream);
+			std::ungetc(converted[1], input_stream);
+			std::ungetc(converted[0], input_stream);
+		}
 #endif
 	}
 }

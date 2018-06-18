@@ -113,10 +113,6 @@ namespace app
 
 		std::FILE* input_stream_;
 		std::FILE* output_stream_;
-		bool is_processed_space_char_ = true;
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-		bool is_last_input_utf16_ = false;
-#endif
 		app::debugger* debugger_ = nullptr;
 
 	public:
