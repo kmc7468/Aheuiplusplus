@@ -43,7 +43,7 @@ $ ./Aheuiplusplus path
 ```
 $ git clone -b stable https://github.com/kmc7468/Aheuiplusplus.git
 ```
-위 명령을 입력하면 안정된 인터프리터 소스 파일을 복제할 수 있습니다. 만약 안정되지 않은 소스 파일을 복제하고 싶다면 위 명령에서 `-b stable` 옵션을 삭제하십시오.
+위 명령을 입력하면 가장 최신의 안정된 인터프리터 소스 파일을 복제할 수 있습니다. 만약 가장 최신의 프리릴리즈를 포함한 안정된 소스 파일을 복제하고 싶으시면 `-b stable` 옵션을 `-b pre-release`로 변경하시고, 항상 가장 최신의 소스 파일을 복제하고 싶다면 위 명령에서 `-b stable` 옵션을 삭제하십시오.
 ### 컴파일(Makefile 이용)
 ```
 $ cmake CMakeLists.txt
