@@ -25,6 +25,10 @@ namespace app
 
 	long long interpreter::run(const raw_code& code)
 	{
+		return run(code, false);
+	}
+	long long interpreter::run(const raw_code& code, bool command_aheui)
+	{
 		std::size_t x;
 		std::size_t y;
 
@@ -37,7 +41,8 @@ namespace app
 
 		char32_t start_of_expression;
 
-		return run_(code, x, y, direction, move, is_ignored, is_reflection, start_of_expression,
+		return run_(code, command_aheui,
+			x, y, direction, move, is_ignored, is_reflection, start_of_expression,
 			is_out_of_version);
 	}
 
@@ -73,8 +78,8 @@ namespace app
 		}
 	}
 
-	long long interpreter::run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
-		std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
+	long long interpreter::run_(const raw_code& code, bool command_aheui,
+		std::size_t& x, std::size_t& y, std::size_t& direction, std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
 		bool& is_out_of_version)
 	{
 		app::code splited_code = code;
@@ -240,7 +245,7 @@ namespace app
 				{
 					if (!(chosung == U'ㄲ' &&
 						(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
-							jongsung == U'ㅅ'))) // 예외 명령
+							jongsung == U'ㅅ')) || command_aheui) // 예외 명령(command_aheui == true일 경우 제외)
 					{
 						new_direction = direction;
 						new_move = move;
@@ -257,8 +262,8 @@ namespace app
 						jongsung = 0;
 					}
 					else if (chosung == U'ㄱ' || chosung == U'ㅋ' || chosung == U'ㅉ' ||
-						(chosung == U'ㄲ' && !(jongsung == U'ㅁ' || jongsung == U'ㅂ' ||
-							jongsung == U'ㅄ' || jongsung == U'ㅅ')))
+						((chosung == U'ㄲ' && !(jongsung == U'ㅁ' || jongsung == U'ㅂ' ||
+							jongsung == U'ㅄ' || jongsung == U'ㅅ')) || command_aheui))
 					{
 						chosung = U'ㅇ';
 					}

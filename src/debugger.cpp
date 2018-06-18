@@ -277,6 +277,10 @@ namespace app
 
 	long long debugger::run_with_debugging(const raw_code& code)
 	{
+		return run_with_debugging(code, false);
+	}
+	long long debugger::run_with_debugging(const raw_code& code, bool command_aheui)
+	{
 		std::size_t x;
 		std::size_t y;
 
@@ -287,13 +291,14 @@ namespace app
 		bool is_reflection;
 		bool is_out_of_version;
 		char32_t start_of_expression = 0;
-		
+
 		try
 		{
 			if (is_connceted_debugger())
 			{
-				long long result = interpreter_.run_(code, x, y, direction, move, is_ignored, is_reflection,
-					start_of_expression, is_out_of_version);
+				long long result = interpreter_.run_(code, command_aheui,
+					x, y, direction, move, is_ignored, is_reflection, start_of_expression,
+					is_out_of_version);
 
 				if (is_out_of_version)
 				{
@@ -310,8 +315,8 @@ namespace app
 		catch (const std::exception& exception)
 		{
 			std::fprintf(output_stream_, "[Debugger] %lld줄 %lld행에서 처리되지 못한 구현체 예외가 발생하였습니다. 개발자에게 보고해 주십시오.\n"
-										 "[Debugger] 예외 메세지: %s\n", static_cast<long long>(y), static_cast<long long>(x), exception.what());
-		
+				"[Debugger] 예외 메세지: %s\n", static_cast<long long>(y), static_cast<long long>(x), exception.what());
+
 			return -1;
 		}
 

@@ -42,6 +42,7 @@ namespace app
 		bool is_added_breakpoint(std::size_t x, std::size_t y);
 
 		long long run_with_debugging(const raw_code& code);
+		long long run_with_debugging(const raw_code& code, bool command_aheui);
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 		bool is_last_input_utf16() const;

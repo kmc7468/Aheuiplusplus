@@ -32,7 +32,7 @@ namespace
 	{
 		if (argc == 1)
 		{
-			std::printf("오류: 입력이 없습니다. --help 옵션을 이용해 사용법을 확인하실 수 있습니다.\n", argv[0]);
+			std::printf("오류: 입력이 없습니다. --help 옵션을 이용해 사용법을 확인하실 수 있습니다.\n");
 			return false;
 		}
 
@@ -139,7 +139,7 @@ namespace
 					int major = std::stoi(major_raw);
 					int minor = std::stoi(minor_raw);
 
-					version = app::get_version(major);
+					version = app::get_version(major, minor);
 
 					if (version == app::version::none)
 					{

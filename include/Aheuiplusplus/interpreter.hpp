@@ -39,6 +39,7 @@ namespace app
 
 	public:
 		long long run(const raw_code& code);
+		long long run(const raw_code& code, bool command_aheui);
 
 		const app::storage* storage(std::size_t index) const;
 		std::size_t storage_index(std::size_t index) const;
@@ -46,7 +47,8 @@ namespace app
 	private:
 		void initialize_();
 
-		long long run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
+		long long run_(const raw_code& code, bool command_aheui,
+			std::size_t& x, std::size_t& y, std::size_t& direction,
 			std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
 			bool& is_out_of_version);
 
