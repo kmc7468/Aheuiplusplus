@@ -408,15 +408,50 @@ namespace app
 		{
 			element* value = nullptr;
 
-			while (value = storage_()->pop())
+			if (storage_()->type() == storage_type::list)
 			{
-				switch (value->index())
+				app::list* list = reinterpret_cast<app::list*>(storage_());
+
+				for (std::size_t i = list->virtual_length() - 1; ; --i)
 				{
-				case 0:
-					return std::get<0>(*value).integer();
+					value = list->original()[i];
 					
-				case 1:
-					return std::get<1>(*value);
+					switch (value->index())
+					{
+					case 0:
+						return std::get<0>(*value).integer();
+
+					case 1:
+						return std::get<1>(*value);
+					}
+
+					if (i == 0)
+					{
+						break;
+					}
+				}
+			}
+			else
+			{
+				app::queue* queue = reinterpret_cast<app::queue*>(storage_());
+
+				for (std::size_t i = queue->length() - 1; ; --i)
+				{
+					value = queue->original()[i];
+
+					switch (value->index())
+					{
+					case 0:
+						return std::get<0>(*value).integer();
+
+					case 1:
+						return std::get<1>(*value);
+					}
+
+					if (i == 0)
+					{
+						break;
+					}
 				}
 			}
 
