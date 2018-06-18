@@ -172,6 +172,7 @@ namespace app
 			}
 
 			bool is_first = true;
+			bool is_first_digit = true;
 
 			std::string number;
 			char32_t digit;
@@ -196,11 +197,20 @@ namespace app
 
 				if (std::isdigit(static_cast<char>(digit)))
 				{
+					is_first_digit = false;
+
 					number += static_cast<char>(digit);
 				}
 				else
 				{
-					if (!(std::isspace(digit) && digit != U' '))
+					if (digit == U'-' && is_first_digit)
+					{
+						is_first_digit = false;
+						number += '-';
+
+						continue;
+					}
+					else if (!(std::isspace(digit) && digit != U' '))
 					{
 						unread_char(input_stream_, digit);
 					}
@@ -228,6 +238,7 @@ namespace app
 			}
 
 			bool is_first = true;
+			bool is_first_digit = true;
 
 			std::string number;
 			char32_t digit;
@@ -252,17 +263,26 @@ namespace app
 
 				if (std::isdigit(static_cast<char>(digit)) || digit == U'.')
 				{
-					if (number.find('.') != std::string::npos)
+					if (digit == U'.' && number.find('.') != std::string::npos)
 					{
 						unread_char(input_stream_, digit);
 						break;
 					}
 
+					is_first_digit = false;
+
 					number += static_cast<char>(digit);
 				}
 				else
 				{
-					if (!(std::isspace(digit) && digit != U' '))
+					if (digit == U'-' && is_first_digit)
+					{
+						is_first_digit = false;
+						number += '-';
+
+						continue;
+					}
+					else if (!(std::isspace(digit) && digit != U' '))
 					{
 						unread_char(input_stream_, digit);
 					}
