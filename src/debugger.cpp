@@ -71,9 +71,14 @@ namespace app
 			throw std::bad_function_call();
 		if (!is_complete_hangul(storage))
 			throw std::invalid_argument("인수 storage는 완성된 현대 한글이여야 합니다.");
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
+
 		if (get_jongsung(storage) == U'ㅎ')
 		{
-			std::printf("[Debugger] 현재 버전에서는 통로는 지원되지 않습니다.\n\n");
+			std::fprintf(output_stream_, "[Debugger] 현재 버전에서는 통로는 지원되지 않습니다.\n\n");
 			return;
 		}
 
@@ -236,7 +241,7 @@ namespace app
 		}
 
 		--depth;
-		std::printf("\n");
+		std::fprintf(output_stream_, "\n");
 	}
 
 	void debugger::add_breakpoint(std::size_t x, std::size_t y)
@@ -322,6 +327,35 @@ namespace app
 
 	throw_bad_function_call:
 		throw std::bad_function_call();
+	}
+
+	bool debugger::is_integer_mode() const
+	{
+		if (!is_connceted_debugger())
+			throw std::bad_function_call();
+
+		return interpreter_.is_integer_mode_;
+	}
+	void debugger::is_integer_mode(bool new_is_integer_mode)
+	{
+		if (!is_connceted_debugger())
+			throw std::bad_function_call();
+
+		interpreter_.is_integer_mode_ = new_is_integer_mode;
+	}
+	bool debugger::is_compatible_with_aheui() const
+	{
+		if (!is_connceted_debugger())
+			throw std::bad_function_call();
+
+		return interpreter_.is_compatible_with_aheui_;
+	}
+	void debugger::is_compatible_with_aheui(bool new_is_compatible_with_aheui)
+	{
+		if (!is_connceted_debugger())
+			throw std::bad_function_call();
+
+		interpreter_.is_compatible_with_aheui_ = new_is_compatible_with_aheui;
 	}
 
 	const std::vector<std::pair<std::size_t, std::size_t>>& debugger::breakpoints() const noexcept

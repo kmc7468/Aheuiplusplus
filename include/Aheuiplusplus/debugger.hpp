@@ -45,6 +45,11 @@ namespace app
 		long long run_with_debugging(const raw_code& code);
 		long long run_with_debugging(const raw_code& code, const command_line& command_line);
 
+		bool is_integer_mode() const;
+		void is_integer_mode(bool new_is_integer_mode);
+		bool is_compatible_with_aheui() const;
+		void is_compatible_with_aheui(bool new_is_compatible_with_aheui);
+
 	public:
 		const std::vector<std::pair<std::size_t, std::size_t>>& breakpoints() const noexcept;
 
