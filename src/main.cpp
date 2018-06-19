@@ -28,7 +28,8 @@ static_assert((sizeof(wchar_t) != sizeof(char32_t) && AHEUIPLUSPLUS_MACRO_IS_WIN
 
 namespace
 {
-	bool parse_command(const app::raw_code& code, app::debugger& d, bool& command_quit)
+	bool parse_command(const app::raw_code& code, app::debugger& d, app::command_line& command_line,
+		bool& command_quit)
 	{
 		static const char* help_message =
 			"!q 또는 !quit - 인터프리터를 종료합니다.\n"
@@ -36,7 +37,10 @@ namespace
 			"!clear - 화면을 비웁니다.\n"
 			"\n"
 			"!d 또는 !dump - 전체 저장공간 상태를 덤프합니다.\n"
-			"!d 또는 !dump [storage] - 해당 저장공간의 상태를 덤프합니다. storage는 완성된 현대 한글이여야 하며, 종성만이 결과에 영향을 미칩니다.";
+			"!d 또는 !dump [storage] - 해당 저장공간의 상태를 덤프합니다. storage는 완성된 현대 한글이여야 하며, 종성만이 결과에 영향을 미칩니다.\n"
+			"\n"
+			"!enable <option> - 해당 명령줄 옵션을 활성화 합니다. option은 A, l 중 하나입니다.\n"
+			"!disable <option> - 해당 명령줄 옵션을 비활성화 합니다. option은 A, l 중 하나입니다.";
 		static const char* invalid_argument_message = "오류: 올바르지 않은 인수입니다. !help 명령어를 입력해 올바른 인수 형태를 확인하실 수 있습니다.";
 
 		command_quit = false;
@@ -78,6 +82,64 @@ namespace
 				else
 				{
 					d.dump_storage(code.back());
+				}
+				return true;
+			}
+			else if (code.substr(0, 7) == U"!enable")
+			{
+				if (code.length() < 9)
+				{
+					std::printf("%s\n\n", invalid_argument_message);
+					return true;
+				}
+				else if (code[7] != U' ')
+				{
+					std::printf("%s\n\n", invalid_argument_message);
+					return true;
+				}
+
+				app::raw_code argument = code.substr(8);
+
+				if (argument == U"A")
+				{
+					command_line.option_aheui(true);
+				}
+				else if (argument == U"l")
+				{
+					command_line.option_loud_mode(true);
+				}
+				else
+				{
+					std::printf("%s\n\n", invalid_argument_message);
+				}
+				return true;
+			}
+			else if (code.substr(0, 8) == U"!disable")
+			{
+				if (code.length() < 10)
+				{
+					std::printf("%s\n\n", invalid_argument_message);
+					return true;
+				}
+				else if (code[8] != U' ')
+				{
+					std::printf("%s\n\n", invalid_argument_message);
+					return true;
+				}
+
+				app::raw_code argument = code.substr(9);
+
+				if (argument == U"A")
+				{
+					command_line.option_aheui(true);
+				}
+				else if (argument == U"l")
+				{
+					command_line.option_loud_mode(true);
+				}
+				else
+				{
+					std::printf("%s\n\n", invalid_argument_message);
 				}
 				return true;
 			}
@@ -192,7 +254,7 @@ int main(int argc, char** argv)
 
 			bool command_quit;
 
-			if (parse_command(code, d, command_quit))
+			if (parse_command(code, d, command_line, command_quit))
 			{
 				if (command_quit)
 				{
