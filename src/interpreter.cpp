@@ -414,12 +414,16 @@ namespace app
 				if (is_ignored && is_compatible_with_aheui_)
 				{
 					is_reflection = true;
+
+					is_ignored = false;
 				}
 				else if (is_ignored && !is_compatible_with_aheui_)
 				{
 				reserved:
 					new_direction = direction;
 					new_move = move;
+
+					is_ignored = false;
 				}
 
 				if (is_reflection)
