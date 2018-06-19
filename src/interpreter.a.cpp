@@ -312,14 +312,6 @@ namespace app
 
 			char32_t input = read_char(input_stream_);
 
-			if (input < 128)
-			{
-				if (std::isspace(static_cast<unsigned char>(input)) && input != U' ')
-				{
-					goto input_char;
-				}
-			}
-
 			storage_()->push(new element(input));
 
 			return false;
