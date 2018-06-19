@@ -10,6 +10,7 @@ static_assert((sizeof(wchar_t) != sizeof(char32_t) && AHEUIPLUSPLUS_MACRO_IS_WIN
 
 #if AHEUIPLUSPLUS_TARGET == 1
 #include <Aheuiplusplus/code.hpp>
+#include <Aheuiplusplus/command_line.hpp>
 #include <Aheuiplusplus/debugger.hpp>
 #include <Aheuiplusplus/interpreter.hpp>
 #include <Aheuiplusplus/version.hpp>
@@ -27,198 +28,6 @@ static_assert((sizeof(wchar_t) != sizeof(char32_t) && AHEUIPLUSPLUS_MACRO_IS_WIN
 
 namespace
 {
-	bool parse_command_line(int argc, char** argv,
-		bool& command_aheui, bool& command_interpreting, app::version& version, std::string& path,
-		bool& command_loud_mode)
-	{
-		if (argc == 1)
-		{
-			std::printf("오류: 입력이 없습니다. --help 옵션을 이용해 사용법을 확인하실 수 있습니다.\n");
-			return false;
-		}
-
-		static const char* duplicate_message = " 옵션이 두번 이상 사용되었습니다.";
-		static const char* invalid_argument_message = " 옵션의 인수가 올바르지 않습니다. --help 옵션을 이용해 올바른 인수 형태를 확인하실 수 있습니다.";
-
-		bool command_help = false;
-		bool command_version = false;
-		command_aheui = false;
-		command_interpreting = false;
-		path.clear();
-		version = app::version::none;
-		command_loud_mode = false;
-
-		for (int i = 1; i < argc; ++i)
-		{
-			std::string argument = argv[i];
-
-			if (argument == "--help")
-			{
-				if (command_help)
-				{
-					std::printf("오류: %s%s\n", "--help", duplicate_message);
-					return false;
-				}
-
-				command_help = true;
-			}
-			else if (argument == "--version")
-			{
-				if (command_version)
-				{
-					std::printf("오류: %s%s\n", "--version", duplicate_message);
-					return false;
-				}
-
-				command_version = true;
-			}
-			else if (argument == "-A")
-			{
-				if (command_aheui)
-				{
-					std::printf("오류: %s%s\n", "-A", duplicate_message);
-					return false;
-				}
-
-				command_aheui = true;
-			}
-			else if (argument == "-i")
-			{
-				if (command_interpreting)
-				{
-					std::printf("오류: %s%s\n", "-i", duplicate_message);
-					return false;
-				}
-
-				command_interpreting = true;
-			}
-			else if (argument.substr(0, 4) == "-std")
-			{
-				if (argument.length() <= 5)
-				{
-					std::printf("오류: %s%s\n", "-std", invalid_argument_message);
-					return false;
-				}
-				else if (argument[4] != '=')
-				{
-					std::printf("오류: %s%s\n", "-std", invalid_argument_message);
-					return false;
-				}
-				
-				std::string argument_of_argument = argument.substr(5);
-				
-				if (argument_of_argument.find('.') == std::string::npos)
-				{
-					try
-					{
-						int major = std::stoi(argument_of_argument);
-
-						version = app::get_version(major);
-
-						if (version == app::version::none)
-						{
-							std::printf("오류: %s%s\n", "-std", invalid_argument_message);
-							return false;
-						}
-					}
-					catch (...)
-					{
-						std::printf("오류: %s%s\n", "-std", invalid_argument_message);
-						return false;
-					}
-				}
-				else
-				{
-					std::string major_raw = argument_of_argument.substr(0, argument_of_argument.find('.'));
-					std::string minor_raw = argument_of_argument.substr(argument_of_argument.find('.') + 1);
-
-					if (minor_raw.find('.') != std::string::npos)
-					{
-						std::printf("오류: %s%s\n", "-std", invalid_argument_message);
-						return false;
-					}
-
-					int major = std::stoi(major_raw);
-					int minor = std::stoi(minor_raw);
-
-					version = app::get_version(major, minor);
-
-					if (version == app::version::none)
-					{
-						std::printf("오류: %s%s\n", "-std", invalid_argument_message);
-						return false;
-					}
-				}
-			}
-			else if (argument == "-l")
-			{
-				if (command_loud_mode)
-				{
-					std::printf("오류: %s%s\n", "-l", duplicate_message);
-					return false;
-				}
-
-				command_loud_mode = true;
-			}
-			else
-			{
-				if (argument.front() == '-')
-				{
-					std::printf("오류: %s는 알 수 없는 옵션입니다. --help 옵션을 이용해 올바른 옵션을 확인하실 수 있습니다.\n", argument.c_str());
-					return false;
-				}
-				else if (!path.empty())
-				{
-					std::printf("오류: 경로가 두개 이상 입력되었습니다.\n");
-					return false;
-				}
-
-				path = argument;
-			}
-		}
-
-		if (command_help)
-		{
-			std::printf("사용법: %s [option(s)...] [path]\n"
-						"path는 아희++(또는 아희) 코드가 기록된 BOM이 없는 UTF-8로 인코딩 된 텍스트 파일이여야 합니다(인터프리팅 모드일 경우 필요하지 않습니다.).\n\n"
-						"--help - 사용법 및 옵션 목록을 봅니다.\n"
-						"--version - 프로그램의 버전을 봅니다.\n\n"
-						"-A - 아희 표준대로만 작동합니다(아희++의 기능을 이용할 수 없습니다.). -std 옵션과 함께 쓰일 수 없습니다.\n"
-						"-std=<version> - 어떤 버전의 아희++ 표준을 따를지 설정합니다. version은 m 또는 m.n 형태로 구성됩니다(이때 m은 주 버전, n은 부 버전입니다.). -A 옵션과 함께 쓰일 수 없습니다.\n"
-						"-i - 인터프리팅 모드로 전환합니다.\n\n"
-						"-l - 입력을 받아야 할 때 입력을 요청하는 메세지를 출력합니다.\n", argv[0]);
-			return false;
-		}
-		if (command_version)
-		{
-			std::printf("아희++ 표준 인터프리터 %s\n\n%s\n이 프로그램은 공개 소프트웨어로, 소스 코드는 위 웹사이트에서 MIT 라이선스에 의해 배포되고 있습니다.\n",
-				app::interpreter::version_string, "https://github.com/kmc7468/Aheuiplusplus");
-			return false;
-		}
-
-		if (command_aheui && version != app::version::none)
-		{
-			std::printf("오류: -A 옵션은 -std 옵션과 함께 쓰일 수 없습니다.\n");
-			return false;
-		}
-		if (command_interpreting && !path.empty())
-		{
-			std::printf("오류: 인터프리팅 모드일 경우 path는 필요하지 않습니다.\n");
-			return false;
-		}
-		if (!command_interpreting && path.empty())
-		{
-			std::printf("오류: 일반 모드일 경우 path가 필요합니다.\n");
-			return false;
-		}
-
-		if (version == app::version::none)
-		{
-			version = app::version::latest;
-		}
-
-		return true;
-	}
 	bool parse_command(const app::raw_code& code, app::debugger& d, bool& command_quit)
 	{
 		static const char* help_message =
@@ -342,27 +151,21 @@ namespace
 
 int main(int argc, char** argv)
 {
-	bool command_aheui;
-	bool command_interpreting;
-	std::string path;
-	app::version version;
-	bool command_loud_mode;
+	app::command_line command_line;
 
-	if (!parse_command_line(argc, argv,
-		command_aheui, command_interpreting, version, path,
-		command_loud_mode))
+	if (!command_line.parse(argc, argv))
 	{
 		return 0;
 	}
 	
-	app::interpreter i(version, stdin, stdout);
+	app::interpreter i(command_line.option_version());
 	app::debugger d(stdout, i);
 
 	d.connect_debugger();
 
 	std::setlocale(LC_ALL, "");
 
-	if (command_interpreting)
+	if (command_line.option_interpreting_mode())
 	{
 		static const char* title_message =
 			"- 코드를 실행하려면 코드를 입력하고 엔터 키를 누르세요.\n"
@@ -436,8 +239,7 @@ int main(int argc, char** argv)
 			_setmode(_fileno(stdin), _O_U16TEXT);
 			_setmode(_fileno(stdout), _O_U16TEXT);
 #endif
-			d.run_with_debugging(code,
-				command_aheui, command_loud_mode);
+			d.run_with_debugging(code, command_line);
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 			_setmode(_fileno(stdout), _O_TEXT);
 #endif
@@ -455,11 +257,11 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		std::FILE* file = std::fopen(path.c_str(), "r");
+		std::FILE* file = std::fopen(command_line.option_code_path().c_str(), "r");
 
 		if (file == nullptr)
 		{
-			std::printf("오류: '%s' 파일을 여는데에 실패했습니다. 경로 또는 권한을 확인해 보십시오.\n", path.c_str());
+			std::printf("오류: '%s' 파일을 여는데에 실패했습니다. 경로 또는 권한을 확인해 보십시오.\n", command_line.option_code_path().c_str());
 			return 0;
 		}
 
@@ -476,8 +278,7 @@ int main(int argc, char** argv)
 
 		code = code.substr(0, code.length() - 2);
 
-		long long result = d.run_with_debugging(code,
-			command_aheui, command_loud_mode);
+		long long result = d.run_with_debugging(code, command_line);
 		std::printf("\n");
 
 		std::fclose(file);

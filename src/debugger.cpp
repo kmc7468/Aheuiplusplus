@@ -277,10 +277,9 @@ namespace app
 
 	long long debugger::run_with_debugging(const raw_code& code)
 	{
-		return run_with_debugging(code, false, false);
+		return run_with_debugging(code, command_line());
 	}
-	long long debugger::run_with_debugging(const raw_code& code,
-		bool command_aheui, bool command_loud_mode)
+	long long debugger::run_with_debugging(const raw_code& code, const command_line& command_line)
 	{
 		std::size_t x;
 		std::size_t y;
@@ -297,7 +296,7 @@ namespace app
 		{
 			if (is_connceted_debugger())
 			{
-				long long result = interpreter_.run_(code, command_aheui, command_loud_mode,
+				long long result = interpreter_.run_(code, command_line,
 					x, y, direction, move, is_ignored, is_reflection, start_of_expression,
 					is_out_of_version);
 

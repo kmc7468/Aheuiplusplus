@@ -1,5 +1,6 @@
 ﻿#include <Aheuiplusplus/interpreter.hpp>
 
+#include <Aheuiplusplus/command_line.hpp>
 #include <Aheuiplusplus/debugger.hpp>
 
 #include <cstddef>
@@ -13,6 +14,12 @@
 
 namespace app
 {
+	interpreter::interpreter()
+		: interpreter(stdin, stdout)
+	{}
+	interpreter::interpreter(app::version version)
+		: interpreter(stdin, stdout, version)
+	{}
 	interpreter::interpreter(std::FILE* input_stream, std::FILE* output_stream)
 		: input_stream_(input_stream), output_stream_(output_stream)
 	{
@@ -23,8 +30,8 @@ namespace app
 		_setmode(_fileno(output_stream_), _O_U16TEXT);
 #endif
 	}
-	interpreter::interpreter(app::version version, std::FILE* input_stream, std::FILE* output_stream)
-		: version_(version), input_stream_(input_stream), output_stream_(output_stream)
+	interpreter::interpreter(std::FILE* input_stream, std::FILE* output_stream, app::version version)
+		: input_stream_(input_stream), output_stream_(output_stream), version_(version)
 	{
 		initialize_();
 
@@ -45,9 +52,9 @@ namespace app
 
 	long long interpreter::run(const raw_code& code)
 	{
-		return run(code, false, false);
+		return run(code, command_line());
 	}
-	long long interpreter::run(const raw_code& code, bool command_aheui, bool command_loud_mode)
+	long long interpreter::run(const raw_code& code, const command_line& command_line)
 	{
 		std::size_t x;
 		std::size_t y;
@@ -61,7 +68,7 @@ namespace app
 
 		char32_t start_of_expression;
 
-		return run_(code, command_aheui, command_loud_mode,
+		return run_(code, command_line,
 			x, y, direction, move, is_ignored, is_reflection, start_of_expression,
 			is_out_of_version);
 	}
@@ -98,17 +105,17 @@ namespace app
 		}
 	}
 
-	long long interpreter::run_(const raw_code& code, bool command_aheui, bool command_loud_mode,
+	long long interpreter::run_(const raw_code& code, const command_line& command_line,
 		std::size_t& x, std::size_t& y, std::size_t& direction, std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
 		bool& is_out_of_version)
 	{
 		bool backup_is_compatible_with_aheui_ = is_compatible_with_aheui_;
 
-		if (command_aheui)
+		if (command_line.option_aheui())
 		{
 			is_compatible_with_aheui_ = true;
 		}
-		is_loud_mode_ = command_loud_mode;
+		is_loud_mode_ = command_line.option_loud_mode();
 
 		app::code splited_code = code;
 
@@ -281,7 +288,7 @@ namespace app
 						is_added_additional_data = false;
 					}
 
-					if (command_aheui)
+					if (command_line.option_aheui())
 					{
 						if ((chosung == U'ㄲ' &&
 							(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
@@ -310,7 +317,7 @@ namespace app
 						chosung = U'ㅇ';
 					}
 
-					if (command_aheui)
+					if (command_line.option_aheui())
 					{
 						if ((chosung == U'ㄲ' &&
 							(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
@@ -449,7 +456,7 @@ namespace app
 			}
 		}
 
-		if (command_aheui)
+		if (command_line.option_aheui())
 		{
 			is_compatible_with_aheui_ = backup_is_compatible_with_aheui_;
 		}

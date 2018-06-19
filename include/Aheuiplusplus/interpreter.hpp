@@ -18,6 +18,7 @@
 
 namespace app
 {
+	class command_line;
 	class debugger;
 
 	class interpreter final
@@ -25,8 +26,10 @@ namespace app
 		friend class app::debugger;
 
 	public:
+		interpreter();
+		interpreter(app::version version);
 		interpreter(std::FILE* input_stream, std::FILE* output_stream);
-		interpreter(app::version version, std::FILE* input_stream, std::FILE* output_stream);
+		interpreter(std::FILE* input_stream, std::FILE* output_stream, app::version version);
 		interpreter(const interpreter& interpreter) = delete;
 		interpreter(interpreter&& interpreter) noexcept = delete;
 		~interpreter();
@@ -39,7 +42,7 @@ namespace app
 
 	public:
 		long long run(const raw_code& code);
-		long long run(const raw_code& code, bool command_aheui, bool command_loud_mode);
+		long long run(const raw_code& code, const command_line& command_line);
 
 		const app::storage* storage(std::size_t index) const;
 		std::size_t storage_index(std::size_t index) const;
@@ -47,7 +50,7 @@ namespace app
 	private:
 		void initialize_();
 
-		long long run_(const raw_code& code, bool command_aheui, bool command_loud_mode,
+		long long run_(const raw_code& code, const command_line& command_line,
 			std::size_t& x, std::size_t& y, std::size_t& direction,
 			std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
 			bool& is_out_of_version);
