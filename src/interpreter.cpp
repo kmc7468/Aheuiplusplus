@@ -102,6 +102,8 @@ namespace app
 		std::size_t& x, std::size_t& y, std::size_t& direction, std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
 		bool& is_out_of_version)
 	{
+		bool backup_is_compatible_with_aheui_ = is_compatible_with_aheui_;
+
 		if (command_aheui)
 		{
 			is_compatible_with_aheui_ = true;
@@ -445,6 +447,11 @@ namespace app
 			{
 				go_(x, y, move, direction, splited_code);
 			}
+		}
+
+		if (command_aheui)
+		{
+			is_compatible_with_aheui_ = backup_is_compatible_with_aheui_;
 		}
 	}
 
