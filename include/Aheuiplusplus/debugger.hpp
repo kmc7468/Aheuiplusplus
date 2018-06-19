@@ -2,6 +2,7 @@
 #define AHEUIPLUSPLUS_HEADER_DEBUGGER_HPP
 
 #include <Aheuiplusplus/code.hpp>
+#include <Aheuiplusplus/command_line.hpp>
 #include <Aheuiplusplus/interpreter.hpp>
 
 #include <cstddef>
@@ -42,8 +43,12 @@ namespace app
 		bool is_added_breakpoint(std::size_t x, std::size_t y);
 
 		long long run_with_debugging(const raw_code& code);
-		long long run_with_debugging(const raw_code& code,
-			bool command_aheui, bool command_loud_mode);
+		long long run_with_debugging(const raw_code& code, const command_line& command_line);
+
+		bool is_integer_mode() const;
+		void is_integer_mode(bool new_is_integer_mode);
+		bool is_compatible_with_aheui() const;
+		void is_compatible_with_aheui(bool new_is_compatible_with_aheui);
 
 	public:
 		const std::vector<std::pair<std::size_t, std::size_t>>& breakpoints() const noexcept;
