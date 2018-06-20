@@ -1,4 +1,4 @@
-#include <Aheuiplusplus/encoding.hpp>
+ï»¿#include <Aheuiplusplus/encoding.hpp>
 
 #include <algorithm>
 #include <stdexcept>
@@ -20,7 +20,7 @@ namespace app
 			if (!is_little_endian && *(reinterpret_cast<std::uint8_t*>(&test) + 3) != 1)
 			{
 				is_first = false;
-				throw std::runtime_error("ºò ¿£µğ¾È ¶Ç´Â ¸®Æ² ¿£µğ¾ÈÀ» »ç¿ëÇÏ´Â ÇÃ·§Æû¸¸ Áö¿øÇÕ´Ï´Ù.");
+				throw std::runtime_error("ë¹… ì—”ë””ì•ˆ ë˜ëŠ” ë¦¬í‹€ ì—”ë””ì•ˆì„ ì‚¬ìš©í•˜ëŠ” í”Œë«í¼ë§Œ ì§€ì›í•©ë‹ˆë‹¤.");
 			}
 		}
 
@@ -56,7 +56,7 @@ namespace app
 				result.push_back(static_cast<char>(0x80 | (character & 0x3F)));
 			}
 			else
-				throw std::invalid_argument("ÀÎ¼ö character´Â ¿Ã¹Ù¸¥ À¯´ÏÄÚµå ¹®ÀÚ°¡ ¾Æ´Õ´Ï´Ù.");
+				throw std::invalid_argument("ì¸ìˆ˜ characterëŠ” ì˜¬ë°”ë¥¸ ìœ ë‹ˆì½”ë“œ ë¬¸ìê°€ ì•„ë‹™ë‹ˆë‹¤.");
 
 			return result;
 		}		
@@ -81,7 +81,7 @@ namespace app
 					+ ((static_cast<std::int32_t>(string[2]) & 0x3F) << 6) + (static_cast<std::int32_t>(string[3]) & 0x3F);
 			}
 			else
-				throw std::invalid_argument("ÀÎ¼ö stringÀº UTF-8·Î ¿Ã¹Ù¸£°Ô ÀÎÄÚµù µÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+				throw std::invalid_argument("ì¸ìˆ˜ stringì€ UTF-8ë¡œ ì˜¬ë°”ë¥´ê²Œ ì¸ì½”ë”© ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 		}
 		char32_t utf8::decode(char first, char second, char third, char fourth)
 		{
@@ -104,7 +104,7 @@ namespace app
 					+ ((static_cast<std::int32_t>(third) & 0x3F) << 6) + (static_cast<std::int32_t>(fourth) & 0x3F);
 			}
 			else
-				throw std::invalid_argument("ÀÎ¼ö stringÀº UTF-8·Î ¿Ã¹Ù¸£°Ô ÀÎÄÚµù µÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+				throw std::invalid_argument("ì¸ìˆ˜ stringì€ UTF-8ë¡œ ì˜¬ë°”ë¥´ê²Œ ì¸ì½”ë”© ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 		}
 		int utf8::encoded_length(char32_t character)
 		{
@@ -125,7 +125,7 @@ namespace app
 				return 4;
 			}
 			else
-				throw std::invalid_argument("ÀÎ¼ö character´Â ¿Ã¹Ù¸¥ À¯´ÏÄÚµå ¹®ÀÚ°¡ ¾Æ´Õ´Ï´Ù.");
+				throw std::invalid_argument("ì¸ìˆ˜ characterëŠ” ì˜¬ë°”ë¥¸ ìœ ë‹ˆì½”ë“œ ë¬¸ìê°€ ì•„ë‹™ë‹ˆë‹¤.");
 		}
 		int utf8::encoded_length(char first)
 		{
@@ -146,7 +146,7 @@ namespace app
 				return 4;
 			}
 			else
-				throw std::invalid_argument("ÀÎ¼ö first´Â UTF-8·Î Á¦´ë·Î ÀÎÄÚµù µÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+				throw std::invalid_argument("ì¸ìˆ˜ firstëŠ” UTF-8ë¡œ ì œëŒ€ë¡œ ì¸ì½”ë”© ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 		}
 
 		const std::string utf8::name = "UTF-8";

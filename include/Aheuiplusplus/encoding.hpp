@@ -1,4 +1,4 @@
-#ifndef AHEUIPLUSPLUS_HEADER_ENCODING_HPP
+ï»¿#ifndef AHEUIPLUSPLUS_HEADER_ENCODING_HPP
 #define AHEUIPLUSPLUS_HEADER_ENCODING_HPP
 
 #include <cstdint>
@@ -13,7 +13,7 @@ namespace app
 	std::uint8_t get_byte(const Ty_& data, int index)
 	{
 		if (index >= sizeof(Ty_))
-			throw std::invalid_argument("ÀÎ¼ö index´Â ÅÛÇÃ¸´ ÀÎ¼ö Ty_ÀÇ Å©±â ¹Ì¸¸ÀÌ¿©¾ß ÇÕ´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ indexëŠ” í…œí”Œë¦¿ ì¸ìˆ˜ Ty_ì˜ í¬ê¸° ë¯¸ë§Œì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
 		
 		return *(reinterpret_cast<const std::uint8_t*>(&data) + index);
 	}
@@ -21,7 +21,7 @@ namespace app
 	std::uint8_t get_byte_in_little_endian(const Ty_& data, int index)
 	{
 		if (index >= sizeof(Ty_))
-			throw std::invalid_argument("ÀÎ¼ö index´Â ÅÛÇÃ¸´ ÀÎ¼ö Ty_ÀÇ Å©±â ¹Ì¸¸ÀÌ¿©¾ß ÇÕ´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ indexëŠ” í…œí”Œë¦¿ ì¸ìˆ˜ Ty_ì˜ í¬ê¸° ë¯¸ë§Œì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
 		
 		if (is_little_endian())
 		{
@@ -36,7 +36,7 @@ namespace app
 	std::uint8_t get_byte_in_big_endian(const Ty_& data, int index)
 	{
 		if (index >= sizeof(Ty_))
-			throw std::invalid_argument("ÀÎ¼ö index´Â ÅÛÇÃ¸´ ÀÎ¼ö Ty_ÀÇ Å©±â ¹Ì¸¸ÀÌ¿©¾ß ÇÕ´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ indexëŠ” í…œí”Œë¦¿ ì¸ìˆ˜ Ty_ì˜ í¬ê¸° ë¯¸ë§Œì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
 
 		if (is_little_endian())
 		{
