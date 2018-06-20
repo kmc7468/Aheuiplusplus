@@ -11,6 +11,7 @@ static_assert((sizeof(wchar_t) != sizeof(char32_t) && AHEUIPLUSPLUS_MACRO_IS_WIN
 #if AHEUIPLUSPLUS_TARGET == 1
 #include <Aheuiplusplus/Aheuiplusplus.hpp>
 
+#include <algorithm>
 #include <clocale>
 #include <cstdio>
 #include <cstdlib>
@@ -167,42 +168,98 @@ namespace
 
 		return result;
 	}
-	app::raw_code input_line(std::FILE* file)
+	app::raw_code input_line(std::FILE* file, const app::command_line& command_line)
 	{
 		app::raw_code result;
-
-		while (!std::feof(file))
+		
+		if (command_line.option_utf8())
 		{
-			std::string c = app::read_u8char(file);
-
-			if (c.length() == 1 && (c.front() == '\n' || c.front() == '\r'))
+			while (!std::feof(file))
 			{
-				if (c.front() == '\r')
+				std::string c = app::read_u8char(file);
+
+				if (c.length() == 1 && (c.front() == '\n' || c.front() == '\r'))
 				{
-					app::read_u8char(file);
+					if (c.front() == '\r')
+					{
+						app::read_u8char(file);
+					}
+
+					break;
 				}
 
-				break;
-			}
+				if (c.length() == 1)
+				{
+					result += app::encoding::utf8::decode(c[0]);
+				}
+				else if (c.length() == 2)
+				{
+					result += app::encoding::utf8::decode(c[0], c[1]);
+				}
+				else if (c.length() == 3)
+				{
+					if (std::equal(reinterpret_cast<std::uint8_t*>(&c[0]), reinterpret_cast<std::uint8_t*>(&c[2]), app::encoding::utf8::byte_order_mark))
+					{
+						continue;
+					}
 
-			if (c.length() == 1)
-			{
-				result += app::encoding::utf8::decode(c[0]);
-			}
-			else if (c.length() == 2)
-			{
-				result += app::encoding::utf8::decode(c[0], c[1]);
-			}
-			else if (c.length() == 3)
-			{
-				result += app::encoding::utf8::decode(c[0], c[1], c[2]);
-			}
-			else
-			{
-				result += app::encoding::utf8::decode(c[0], c[1], c[2], c[3]);
+					result += app::encoding::utf8::decode(c[0], c[1], c[2]);
+				}
+				else
+				{
+					result += app::encoding::utf8::decode(c[0], c[1], c[2], c[3]);
+				}
 			}
 		}
+		else if (command_line.option_utf16())
+		{
+			while (!std::feof(file))
+			{
+				unsigned char first_byte = std::fgetc(file);
+				unsigned char second_byte = std::fgetc(file);
 
+				char16_t first = (first_byte << 8) + second_byte;
+				if (app::is_little_endian())
+				{
+					std::reverse(reinterpret_cast<std::uint8_t*>(&first), reinterpret_cast<std::uint8_t*>(&first) + 2);
+				}
+				int length = app::encoding::utf16::encoded_length(first);
+				
+				if (length == 2 && (first == u'\n' || first == u'\r'))
+				{
+					if (first == '\r')
+					{
+						std::fgetc(file);
+						std::fgetc(file);
+					}
+
+					break;
+				}
+
+				if (length == 2)
+				{
+					if ((first == 0xFEFF && app::is_little_endian()) ||
+						(first == 0xFFEE && !app::is_little_endian()))
+					{
+						continue;
+					}
+
+					result += first;
+				}
+				else
+				{
+					first_byte = std::fgetc(file);
+					second_byte = std::fgetc(file);
+
+					char16_t second = (first_byte << 8) + second_byte;
+					
+					result += app::encoding::utf16::decode(first, second);
+				}
+			}
+		}
+		else
+			throw std::invalid_argument("인수 command_line에 명시된 인코딩이 없습니다.");
+		
 		return result;
 	}
 }
@@ -328,7 +385,7 @@ int main(int argc, char** argv)
 
 		while (!std::feof(file))
 		{
-			line = input_line(file);
+			line = input_line(file, command_line);
 
 			code += line;
 			code += U'\n';
@@ -336,7 +393,13 @@ int main(int argc, char** argv)
 
 		code = code.substr(0, code.length() - 2);
 
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		_setmode(_fileno(stdout), _O_U16TEXT);
+#endif
 		long long result = d.run_with_debugging(code, command_line);
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		_setmode(_fileno(stdout), _O_TEXT);
+#endif
 		std::printf("\n");
 
 		std::fclose(file);

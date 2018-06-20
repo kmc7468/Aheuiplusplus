@@ -62,46 +62,46 @@ namespace app
 		}		
 		char32_t utf8::decode(const std::string& string)
 		{
-			if (string[0] < 0x80)
+			if (static_cast<unsigned char>(string[0]) < 0x80)
 			{
 				return string[0];
 			}
-			else if ((string[0] & 0xC0) == 0xC0)
+			else if ((static_cast<unsigned char>(string[0]) & 0xF0) == 0xF0)
 			{
-				return ((static_cast<std::int32_t>(string[0]) & 0x1F) << 6) + (static_cast<std::int32_t>(string[1]) & 0x3F);
+				return ((static_cast<std::int32_t>(string[0]) & 0x07) << 18) + ((static_cast<std::int32_t>(string[1]) & 0x3F) << 12)
+					+ ((static_cast<std::int32_t>(string[2]) & 0x3F) << 6) + (static_cast<std::int32_t>(string[3]) & 0x3F);
 			}
-			else if ((string[0] & 0xE0) == 0xE0)
+			else if ((static_cast<unsigned char>(string[0]) & 0xE0) == 0xE0)
 			{
 				return ((static_cast<std::int32_t>(string[0]) & 0x0F) << 12) + ((static_cast<std::int32_t>(string[1]) & 0x3F) << 6)
 					+ (static_cast<std::int32_t>(string[2]) & 0x3F);
 			}
-			else if ((string[0] & 0xF0) == 0xF0)
+			else if ((static_cast<unsigned char>(string[0]) & 0xC0) == 0xC0)
 			{
-				return ((static_cast<std::int32_t>(string[0]) & 0x07) << 18) + ((static_cast<std::int32_t>(string[1]) & 0x3F) << 12)
-					+ ((static_cast<std::int32_t>(string[2]) & 0x3F) << 6) + (static_cast<std::int32_t>(string[3]) & 0x3F);
+				return ((static_cast<std::int32_t>(string[0]) & 0x1F) << 6) + (static_cast<std::int32_t>(string[1]) & 0x3F);
 			}
 			else
 				throw std::invalid_argument("인수 string은 UTF-8로 올바르게 인코딩 되지 않았습니다.");
 		}
 		char32_t utf8::decode(char first, char second, char third, char fourth)
 		{
-			if (first < 0x80)
+			if (static_cast<unsigned char>(first) < 0x80)
 			{
 				return first;
 			}
-			else if ((first & 0xC0) == 0xC0)
+			else if ((static_cast<unsigned char>(first) & 0xF0) == 0xF0)
 			{
-				return ((static_cast<std::int32_t>(first) & 0x1F) << 6) + (static_cast<std::int32_t>(second) & 0x3F);
+				return ((static_cast<std::int32_t>(first) & 0x07) << 18) + ((static_cast<std::int32_t>(second) & 0x3F) << 12)
+					+ ((static_cast<std::int32_t>(third) & 0x3F) << 6) + (static_cast<std::int32_t>(fourth) & 0x3F);
 			}
-			else if ((first & 0xE0) == 0xE0)
+			else if ((static_cast<unsigned char>(first) & 0xE0) == 0xE0)
 			{
 				return ((static_cast<std::int32_t>(first) & 0x0F) << 12) + ((static_cast<std::int32_t>(second) & 0x3F) << 6)
 					+ (static_cast<std::int32_t>(third) & 0x3F);
 			}
-			else if ((first & 0xF0) == 0xF0)
+			else if ((static_cast<unsigned char>(first) & 0xC0) == 0xC0)
 			{
-				return ((static_cast<std::int32_t>(first) & 0x07) << 18) + ((static_cast<std::int32_t>(second) & 0x3F) << 12)
-					+ ((static_cast<std::int32_t>(third) & 0x3F) << 6) + (static_cast<std::int32_t>(fourth) & 0x3F);
+				return ((static_cast<std::int32_t>(first) & 0x1F) << 6) + (static_cast<std::int32_t>(second) & 0x3F);
 			}
 			else
 				throw std::invalid_argument("인수 string은 UTF-8로 올바르게 인코딩 되지 않았습니다.");
@@ -133,17 +133,17 @@ namespace app
 			{
 				return 1;
 			}
-			else if ((static_cast<unsigned char>(first) & 0xC0) == 0xC0)
+			else if ((static_cast<unsigned char>(first) & 0xF0) == 0xF0)
 			{
-				return 2;
+				return 4;
 			}
 			else if ((static_cast<unsigned char>(first) & 0xE0) == 0xE0)
 			{
 				return 3;
 			}
-			else if ((static_cast<unsigned char>(first) & 0xF0) == 0xF0)
+			else if ((static_cast<unsigned char>(first) & 0xC0) == 0xC0)
 			{
-				return 4;
+				return 2;
 			}
 			else
 				throw std::invalid_argument("인수 first는 UTF-8로 제대로 인코딩 되지 않았습니다.");
@@ -161,11 +161,11 @@ namespace app
 			if (character <= 0xFFFF)
 			{
 				result.push_back(static_cast<char16_t>(character));
-
+				
 				if (!app::is_little_endian())
 				{
 					std::reverse(reinterpret_cast<std::uint8_t*>(&result[0]),
-						reinterpret_cast<std::uint8_t*>(&result[0]) + 1);
+						reinterpret_cast<std::uint8_t*>(&result[0]) + 2);
 				}
 			}
 			else
@@ -183,9 +183,9 @@ namespace app
 				if (!app::is_little_endian())
 				{
 					std::reverse(reinterpret_cast<std::uint8_t*>(&result[0]),
-						reinterpret_cast<std::uint8_t*>(&result[0]) + 1);
+						reinterpret_cast<std::uint8_t*>(&result[0]) + 2);
 					std::reverse(reinterpret_cast<std::uint8_t*>(&result[1]),
-							reinterpret_cast<std::uint8_t*>(&result[1]) + 1);
+							reinterpret_cast<std::uint8_t*>(&result[1]) + 2);
 				}
 			}
 
@@ -212,7 +212,7 @@ namespace app
 			if (!app::is_little_endian())
 			{
 				std::reverse(reinterpret_cast<std::uint8_t*>(&first),
-					reinterpret_cast<std::uint8_t*>(&first) + 1);
+					reinterpret_cast<std::uint8_t*>(&first) + 2);
 			}
 
 			if (encoded_length(first) == 2)
@@ -223,7 +223,7 @@ namespace app
 			{
 				second = string[1];
 				std::reverse(reinterpret_cast<std::uint8_t*>(&second),
-					reinterpret_cast<std::uint8_t*>(&second) + 1);
+					reinterpret_cast<std::uint8_t*>(&second) + 2);
 
 				return (first << 16) + second;
 			}		
@@ -233,7 +233,7 @@ namespace app
 			if (!app::is_little_endian())
 			{
 				std::reverse(reinterpret_cast<std::uint8_t*>(&first),
-					reinterpret_cast<std::uint8_t*>(&first) + 1);
+					reinterpret_cast<std::uint8_t*>(&first) + 2);
 			}
 
 			if (encoded_length(first) == 2)
@@ -243,7 +243,7 @@ namespace app
 			else
 			{
 				std::reverse(reinterpret_cast<std::uint8_t*>(&second),
-					reinterpret_cast<std::uint8_t*>(&second) + 1);
+					reinterpret_cast<std::uint8_t*>(&second) + 2);
 
 				return (first << 16) + second;
 			}

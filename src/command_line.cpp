@@ -40,13 +40,15 @@ namespace app
 
 		static const char* duplicate_message = " 옵션이 두번 이상 사용되었습니다.";
 		static const char* invalid_argument_message = " 옵션의 인수가 올바르지 않습니다. --help 옵션을 이용해 올바른 인수 형태를 확인하실 수 있습니다.";
-	
+
 		bool option_help = false;
 		bool option_version = false;
 
 		option_aheui_ = false;
 		option_interpreting_mode_ = false;
 		option_version_ = version::none;
+		option_utf8_ = false;
+		option_utf16_ = false;
 
 		option_loud_mode_ = false;
 		option_input_end_mode_ = false;
@@ -96,6 +98,26 @@ namespace app
 				}
 
 				option_interpreting_mode_ = true;
+			}
+			else if (argument == "-utf8")
+			{
+				if (option_utf8_)
+				{
+					std::fprintf(output_stream, "오류: %s%s\n", "-utf8", duplicate_message);
+					return false;
+				}
+
+				option_utf8_ = true;
+			}
+			else if (argument == "-utf16")
+			{
+				if (option_utf16_)
+				{
+					std::fprintf(output_stream, "오류: %s%s\n", "-utf16", duplicate_message);
+					return false;
+				}
+
+				option_utf16_ = true;
 			}
 			else if (argument.substr(0, 4) == "-std")
 			{
@@ -194,6 +216,8 @@ namespace app
 				"-A - 아희 전용 모드로 전환합니다(아희++의 기능을 이용할 수 없습니다.). -std 옵션과 함께 쓰일 수 없습니다.\n"
 				"-std=<version> - 어떤 버전의 아희++ 표준을 따를지 설정합니다. version은 m 또는 m.n 형태로 구성됩니다(이때 m은 주 버전, n은 부 버전입니다.). -A 옵션과 함께 쓰일 수 없습니다.\n"
 				"-i - 인터프리팅 모드로 전환합니다.\n"
+				"-utf8 - path의 인코딩이 UTF-8임을 명시합니다. 기본적으로 이 옵션이 적용됩니다. -i, -utf16 옵션과 함께 쓰일 수 없습니다.\n"
+				"-utf16 - path의 인코딩이 UTF-16임을 명시합니다. -i, -utf8 옵션과 함께 쓰일 수 없습니다.\n"
 				"\n"
 				"-l - 입력을 받아야 할 때 입력을 요청하는 메세지를 출력합니다.\n",
 				argv[0]);
@@ -208,7 +232,7 @@ namespace app
 
 			return false;
 		}
-		
+
 		if (option_aheui_ && option_version_ != version::none)
 		{
 			std::fprintf(output_stream, "오류: -A 옵션과 -std 옵션은 함께 쓰일 수 없습니다.\n");
@@ -226,6 +250,29 @@ namespace app
 			std::fprintf(output_stream, "오류: 일반 모드일 경우 path가 필요합니다.n");
 
 			return false;
+		}
+		else if (option_interpreting_mode_ && option_utf8_)
+		{
+			std::fprintf(output_stream, "오류: -i 옵션과 -utf8 옵션은 함께 쓰일 수 없습니다.\n");
+
+			return false;
+		}
+		else if (option_interpreting_mode_ && option_utf16_)
+		{
+			std::fprintf(output_stream, "오류: -i 옵션과 -utf16 옵션은 함께 쓰일 수 없습니다.\n");
+
+			return false;
+		}
+		else if (option_utf8_ && option_utf16_)
+		{
+			std::fprintf(output_stream, "오류: -utf8 옵션과 -utf16 옵션은 함께 쓰일 수 없습니다.\n");
+
+			return false;
+		}
+
+		if (!option_utf8_ && !option_utf16_)
+		{
+			option_utf8_ = true;
 		}
 
 		return true;
@@ -254,6 +301,22 @@ namespace app
 	void command_line::option_version(version new_option_version) noexcept
 	{
 		option_version_ = new_option_version;
+	}
+	bool command_line::option_utf8() const noexcept
+	{
+		return option_utf8_;
+	}
+	void command_line::option_utf8(bool new_option_utf8) noexcept
+	{
+		option_utf8_ = new_option_utf8;
+	}
+	bool command_line::option_utf16() const noexcept
+	{
+		return option_utf16_;
+	}
+	void command_line::option_utf16(bool new_option_utf16) noexcept
+	{
+		option_utf16_ = new_option_utf16;
 	}
 
 	bool command_line::option_loud_mode() const noexcept
