@@ -20,20 +20,6 @@ namespace app
 	char32_t get_complete_hangul(char32_t chosung, char32_t jungsung, char32_t jongsung);
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-	std::wstring char32_to_wchar(char32_t character);
-	char32_t wchar_to_char32(wchar_t high_surrogate, wchar_t low_surrogate = 0);
-#endif
-	std::string char32_to_u8char(char32_t character);
-	char32_t u8char_to_char32(unsigned char first, unsigned char second = 0, unsigned char third = 0, unsigned char fourth = 0);
-	
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-	int get_wchar_length(char32_t character);
-	int get_wchar_length(wchar_t first);
-#endif
-	int get_u8char_length(char32_t character);
-	int get_u8char_length(unsigned char first);
-
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 	std::wstring read_wchar(std::FILE* input_stream);
 	void write_wchar(std::FILE* output_stream, const std::wstring& character);
 #endif

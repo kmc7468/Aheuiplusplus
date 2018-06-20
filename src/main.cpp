@@ -9,11 +9,7 @@ static_assert((sizeof(wchar_t) != sizeof(char32_t) && AHEUIPLUSPLUS_MACRO_IS_WIN
 	"The size of wchar_t and char32_t can be different from each other on Windows.");
 
 #if AHEUIPLUSPLUS_TARGET == 1
-#include <Aheuiplusplus/code.hpp>
-#include <Aheuiplusplus/command_line.hpp>
-#include <Aheuiplusplus/debugger.hpp>
-#include <Aheuiplusplus/interpreter.hpp>
-#include <Aheuiplusplus/version.hpp>
+#include <Aheuiplusplus/Aheuiplusplus.hpp>
 
 #include <clocale>
 #include <cstdio>
@@ -191,19 +187,19 @@ namespace
 
 			if (c.length() == 1)
 			{
-				result += app::u8char_to_char32(c[0]);
+				result += app::encoding::utf8::decode(c[0]);
 			}
 			else if (c.length() == 2)
 			{
-				result += app::u8char_to_char32(c[0], c[1]);
+				result += app::encoding::utf8::decode(c[0], c[1]);
 			}
 			else if (c.length() == 3)
 			{
-				result += app::u8char_to_char32(c[0], c[1], c[2]);
+				result += app::encoding::utf8::decode(c[0], c[1], c[2]);
 			}
 			else
 			{
-				result += app::u8char_to_char32(c[0], c[1], c[2], c[3]);
+				result += app::encoding::utf8::decode(c[0], c[1], c[2], c[3]);
 			}
 		}
 

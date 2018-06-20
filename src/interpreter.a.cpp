@@ -297,7 +297,6 @@ namespace app
 		}
 		else if (jongsung == U'ㅎ' && !is_added_additional_data) // 문자 입력
 		{
-		input_char:
 			if (input_stream_ != stdin && std::feof(input_stream_))
 			{
 				storage_()->push(new element(0));
