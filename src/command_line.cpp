@@ -49,6 +49,7 @@ namespace app
 		option_version_ = version::none;
 		option_utf8_ = false;
 		option_utf16_ = false;
+		option_utf16be_ = false;
 
 		option_loud_mode_ = false;
 		option_input_end_mode_ = false;
@@ -118,6 +119,16 @@ namespace app
 				}
 
 				option_utf16_ = true;
+			}
+			else if (argument == "-utf16be")
+			{
+				if (option_utf16be_)
+				{
+					std::fprintf(output_stream, "오류: %s%s\n", "-utf16be", duplicate_message);
+					return false;
+				}
+
+				option_utf16be_ = true;
 			}
 			else if (argument.substr(0, 4) == "-std")
 			{
@@ -215,9 +226,10 @@ namespace app
 				"\n"
 				"-A - 아희 전용 모드로 전환합니다(아희++의 기능을 이용할 수 없습니다.). -std 옵션과 함께 쓰일 수 없습니다.\n"
 				"-std=<version> - 어떤 버전의 아희++ 표준을 따를지 설정합니다. version은 m 또는 m.n 형태로 구성됩니다(이때 m은 주 버전, n은 부 버전입니다.). -A 옵션과 함께 쓰일 수 없습니다.\n"
-				"-i - 인터프리팅 모드로 전환합니다.\n"
-				"-utf8 - path의 인코딩이 UTF-8임을 명시합니다. 기본적으로 이 옵션이 적용됩니다. -i, -utf16 옵션과 함께 쓰일 수 없습니다.\n"
-				"-utf16 - path의 인코딩이 UTF-16임을 명시합니다. -i, -utf8 옵션과 함께 쓰일 수 없습니다.\n"
+				"-i - 인터프리팅 모드로 전환합니다. -utf8, -utf16, -utf16be 옵션과 함께 쓰일 수 없습니다.\n"
+				"-utf8 - path의 인코딩이 UTF-8임을 명시합니다. 기본적으로 이 옵션이 적용됩니다. -i, -utf16, -utf16be 옵션과 함께 쓰일 수 없습니다.\n"
+				"-utf16 - path의 인코딩이 UTF-16임을 명시합니다. -i, -utf8, -utf16be 옵션과 함께 쓰일 수 없습니다.\n"
+				"-utf16be - path의 인코딩이 UTF-16BE임을 명시합니다. -i, -utf8, -utf16 옵션과 함께 쓰일 수 없습니다.\n"
 				"\n"
 				"-l - 입력을 받아야 할 때 입력을 요청하는 메세지를 출력합니다.\n",
 				argv[0]);
@@ -263,14 +275,32 @@ namespace app
 
 			return false;
 		}
+		else if (option_interpreting_mode_ && option_utf16be_)
+		{
+			std::fprintf(output_stream, "오류: -i 옵션과 -utf16be 옵션은 함께 쓰일 수 없습니다.\n");
+
+			return false;
+		}
 		else if (option_utf8_ && option_utf16_)
 		{
 			std::fprintf(output_stream, "오류: -utf8 옵션과 -utf16 옵션은 함께 쓰일 수 없습니다.\n");
 
 			return false;
 		}
+		else if (option_utf8_ && option_utf16be_)
+		{
+			std::fprintf(output_stream, "오류: -utf8 옵션과 -utf16be 옵션은 함께 쓰일 수 없습니다.\n");
 
-		if (!option_utf8_ && !option_utf16_)
+			return false;
+		}
+		else if (option_utf16_ && option_utf16be_)
+		{
+			std::fprintf(output_stream, "오류: -utf16 옵션과 -utf16be 옵션은 함께 쓰일 수 없습니다.\n");
+
+			return false;
+		}
+
+		if (!option_utf8_ && !option_utf16_ && !option_utf16be_)
 		{
 			option_utf8_ = true;
 		}
@@ -317,6 +347,14 @@ namespace app
 	void command_line::option_utf16(bool new_option_utf16) noexcept
 	{
 		option_utf16_ = new_option_utf16;
+	}
+	bool command_line::option_utf16be() const noexcept
+	{
+		return option_utf16be_;
+	}
+	void command_line::option_utf16be(bool new_option_utf16be) noexcept
+	{
+		option_utf16be_ = new_option_utf16be;
 	}
 
 	bool command_line::option_loud_mode() const noexcept

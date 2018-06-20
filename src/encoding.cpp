@@ -222,8 +222,12 @@ namespace app
 			else
 			{
 				second = string[1];
-				std::reverse(reinterpret_cast<std::uint8_t*>(&second),
-					reinterpret_cast<std::uint8_t*>(&second) + 2);
+
+				if (!app::is_little_endian())
+				{
+					std::reverse(reinterpret_cast<std::uint8_t*>(&second),
+						reinterpret_cast<std::uint8_t*>(&second) + 2);
+				}
 
 				return (first << 16) + second;
 			}		
@@ -242,8 +246,11 @@ namespace app
 			}
 			else
 			{
-				std::reverse(reinterpret_cast<std::uint8_t*>(&second),
-					reinterpret_cast<std::uint8_t*>(&second) + 2);
+				if (!app::is_little_endian())
+				{
+					std::reverse(reinterpret_cast<std::uint8_t*>(&second),
+						reinterpret_cast<std::uint8_t*>(&second) + 2);
+				}
 
 				return (first << 16) + second;
 			}
@@ -295,5 +302,157 @@ namespace app
 #endif
 
 		const std::string utf16::name = "UTF-16";
+	}
+
+	namespace encoding
+	{
+		std::u16string utf16be::encode(char32_t character)
+		{
+			std::u16string result;
+
+			if (character <= 0xFFFF)
+			{
+				result.push_back(static_cast<char16_t>(character));
+
+				if (app::is_little_endian())
+				{
+					std::reverse(reinterpret_cast<std::uint8_t*>(&result[0]),
+						reinterpret_cast<std::uint8_t*>(&result[0]) + 2);
+				}
+			}
+			else
+			{
+				result.resize(2);
+
+				char32_t temp = character - 0x10000;
+
+				char16_t high_surrogate = static_cast<char16_t>((temp / 0x400) + 0xD800);
+				char16_t low_surrogate = static_cast<char16_t>((temp % 0x400) + 0xDC00);
+
+				result[0] = high_surrogate;
+				result[1] = low_surrogate;
+
+				if (app::is_little_endian())
+				{
+					std::reverse(reinterpret_cast<std::uint8_t*>(&result[0]),
+						reinterpret_cast<std::uint8_t*>(&result[0]) + 2);
+					std::reverse(reinterpret_cast<std::uint8_t*>(&result[1]),
+						reinterpret_cast<std::uint8_t*>(&result[1]) + 2);
+				}
+			}
+
+			return result;
+		}
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		std::wstring utf16be::wencode(char32_t character)
+		{
+			std::wstring result;
+			std::u16string temp_result = encode(character);
+
+			result.insert(result.end(), temp_result.begin(), temp_result.end());
+
+			return result;
+		}
+#endif
+		char32_t utf16be::decode(const std::u16string& string)
+		{
+			char16_t first;
+			char16_t second;
+
+			first = string[0];
+
+			if (app::is_little_endian())
+			{
+				std::reverse(reinterpret_cast<std::uint8_t*>(&first),
+					reinterpret_cast<std::uint8_t*>(&first) + 2);
+			}
+
+			if (encoded_length(first) == 2)
+			{
+				return first;
+			}
+			else
+			{
+				second = string[1];
+
+				if (app::is_little_endian())
+				{
+					std::reverse(reinterpret_cast<std::uint8_t*>(&second),
+						reinterpret_cast<std::uint8_t*>(&second) + 2);
+				}
+
+				return (first << 16) + second;
+			}
+		}
+		char32_t utf16be::decode(char16_t first, char16_t second)
+		{
+			if (!app::is_little_endian())
+			{
+				std::reverse(reinterpret_cast<std::uint8_t*>(&first),
+					reinterpret_cast<std::uint8_t*>(&first) + 2);
+			}
+
+			if (encoded_length(first) == 2)
+			{
+				return first;
+			}
+			else
+			{
+				if (app::is_little_endian())
+				{
+					std::reverse(reinterpret_cast<std::uint8_t*>(&second),
+						reinterpret_cast<std::uint8_t*>(&second) + 2);
+				}
+
+				return (first << 16) + second;
+			}
+		}
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		char32_t utf16be::wdecode(const std::wstring& string)
+		{
+			if (string.length())
+			{
+				return decode(static_cast<char16_t>(string[0]));
+			}
+			else
+			{
+				return decode(static_cast<char16_t>(string[0]), static_cast<char16_t>(string[1]));
+			}
+		}
+		char32_t utf16be::wdecode(wchar_t first, wchar_t second)
+		{
+			return decode(first, second);
+		}
+#endif
+		int utf16be::encoded_length(char32_t character)
+		{
+			if (character <= 0xFF)
+			{
+				return 2;
+			}
+			else
+			{
+				return 4;
+			}
+		}
+		int utf16be::encoded_length(char16_t first)
+		{
+			if (first >= 0xD800 && first <= 0xDBFF)
+			{
+				return 4;
+			}
+			else
+			{
+				return 2;
+			}
+		}
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		int utf16be::wencoded_length(wchar_t character)
+		{
+			return encoded_length(static_cast<char16_t>(character));
+		}
+#endif
+
+		const std::string utf16be::name = "UTF-16BE";
 	}
 }

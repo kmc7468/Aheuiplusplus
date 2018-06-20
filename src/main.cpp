@@ -257,6 +257,52 @@ namespace
 				}
 			}
 		}
+		else if (command_line.option_utf16be())
+		{
+			while (!std::feof(file))
+			{
+				unsigned char first_byte = std::fgetc(file);
+				unsigned char second_byte = std::fgetc(file);
+
+				char16_t first = (first_byte << 8) + second_byte;
+				if (!app::is_little_endian())
+				{
+					std::reverse(reinterpret_cast<std::uint8_t*>(&first), reinterpret_cast<std::uint8_t*>(&first) + 2);
+				}
+				int length = app::encoding::utf16be::encoded_length(first);
+
+				if (length == 2 && (first == u'\n' || first == u'\r'))
+				{
+					if (first == '\r')
+					{
+						std::fgetc(file);
+						std::fgetc(file);
+					}
+
+					break;
+				}
+
+				if (length == 2)
+				{
+					if ((first == 0xFEFF && app::is_little_endian()) ||
+						(first == 0xFFEE && !app::is_little_endian()))
+					{
+						continue;
+					}
+
+					result += first;
+				}
+				else
+				{
+					first_byte = std::fgetc(file);
+					second_byte = std::fgetc(file);
+
+					char16_t second = (first_byte << 8) + second_byte;
+
+					result += app::encoding::utf16be::decode(first, second);
+				}
+			}
+		}
 		else
 			throw std::invalid_argument("인수 command_line에 명시된 인코딩이 없습니다.");
 		

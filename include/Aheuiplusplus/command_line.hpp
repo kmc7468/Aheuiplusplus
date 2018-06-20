@@ -35,6 +35,8 @@ namespace app
 		void option_utf8(bool new_option_utf8) noexcept;
 		bool option_utf16() const noexcept;
 		void option_utf16(bool new_option_utf16) noexcept;
+		bool option_utf16be() const noexcept;
+		void option_utf16be(bool new_option_utf16be) noexcept;
 
 		bool option_loud_mode() const noexcept;
 		void option_loud_mode(bool new_option_loud_mode) noexcept;
@@ -50,6 +52,7 @@ namespace app
 		version option_version_ = version::none;
 		bool option_utf8_ = false;
 		bool option_utf16_ = false;
+		bool option_utf16be_ = false;
 
 		bool option_loud_mode_ = false;
 		bool option_input_end_mode_ = false;
