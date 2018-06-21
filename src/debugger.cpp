@@ -1,5 +1,7 @@
 ﻿#include <Aheuiplusplus/debugger.hpp>
 
+#include <Aheuiplusplus/encoding.hpp>
+
 #include <algorithm>
 #include <exception>
 #include <functional>
@@ -194,7 +196,7 @@ namespace app
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 						_setmode(_fileno(output_stream_), _O_U16TEXT);
 
-						std::wstring converted = char32_to_wchar(std::get<1>(*value));
+						std::wstring converted = encoding::utf16::wencode(std::get<1>(*value));
 						std::fwprintf(output_stream_, L"character(%ls)\n", converted.c_str());
 
 						_setmode(_fileno(output_stream_), _O_TEXT);
@@ -220,7 +222,7 @@ namespace app
 
 						for (char32_t c : convert_value)
 						{
-							converted += char32_to_wchar(c);
+							converted += encoding::utf16::wencode(c);
 						}
 
 						std::fwprintf(output_stream_, L"string(%ls)\n", converted.c_str());

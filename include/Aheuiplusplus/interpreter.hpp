@@ -1,8 +1,8 @@
 ﻿#ifndef AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 #define AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 
-#define AHEUIPLUSPLUS_VERSION_STRING ("1.2.0-pre2")
-#define AHEUIPLUSPLUS_VERSION_PRE ("pre2")
+#define AHEUIPLUSPLUS_VERSION_STRING ("1.2.0")
+#define AHEUIPLUSPLUS_VERSION_PRE ("")
 #define AHEUIPLUSPLUS_VERSION (1)
 #define AHEUIPLUSPLUS_VERSION_MAJOR AHEUIPLUSPLUS_VERSION
 #define AHEUIPLUSPLUS_VERSION_MINOR (2)
@@ -103,7 +103,7 @@ namespace app
 		std::FILE* output_stream();
 
 	private:
-		app::version version_ = app::version::v1_0;
+		app::version version_ = app::version::latest;
 		std::vector<std::vector<app::storage*>> storages_;
 		std::vector<std::size_t> storage_indexs_;
 		std::size_t selected_index_ = 0;
