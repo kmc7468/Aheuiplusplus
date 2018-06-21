@@ -1,29 +1,64 @@
 ﻿#include <Aheuiplusplus/interpreter.hpp>
 
+#include <Aheuiplusplus/command_line.hpp>
 #include <Aheuiplusplus/debugger.hpp>
 
 #include <cstddef>
 #include <cstdint>
 #include <map>
+#include <stdexcept>
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+#	include <fcntl.h>
+#	include <io.h>
+#endif
 
 namespace app
 {
+	interpreter::interpreter()
+		: interpreter(stdin, stdout)
+	{}
+	interpreter::interpreter(app::version version)
+		: interpreter(stdin, stdout, version)
+	{}
 	interpreter::interpreter(std::FILE* input_stream, std::FILE* output_stream)
 		: input_stream_(input_stream), output_stream_(output_stream)
 	{
 		initialize_();
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		_setmode(_fileno(input_stream_), _O_U16TEXT);
+		_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif		
 	}
-	interpreter::interpreter(app::version version, std::FILE* input_stream, std::FILE* output_stream)
-		: version_(version), input_stream_(input_stream), output_stream_(output_stream)
+	interpreter::interpreter(std::FILE* input_stream, std::FILE* output_stream, app::version version)
+		: input_stream_(input_stream), output_stream_(output_stream), version_(version)
 	{
 		initialize_();
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		_setmode(_fileno(input_stream_), _O_U16TEXT);
+		_setmode(_fileno(output_stream_), _O_U16TEXT);
+#endif
+
+		if (version == version::none)
+			throw std::invalid_argument("인수 version은 app::version::none일 수 없습니다.");
 	}
 	interpreter::~interpreter()
 	{
 		delete_storage_();
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		_setmode(_fileno(input_stream_), _O_TEXT);
+		_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
 	}
 
 	long long interpreter::run(const raw_code& code)
+	{
+		return run(code, command_line());
+	}
+	long long interpreter::run(const raw_code& code, const command_line& command_line)
 	{
 		std::size_t x;
 		std::size_t y;
@@ -37,7 +72,8 @@ namespace app
 
 		char32_t start_of_expression;
 
-		return run_(code, x, y, direction, move, is_ignored, is_reflection, start_of_expression,
+		return run_(code, command_line,
+			x, y, direction, move, is_ignored, is_reflection, start_of_expression,
 			is_out_of_version);
 	}
 
@@ -73,10 +109,18 @@ namespace app
 		}
 	}
 
-	long long interpreter::run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
-		std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
+	long long interpreter::run_(const raw_code& code, const command_line& command_line,
+		std::size_t& x, std::size_t& y, std::size_t& direction, std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
 		bool& is_out_of_version)
 	{
+		bool backup_is_compatible_with_aheui_ = is_compatible_with_aheui_;
+
+		if (command_line.option_aheui())
+		{
+			is_compatible_with_aheui_ = true;
+		}
+		is_loud_mode_ = command_line.option_loud_mode();
+
 		app::code splited_code = code;
 
 		x = 0;
@@ -123,117 +167,120 @@ namespace app
 
 				char32_t jungsung_org = get_jungsung_original(jungsung);
 				bool is_added_additional_data = app::is_added_additional_data(jungsung);
-
-				switch (jungsung_org)
+				
+				if (version_ == version::v1_0)
 				{
-				case U'ㅏ':
-					new_direction = 1;
-					new_move = 1;
-					break;
-
-				case U'ㅑ':
-					new_direction = 1;
-					new_move = 2;
-					break;
-
-				case U'ㅓ':
-					new_direction = 0;
-					new_move = 1;
-					break;
-
-				case U'ㅕ':
-					new_direction = 0;
-					new_move = 2;
-					break;
-
-				case U'ㅗ':
-					new_direction = 2;
-					new_move = 1;
-					break;
-
-				case U'ㅛ':
-					new_direction = 2;
-					new_move = 2;
-					break;
-
-				case U'ㅜ':
-					new_direction = 3;
-					new_move = 1;
-					break;
-
-				case U'ㅠ':
-					new_direction = 3;
-					new_move = 2;
-					break;
-
-				case U'ㅡ':
-				{
-					if (direction == 0 || direction == 1)
+					switch (jungsung_org)
 					{
-						new_direction = direction;
-					}
-					else if (direction == 2)
-					{
-						new_direction = 3;
-					}
-					else
-					{
-						new_direction = 2;
-					}
-
-					new_move = move;
-
-					break;
-				}
-
-				case U'ㅣ':
-				{
-					if (direction == 0)
-					{
+					case U'ㅏ':
 						new_direction = 1;
-					}
-					else if (direction == 1)
-					{
-						new_direction = 0;
-					}
-					else
-					{
-						new_direction = direction;
-					}
+						new_move = 1;
+						break;
 
-					new_move = move;
-
-					break;
-				}
-
-				case U'ㅢ':
-				{
-					if (direction == 0)
-					{
+					case U'ㅑ':
 						new_direction = 1;
-					}
-					else if (direction == 1)
-					{
+						new_move = 2;
+						break;
+
+					case U'ㅓ':
 						new_direction = 0;
-					}
-					else if (direction == 2)
-					{
-						new_direction = 3;
-					}
-					else
-					{
+						new_move = 1;
+						break;
+
+					case U'ㅕ':
+						new_direction = 0;
+						new_move = 2;
+						break;
+
+					case U'ㅗ':
 						new_direction = 2;
+						new_move = 1;
+						break;
+
+					case U'ㅛ':
+						new_direction = 2;
+						new_move = 2;
+						break;
+
+					case U'ㅜ':
+						new_direction = 3;
+						new_move = 1;
+						break;
+
+					case U'ㅠ':
+						new_direction = 3;
+						new_move = 2;
+						break;
+
+					case U'ㅡ':
+					{
+						if (direction == 0 || direction == 1)
+						{
+							new_direction = direction;
+						}
+						else if (direction == 2)
+						{
+							new_direction = 3;
+						}
+						else
+						{
+							new_direction = 2;
+						}
+
+						new_move = move;
+
+						break;
 					}
 
-					new_move = move;
+					case U'ㅣ':
+					{
+						if (direction == 0)
+						{
+							new_direction = 1;
+						}
+						else if (direction == 1)
+						{
+							new_direction = 0;
+						}
+						else
+						{
+							new_direction = direction;
+						}
 
-					break;
-				}
+						new_move = move;
 
-				default:
-					new_direction = direction;
-					new_move = move;
-					break;
+						break;
+					}
+
+					case U'ㅢ':
+					{
+						if (direction == 0)
+						{
+							new_direction = 1;
+						}
+						else if (direction == 1)
+						{
+							new_direction = 0;
+						}
+						else if (direction == 2)
+						{
+							new_direction = 3;
+						}
+						else
+						{
+							new_direction = 2;
+						}
+
+						new_move = move;
+
+						break;
+					}
+
+					default:
+						new_direction = direction;
+						new_move = move;
+						break;
+					}
 				}
 
 				if (is_added_additional_data && is_compatible_with_aheui_)
@@ -247,6 +294,19 @@ namespace app
 
 						is_added_additional_data = false;
 					}
+
+					if (command_line.option_aheui())
+					{
+						if ((chosung == U'ㄲ' &&
+							(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
+								jongsung == U'ㅅ')))
+						{
+							new_direction = direction;
+							new_move = move;
+
+							is_added_additional_data = false;
+						}
+					}
 				}
 
 				if (is_compatible_with_aheui_)
@@ -256,11 +316,22 @@ namespace app
 					{
 						jongsung = 0;
 					}
-					else if (chosung == U'ㄱ' || chosung == U'ㅋ' || chosung == U'ㅉ' ||
+					
+					if (chosung == U'ㄱ' || chosung == U'ㅋ' || chosung == U'ㅉ' ||
 						(chosung == U'ㄲ' && !(jongsung == U'ㅁ' || jongsung == U'ㅂ' ||
 							jongsung == U'ㅄ' || jongsung == U'ㅅ')))
 					{
 						chosung = U'ㅇ';
+					}
+
+					if (command_line.option_aheui())
+					{
+						if ((chosung == U'ㄲ' &&
+							(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
+								jongsung == U'ㅅ')))
+						{
+							chosung = U'ㅇ';
+						}
 					}
 				}
 
@@ -347,17 +418,136 @@ namespace app
 					return 0;
 				}
 
+				if (version_ != version::v1_0)
+				{
+					switch (jungsung_org)
+					{
+					case U'ㅏ':
+						new_direction = 1;
+						new_move = 1;
+						break;
+
+					case U'ㅑ':
+						new_direction = 1;
+						new_move = 2;
+						break;
+
+					case U'ㅓ':
+						new_direction = 0;
+						new_move = 1;
+						break;
+
+					case U'ㅕ':
+						new_direction = 0;
+						new_move = 2;
+						break;
+
+					case U'ㅗ':
+						new_direction = 2;
+						new_move = 1;
+						break;
+
+					case U'ㅛ':
+						new_direction = 2;
+						new_move = 2;
+						break;
+
+					case U'ㅜ':
+						new_direction = 3;
+						new_move = 1;
+						break;
+
+					case U'ㅠ':
+						new_direction = 3;
+						new_move = 2;
+						break;
+
+					case U'ㅡ':
+					{
+						if (direction == 0 || direction == 1)
+						{
+							new_direction = direction;
+						}
+						else if (direction == 2)
+						{
+							new_direction = 3;
+						}
+						else
+						{
+							new_direction = 2;
+						}
+
+						new_move = move;
+
+						break;
+					}
+
+					case U'ㅣ':
+					{
+						if (direction == 0)
+						{
+							new_direction = 1;
+						}
+						else if (direction == 1)
+						{
+							new_direction = 0;
+						}
+						else
+						{
+							new_direction = direction;
+						}
+
+						new_move = move;
+
+						break;
+					}
+
+					case U'ㅢ':
+					{
+						if (direction == 0)
+						{
+							new_direction = 1;
+						}
+						else if (direction == 1)
+						{
+							new_direction = 0;
+						}
+						else if (direction == 2)
+						{
+							new_direction = 3;
+						}
+						else
+						{
+							new_direction = 2;
+						}
+
+						new_move = move;
+
+						break;
+					}
+
+					default:
+						new_direction = direction;
+						new_move = move;
+						break;
+					}
+				}
+
 				if (is_ignored && is_compatible_with_aheui_)
 				{
 					is_reflection = true;
+
+					is_ignored = false;
 				}
 				else if (is_ignored && !is_compatible_with_aheui_)
 				{
 				reserved:
 					new_direction = direction;
 					new_move = move;
-				}
 
+					is_ignored = false;
+				}
+	
 				if (is_reflection)
 				{
 					switch (new_direction)
@@ -391,6 +581,11 @@ namespace app
 				go_(x, y, move, direction, splited_code);
 			}
 		}
+
+		if (command_line.option_aheui())
+		{
+			is_compatible_with_aheui_ = backup_is_compatible_with_aheui_;
+		}
 	}
 
 	long long interpreter::exit_()
@@ -403,15 +598,50 @@ namespace app
 		{
 			element* value = nullptr;
 
-			while (value = storage_()->pop())
+			if (storage_()->type() == storage_type::list)
 			{
-				switch (value->index())
+				app::list* list = reinterpret_cast<app::list*>(storage_());
+
+				for (std::size_t i = list->virtual_length() - 1; ; --i)
 				{
-				case 0:
-					return std::get<0>(*value).integer();
+					value = list->original()[i];
 					
-				case 1:
-					return std::get<1>(*value);
+					switch (value->index())
+					{
+					case 0:
+						return std::get<0>(*value).integer();
+
+					case 1:
+						return std::get<1>(*value);
+					}
+
+					if (i == 0)
+					{
+						break;
+					}
+				}
+			}
+			else
+			{
+				app::queue* queue = reinterpret_cast<app::queue*>(storage_());
+
+				for (std::size_t i = queue->length() - 1; ; --i)
+				{
+					value = queue->original()[i];
+
+					switch (value->index())
+					{
+					case 0:
+						return std::get<0>(*value).integer();
+
+					case 1:
+						return std::get<1>(*value);
+					}
+
+					if (i == 0)
+					{
+						break;
+					}
 				}
 			}
 

@@ -1,5 +1,7 @@
 ﻿#include <Aheuiplusplus/code.hpp>
 
+#include <Aheuiplusplus/encoding.hpp>
+
 #include <cstdint>
 #include <stdexcept>
 #include <utility>
@@ -128,7 +130,7 @@ namespace app
 
 		char32_t chosung_id = static_cast<char32_t>(-1);
 
-		for (std::size_t i = 0; i < 19; ++i)
+		for (char32_t i = 0; i < sizeof(chosungs) / sizeof(char32_t); ++i)
 		{
 			if (chosungs[i] == chosung)
 			{
@@ -153,7 +155,7 @@ namespace app
 
 			char32_t jongsung_id = static_cast<char32_t>(-1);
 
-			for (std::size_t i = 0; i < 28; ++i)
+			for (char32_t i = 0; i < sizeof(jongsungs) / sizeof(char32_t); ++i)
 			{
 				if (jongsungs[i] == jongsung)
 				{
@@ -166,164 +168,6 @@ namespace app
 				throw std::invalid_argument("인수 jongsung은 현대 한글 자음 중 종성에 올 수 있는 자음이여야 합니다.");
 
 			return 588 * chosung_id + 28 * (jungsung - U'ㅏ') + jongsung_id + 0xAC00;
-		}
-	}
-
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-	std::wstring char32_to_wchar(char32_t character)
-	{
-		if (character <= 65'535)
-		{
-			return std::wstring(1, static_cast<wchar_t>(character));
-		}
-
-		std::wstring result;
-		result.resize(2);
-
-		char32_t temp = character - 0x10000;
-
-		wchar_t high_surrogate = (temp / 0x400) + 0xD800;
-		wchar_t low_surrogate = (temp % 0x400) + 0xDC00;
-
-		result[0] = low_surrogate;
-		result[1] = high_surrogate;
-
-		return result;
-	}
-	char32_t wchar_to_char32(wchar_t high_surrogate, wchar_t low_surrogate)
-	{
-		if (high_surrogate >= 0xD800 && high_surrogate <= 0xDBFF)
-		{
-			char32_t temp_high = (high_surrogate - 0xD800) * 0x400;
-			char32_t temp_low = low_surrogate - 0xDC00;
-
-			return temp_high + temp_low + 0x10000;
-		}
-		else
-		{
-			return high_surrogate;
-		}
-	}
-#endif
-	std::string char32_to_u8char(char32_t character)
-	{
-		std::string result;
-
-		if (character < 0x80)
-		{
-			result.push_back(character);
-		}
-		else if (character < 0x0800)
-		{
-			result.push_back(0xC0 | (character >> 6));
-			result.push_back(0x80 | (character & 0x3F));
-		}
-		else if (character < 0x10000)
-		{
-			result.push_back(0xE0 | (character >> 12));
-			result.push_back(0x80 | ((character >> 6) & 0x3F));
-			result.push_back(0x80 | (character & 0x3F));
-		}
-		else
-		{
-			result.push_back(0xF0 | (character >> 18));
-			result.push_back(0x80 | ((character >> 12) & 0x3F));
-			result.push_back(0x80 | ((character >> 6) & 0x3F));
-			result.push_back(0x80 | (character & 0x3F));
-		}
-
-		return result;
-	}
-	char32_t u8char_to_char32(unsigned char first, unsigned char second, unsigned char third, unsigned char fourth)
-	{
-		if (first < 0x80)
-		{
-			return first;
-		}
-		else if ((first & 0xF0) == 0xF0)
-		{
-			return ((static_cast<std::int32_t>(first) & 0x07) << 18) + ((static_cast<std::int32_t>(second) & 0x3F) << 12)
-				+ ((static_cast<std::int32_t>(third) & 0x3F) << 6) + (static_cast<std::int32_t>(fourth) & 0x3F);
-		}
-		else if ((first & 0xE0) == 0xE0)
-		{
-			return ((static_cast<std::int32_t>(first) & 0x0F) << 12) + ((static_cast<std::int32_t>(second) & 0x3F) << 6)
-				+ (static_cast<std::int32_t>(third) & 0x3F);
-		}
-		else if ((first & 0xC0) == 0xC0)
-		{
-			return ((static_cast<std::int32_t>(first) & 0x1F) << 6) + (static_cast<std::int32_t>(second) & 0x3F);
-		}
-	}
-
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-	int wchar_length(char32_t character)
-	{
-		if (character < 65'536)
-		{
-			return 1;
-		}
-		else
-		{
-			return 2;
-		}
-	}
-	int wchar_length(wchar_t first)
-	{
-		if (first >= 0xD800 && first <= 0xDBFF)
-		{
-			return 2;
-		}
-		else
-		{
-			return 1;
-		}
-	}
-#endif
-	int u8char_length(char32_t character)
-	{
-		if (character < 0x80)
-		{
-			return 1;
-		}
-		else if (character < 0x0800)
-		{
-			return 2;
-		}
-		else if (character < 0x10000)
-		{
-			return 3;
-		}
-		else if (character < 0x110000)
-		{
-			return 4;
-		}
-		else
-		{
-			return -1;
-		}
-	}
-	int u8char_length(unsigned char first)
-	{
-		if (first < 0x80)
-		{
-			return 1;
-		}
-		else if ((first & 0xF0) == 0xF0)
-		{
-			return 4;
-		}
-		else if ((first & 0xE0) == 0xE0)
-		{
-			return 3;
-		}
-		else if ((first & 0xC0) == 0xC0)
-		{
-			return 2;
-		}
-		else
-		{
-			return -1;
 		}
 	}
 
@@ -355,8 +199,8 @@ namespace app
 	{
 		std::string result;
 
-		unsigned char first = static_cast<unsigned char>(std::fgetc(input_stream));
-		int length = app::u8char_length(first);
+		char first = static_cast<char>(std::fgetc(input_stream));
+		int length = encoding::utf8::encoded_length(first);
 
 		if (length == 1)
 		{
@@ -364,15 +208,15 @@ namespace app
 		}
 		else if (length == 2)
 		{
-			unsigned char second = std::fgetc(input_stream);
+			unsigned char second = static_cast<unsigned char>(std::fgetc(input_stream));
 
 			result.push_back(first);
 			result.push_back(second);
 		}
 		else if (length == 3)
 		{
-			unsigned char second = std::fgetc(input_stream);
-			unsigned char third = std::fgetc(input_stream);
+			unsigned char second = static_cast<unsigned char>(std::fgetc(input_stream));
+			unsigned char third = static_cast<unsigned char>(std::fgetc(input_stream));
 
 			result.push_back(first);
 			result.push_back(second);
@@ -380,9 +224,9 @@ namespace app
 		}
 		else
 		{
-			unsigned char second = std::fgetc(input_stream);
-			unsigned char third = std::fgetc(input_stream);
-			unsigned char fourth = std::fgetc(input_stream);
+			unsigned char second = static_cast<unsigned char>(std::fgetc(input_stream));
+			unsigned char third = static_cast<unsigned char>(std::fgetc(input_stream));
+			unsigned char fourth = static_cast<unsigned char>(std::fgetc(input_stream));
 
 			result.push_back(first);
 			result.push_back(second);
@@ -407,7 +251,7 @@ namespace app
 
 		wchar_t high_surrogate = std::fgetwc(input_stream);
 
-		if (wchar_length(high_surrogate) == 1)
+		if (encoding::utf16::wencoded_length(high_surrogate) == 2)
 		{
 			return high_surrogate;
 		}
@@ -415,7 +259,7 @@ namespace app
 		{
 			wchar_t low_surroagte = std::fgetwc(input_stream);
 
-			return wchar_to_char32(high_surrogate, low_surroagte);
+			return encoding::utf16::decode(high_surrogate, low_surroagte);
 		}
 #else
 		std::string input = read_u8char(input_stream);
@@ -443,7 +287,7 @@ namespace app
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 		_setmode(_fileno(output_stream), _O_U16TEXT);
 
-		std::wstring utf16 = char32_to_wchar(character);
+		std::wstring utf16 = encoding::utf16::wencode(character);
 
 		write_wchar(output_stream, utf16);
 
@@ -452,6 +296,55 @@ namespace app
 		std::string utf8 = char32_to_u8char(character);
 
 		write_u8char(output_stream, utf8);
+#endif
+	}
+	void unread_char(std::FILE* input_stream, char32_t character)
+	{
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		int length = encoding::utf16::encoded_length(character);
+
+		if (length == 2)
+		{
+			std::ungetwc(static_cast<wchar_t>(character), input_stream);
+		}
+		else
+		{
+			std::wstring converted = encoding::utf16::wencode(character);
+
+			std::ungetwc(converted[1], input_stream);
+			std::ungetwc(converted[0], input_stream);
+		}
+#else
+		int length = get_u8char_length(character);
+
+		if (length == 1)
+		{
+			std::ungetc(static_cast<char>(character), input_stream);
+		}
+		else if (length == 2)
+		{
+			std::string converted = char32_to_u8char(character);
+
+			std::ungetc(converted[1], input_stream);
+			std::ungetc(converted[0], input_stream);
+		}
+		else if (length == 3)
+		{
+			std::string converted = char32_to_u8char(character);
+
+			std::ungetc(converted[2], input_stream);
+			std::ungetc(converted[1], input_stream);
+			std::ungetc(converted[0], input_stream);
+		}
+		else
+		{
+			std::string converted = char32_to_u8char(character);
+
+			std::ungetc(converted[3], input_stream);
+			std::ungetc(converted[2], input_stream);
+			std::ungetc(converted[1], input_stream);
+			std::ungetc(converted[0], input_stream);
+		}
 #endif
 	}
 }

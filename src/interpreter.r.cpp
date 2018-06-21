@@ -72,7 +72,7 @@ namespace app
 
 			if (major != nullptr && major->index() <= 1)
 			{
-				long long major_integer;
+				long long major_integer = 0;
 
 				switch (major->index())
 				{
@@ -113,7 +113,7 @@ namespace app
 
 			if (major != nullptr && major->index() <= 1)
 			{
-				long long major_integer;
+				long long major_integer = 0;
 
 				switch (major->index())
 				{

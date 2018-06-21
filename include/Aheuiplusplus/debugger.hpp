@@ -2,6 +2,7 @@
 #define AHEUIPLUSPLUS_HEADER_DEBUGGER_HPP
 
 #include <Aheuiplusplus/code.hpp>
+#include <Aheuiplusplus/command_line.hpp>
 #include <Aheuiplusplus/interpreter.hpp>
 
 #include <cstddef>
@@ -42,24 +43,20 @@ namespace app
 		bool is_added_breakpoint(std::size_t x, std::size_t y);
 
 		long long run_with_debugging(const raw_code& code);
+		long long run_with_debugging(const raw_code& code, const command_line& command_line);
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-		bool is_last_input_utf16() const;
-		void is_last_input_utf16(bool new_is_last_input_utf16);
-#endif
-		bool is_processed_space() const;
-		void is_processed_space(bool new_is_proecessed_space);
+		bool is_integer_mode() const;
+		void is_integer_mode(bool new_is_integer_mode);
+		bool is_compatible_with_aheui() const;
+		void is_compatible_with_aheui(bool new_is_compatible_with_aheui);
 
 	public:
 		const std::vector<std::pair<std::size_t, std::size_t>>& breakpoints() const noexcept;
-		bool is_inputed() const noexcept;
-		void is_inputed(bool new_is_inputed) noexcept;
 
 		std::FILE* output_stream() const noexcept;
 
 	private:
 		std::vector<std::pair<std::size_t, std::size_t>> breakpoints_;
-		bool is_inputed_ = false;
 
 		std::FILE* output_stream_;
 		app::interpreter& interpreter_;

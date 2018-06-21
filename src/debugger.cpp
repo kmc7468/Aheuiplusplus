@@ -1,5 +1,7 @@
 ﻿#include <Aheuiplusplus/debugger.hpp>
 
+#include <Aheuiplusplus/encoding.hpp>
+
 #include <algorithm>
 #include <exception>
 #include <functional>
@@ -71,9 +73,14 @@ namespace app
 			throw std::bad_function_call();
 		if (!is_complete_hangul(storage))
 			throw std::invalid_argument("인수 storage는 완성된 현대 한글이여야 합니다.");
+
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+		_setmode(_fileno(output_stream_), _O_TEXT);
+#endif
+
 		if (get_jongsung(storage) == U'ㅎ')
 		{
-			std::printf("[Debugger] 현재 버전에서는 통로는 지원되지 않습니다.\n\n");
+			std::fprintf(output_stream_, "[Debugger] 현재 버전에서는 통로는 지원되지 않습니다.\n\n");
 			return;
 		}
 
@@ -189,7 +196,7 @@ namespace app
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 						_setmode(_fileno(output_stream_), _O_U16TEXT);
 
-						std::wstring converted = char32_to_wchar(std::get<1>(*value));
+						std::wstring converted = encoding::utf16::wencode(std::get<1>(*value));
 						std::fwprintf(output_stream_, L"character(%ls)\n", converted.c_str());
 
 						_setmode(_fileno(output_stream_), _O_TEXT);
@@ -215,7 +222,7 @@ namespace app
 
 						for (char32_t c : convert_value)
 						{
-							converted += char32_to_wchar(c);
+							converted += encoding::utf16::wencode(c);
 						}
 
 						std::fwprintf(output_stream_, L"string(%ls)\n", converted.c_str());
@@ -236,7 +243,7 @@ namespace app
 		}
 
 		--depth;
-		std::printf("\n");
+		std::fprintf(output_stream_, "\n");
 	}
 
 	void debugger::add_breakpoint(std::size_t x, std::size_t y)
@@ -277,6 +284,10 @@ namespace app
 
 	long long debugger::run_with_debugging(const raw_code& code)
 	{
+		return run_with_debugging(code, command_line());
+	}
+	long long debugger::run_with_debugging(const raw_code& code, const command_line& command_line)
+	{
 		std::size_t x;
 		std::size_t y;
 
@@ -287,13 +298,14 @@ namespace app
 		bool is_reflection;
 		bool is_out_of_version;
 		char32_t start_of_expression = 0;
-		
+
 		try
 		{
 			if (is_connceted_debugger())
 			{
-				long long result = interpreter_.run_(code, x, y, direction, move, is_ignored, is_reflection,
-					start_of_expression, is_out_of_version);
+				long long result = interpreter_.run_(code, command_line,
+					x, y, direction, move, is_ignored, is_reflection, start_of_expression,
+					is_out_of_version);
 
 				if (is_out_of_version)
 				{
@@ -310,8 +322,8 @@ namespace app
 		catch (const std::exception& exception)
 		{
 			std::fprintf(output_stream_, "[Debugger] %lld줄 %lld행에서 처리되지 못한 구현체 예외가 발생하였습니다. 개발자에게 보고해 주십시오.\n"
-										 "[Debugger] 예외 메세지: %s\n", static_cast<long long>(y), static_cast<long long>(x), exception.what());
-		
+				"[Debugger] 예외 메세지: %s\n", static_cast<long long>(y), static_cast<long long>(x), exception.what());
+
 			return -1;
 		}
 
@@ -319,48 +331,38 @@ namespace app
 		throw std::bad_function_call();
 	}
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-	bool debugger::is_last_input_utf16() const
+	bool debugger::is_integer_mode() const
 	{
 		if (!is_connceted_debugger())
 			throw std::bad_function_call();
 
-		return interpreter_.is_last_input_utf16_;
+		return interpreter_.is_integer_mode_;
 	}
-	void debugger::is_last_input_utf16(bool new_is_last_input_utf16)
+	void debugger::is_integer_mode(bool new_is_integer_mode)
 	{
 		if (!is_connceted_debugger())
 			throw std::bad_function_call();
 
-		interpreter_.is_last_input_utf16_ = new_is_last_input_utf16;
+		interpreter_.is_integer_mode_ = new_is_integer_mode;
 	}
-#endif
-	bool debugger::is_processed_space() const
+	bool debugger::is_compatible_with_aheui() const
 	{
 		if (!is_connceted_debugger())
 			throw std::bad_function_call();
 
-		return interpreter_.is_processed_space_char_;
+		return interpreter_.is_compatible_with_aheui_;
 	}
-	void debugger::is_processed_space(bool new_is_proecessed_space)
+	void debugger::is_compatible_with_aheui(bool new_is_compatible_with_aheui)
 	{
 		if (!is_connceted_debugger())
 			throw std::bad_function_call();
 
-		interpreter_.is_processed_space_char_ = new_is_proecessed_space;
+		interpreter_.is_compatible_with_aheui_ = new_is_compatible_with_aheui;
 	}
 
 	const std::vector<std::pair<std::size_t, std::size_t>>& debugger::breakpoints() const noexcept
 	{
 		return breakpoints_;
-	}
-	bool debugger::is_inputed() const noexcept
-	{
-		return is_inputed_;
-	}
-	void debugger::is_inputed(bool new_is_inputed) noexcept
-	{
-		is_inputed_ = new_is_inputed;
 	}
 
 	std::FILE* debugger::output_stream() const noexcept

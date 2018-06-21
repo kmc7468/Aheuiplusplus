@@ -33,7 +33,7 @@ namespace app
 	}
 	bool interpreter::move_(char32_t jongsung, bool is_added_additional_data)
 	{
-		std::size_t selected_index;
+		std::size_t selected_index = 0;
 
 		static constexpr char32_t jongsungs[] = {
 			0, U'ㄱ', U'ㄲ', U'ㄳ', U'ㄴ', U'ㄵ', U'ㄶ', U'ㄷ', U'ㄹ', U'ㄺ', U'ㄻ', U'ㄼ', U'ㄽ', U'ㄾ',
@@ -186,7 +186,7 @@ namespace app
 					return true;
 				}
 
-				long long new_virtual_length_soon;
+				long long new_virtual_length_soon = 0;
 				
 				switch (new_virtual_length->index())
 				{
@@ -346,7 +346,7 @@ namespace app
 				return true;
 			}
 
-			long long new_index;
+			long long new_index = 0;
 
 			switch (index->index())
 			{

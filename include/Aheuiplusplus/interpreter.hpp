@@ -1,11 +1,12 @@
 ﻿#ifndef AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 #define AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 
-#define AHEUIPLUSPLUS_VERSION_STRING ("1.1.2")
+#define AHEUIPLUSPLUS_VERSION_STRING ("1.2.0")
+#define AHEUIPLUSPLUS_VERSION_PRE ("")
 #define AHEUIPLUSPLUS_VERSION (1)
 #define AHEUIPLUSPLUS_VERSION_MAJOR AHEUIPLUSPLUS_VERSION
-#define AHEUIPLUSPLUS_VERSION_MINOR (1)
-#define AHEUIPLUSPLUS_VERSION_PATCH (2)
+#define AHEUIPLUSPLUS_VERSION_MINOR (2)
+#define AHEUIPLUSPLUS_VERSION_PATCH (0)
 
 #include <Aheuiplusplus/code.hpp>
 #include <Aheuiplusplus/function.hpp>
@@ -17,6 +18,7 @@
 
 namespace app
 {
+	class command_line;
 	class debugger;
 
 	class interpreter final
@@ -24,8 +26,10 @@ namespace app
 		friend class app::debugger;
 
 	public:
+		interpreter();
+		interpreter(app::version version);
 		interpreter(std::FILE* input_stream, std::FILE* output_stream);
-		interpreter(app::version version, std::FILE* input_stream, std::FILE* output_stream);
+		interpreter(std::FILE* input_stream, std::FILE* output_stream, app::version version);
 		interpreter(const interpreter& interpreter) = delete;
 		interpreter(interpreter&& interpreter) noexcept = delete;
 		~interpreter();
@@ -38,6 +42,7 @@ namespace app
 
 	public:
 		long long run(const raw_code& code);
+		long long run(const raw_code& code, const command_line& command_line);
 
 		const app::storage* storage(std::size_t index) const;
 		std::size_t storage_index(std::size_t index) const;
@@ -45,7 +50,8 @@ namespace app
 	private:
 		void initialize_();
 
-		long long run_(const raw_code& code, std::size_t& x, std::size_t& y, std::size_t& direction,
+		long long run_(const raw_code& code, const command_line& command_line,
+			std::size_t& x, std::size_t& y, std::size_t& direction,
 			std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
 			bool& is_out_of_version);
 
@@ -97,7 +103,7 @@ namespace app
 		std::FILE* output_stream();
 
 	private:
-		app::version version_ = app::version::v1_0;
+		app::version version_ = app::version::latest;
 		std::vector<std::vector<app::storage*>> storages_;
 		std::vector<std::size_t> storage_indexs_;
 		std::size_t selected_index_ = 0;
@@ -106,16 +112,15 @@ namespace app
 		bool is_integer_mode_ = true;
 		bool is_compatible_with_aheui_ = true;
 
+		bool is_loud_mode_ = false;
+
 		std::FILE* input_stream_;
 		std::FILE* output_stream_;
-		bool is_processed_space_char_ = true;
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-		bool is_last_input_utf16_ = false;
-#endif
 		app::debugger* debugger_ = nullptr;
 
 	public:
 		static constexpr const char* version_string = AHEUIPLUSPLUS_VERSION_STRING;
+		static constexpr const char* version_pre = AHEUIPLUSPLUS_VERSION_PRE;
 		static constexpr int version_major = AHEUIPLUSPLUS_VERSION_MAJOR;
 		static constexpr int version_minor = AHEUIPLUSPLUS_VERSION_MINOR;
 		static constexpr int version_patch = AHEUIPLUSPLUS_VERSION_PATCH;
