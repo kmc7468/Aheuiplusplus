@@ -304,6 +304,10 @@ namespace app
 		{
 			option_utf8_ = true;
 		}
+		if (option_version_ == version::none)
+		{
+			option_version_ = version::latest;
+		}
 
 		return true;
 	}

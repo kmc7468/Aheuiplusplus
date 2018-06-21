@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <map>
+#include <stdexcept>
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #	include <fcntl.h>
@@ -28,7 +29,7 @@ namespace app
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 		_setmode(_fileno(input_stream_), _O_U16TEXT);
 		_setmode(_fileno(output_stream_), _O_U16TEXT);
-#endif
+#endif		
 	}
 	interpreter::interpreter(std::FILE* input_stream, std::FILE* output_stream, app::version version)
 		: input_stream_(input_stream), output_stream_(output_stream), version_(version)
@@ -39,6 +40,9 @@ namespace app
 		_setmode(_fileno(input_stream_), _O_U16TEXT);
 		_setmode(_fileno(output_stream_), _O_U16TEXT);
 #endif
+
+		if (version == version::none)
+			throw std::invalid_argument("인수 version은 app::version::none일 수 없습니다.");
 	}
 	interpreter::~interpreter()
 	{
@@ -163,117 +167,120 @@ namespace app
 
 				char32_t jungsung_org = get_jungsung_original(jungsung);
 				bool is_added_additional_data = app::is_added_additional_data(jungsung);
-
-				switch (jungsung_org)
+				
+				if (version_ == version::v1_0)
 				{
-				case U'ㅏ':
-					new_direction = 1;
-					new_move = 1;
-					break;
-
-				case U'ㅑ':
-					new_direction = 1;
-					new_move = 2;
-					break;
-
-				case U'ㅓ':
-					new_direction = 0;
-					new_move = 1;
-					break;
-
-				case U'ㅕ':
-					new_direction = 0;
-					new_move = 2;
-					break;
-
-				case U'ㅗ':
-					new_direction = 2;
-					new_move = 1;
-					break;
-
-				case U'ㅛ':
-					new_direction = 2;
-					new_move = 2;
-					break;
-
-				case U'ㅜ':
-					new_direction = 3;
-					new_move = 1;
-					break;
-
-				case U'ㅠ':
-					new_direction = 3;
-					new_move = 2;
-					break;
-
-				case U'ㅡ':
-				{
-					if (direction == 0 || direction == 1)
+					switch (jungsung_org)
 					{
-						new_direction = direction;
-					}
-					else if (direction == 2)
-					{
-						new_direction = 3;
-					}
-					else
-					{
-						new_direction = 2;
-					}
-
-					new_move = move;
-
-					break;
-				}
-
-				case U'ㅣ':
-				{
-					if (direction == 0)
-					{
+					case U'ㅏ':
 						new_direction = 1;
-					}
-					else if (direction == 1)
-					{
-						new_direction = 0;
-					}
-					else
-					{
-						new_direction = direction;
-					}
+						new_move = 1;
+						break;
 
-					new_move = move;
-
-					break;
-				}
-
-				case U'ㅢ':
-				{
-					if (direction == 0)
-					{
+					case U'ㅑ':
 						new_direction = 1;
-					}
-					else if (direction == 1)
-					{
+						new_move = 2;
+						break;
+
+					case U'ㅓ':
 						new_direction = 0;
-					}
-					else if (direction == 2)
-					{
-						new_direction = 3;
-					}
-					else
-					{
+						new_move = 1;
+						break;
+
+					case U'ㅕ':
+						new_direction = 0;
+						new_move = 2;
+						break;
+
+					case U'ㅗ':
 						new_direction = 2;
+						new_move = 1;
+						break;
+
+					case U'ㅛ':
+						new_direction = 2;
+						new_move = 2;
+						break;
+
+					case U'ㅜ':
+						new_direction = 3;
+						new_move = 1;
+						break;
+
+					case U'ㅠ':
+						new_direction = 3;
+						new_move = 2;
+						break;
+
+					case U'ㅡ':
+					{
+						if (direction == 0 || direction == 1)
+						{
+							new_direction = direction;
+						}
+						else if (direction == 2)
+						{
+							new_direction = 3;
+						}
+						else
+						{
+							new_direction = 2;
+						}
+
+						new_move = move;
+
+						break;
 					}
 
-					new_move = move;
+					case U'ㅣ':
+					{
+						if (direction == 0)
+						{
+							new_direction = 1;
+						}
+						else if (direction == 1)
+						{
+							new_direction = 0;
+						}
+						else
+						{
+							new_direction = direction;
+						}
 
-					break;
-				}
+						new_move = move;
 
-				default:
-					new_direction = direction;
-					new_move = move;
-					break;
+						break;
+					}
+
+					case U'ㅢ':
+					{
+						if (direction == 0)
+						{
+							new_direction = 1;
+						}
+						else if (direction == 1)
+						{
+							new_direction = 0;
+						}
+						else if (direction == 2)
+						{
+							new_direction = 3;
+						}
+						else
+						{
+							new_direction = 2;
+						}
+
+						new_move = move;
+
+						break;
+					}
+
+					default:
+						new_direction = direction;
+						new_move = move;
+						break;
+					}
 				}
 
 				if (is_added_additional_data && is_compatible_with_aheui_)
@@ -411,6 +418,121 @@ namespace app
 					return 0;
 				}
 
+				if (version_ != version::v1_0)
+				{
+					switch (jungsung_org)
+					{
+					case U'ㅏ':
+						new_direction = 1;
+						new_move = 1;
+						break;
+
+					case U'ㅑ':
+						new_direction = 1;
+						new_move = 2;
+						break;
+
+					case U'ㅓ':
+						new_direction = 0;
+						new_move = 1;
+						break;
+
+					case U'ㅕ':
+						new_direction = 0;
+						new_move = 2;
+						break;
+
+					case U'ㅗ':
+						new_direction = 2;
+						new_move = 1;
+						break;
+
+					case U'ㅛ':
+						new_direction = 2;
+						new_move = 2;
+						break;
+
+					case U'ㅜ':
+						new_direction = 3;
+						new_move = 1;
+						break;
+
+					case U'ㅠ':
+						new_direction = 3;
+						new_move = 2;
+						break;
+
+					case U'ㅡ':
+					{
+						if (direction == 0 || direction == 1)
+						{
+							new_direction = direction;
+						}
+						else if (direction == 2)
+						{
+							new_direction = 3;
+						}
+						else
+						{
+							new_direction = 2;
+						}
+
+						new_move = move;
+
+						break;
+					}
+
+					case U'ㅣ':
+					{
+						if (direction == 0)
+						{
+							new_direction = 1;
+						}
+						else if (direction == 1)
+						{
+							new_direction = 0;
+						}
+						else
+						{
+							new_direction = direction;
+						}
+
+						new_move = move;
+
+						break;
+					}
+
+					case U'ㅢ':
+					{
+						if (direction == 0)
+						{
+							new_direction = 1;
+						}
+						else if (direction == 1)
+						{
+							new_direction = 0;
+						}
+						else if (direction == 2)
+						{
+							new_direction = 3;
+						}
+						else
+						{
+							new_direction = 2;
+						}
+
+						new_move = move;
+
+						break;
+					}
+
+					default:
+						new_direction = direction;
+						new_move = move;
+						break;
+					}
+				}
+
 				if (is_ignored && is_compatible_with_aheui_)
 				{
 					is_reflection = true;
@@ -425,7 +547,7 @@ namespace app
 
 					is_ignored = false;
 				}
-
+	
 				if (is_reflection)
 				{
 					switch (new_direction)

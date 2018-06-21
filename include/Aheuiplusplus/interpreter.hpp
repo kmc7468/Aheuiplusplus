@@ -103,7 +103,7 @@ namespace app
 		std::FILE* output_stream();
 
 	private:
-		app::version version_ = app::version::v1_0;
+		app::version version_ = app::version::latest;
 		std::vector<std::vector<app::storage*>> storages_;
 		std::vector<std::size_t> storage_indexs_;
 		std::size_t selected_index_ = 0;
