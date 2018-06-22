@@ -20,6 +20,7 @@ namespace app
 	{
 		integer_ = number.integer_;
 		decimal_ = number.decimal_;
+		is_integer_ = number.is_integer_;
 
 		return *this;
 	}

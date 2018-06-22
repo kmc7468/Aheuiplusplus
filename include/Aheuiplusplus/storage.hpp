@@ -10,15 +10,6 @@
 
 namespace app
 {
-	class function;
-
-	enum class storage_type
-	{
-		list,
-		queue,
-		passage,
-	};
-
 	class number final
 	{
 	public:
@@ -52,6 +43,13 @@ namespace app
 	};
 
 	using element = std::variant<number, char32_t, raw_code>;
+
+	enum class storage_type
+	{
+		list,
+		queue,
+		passage,
+	};
 
 	class storage
 	{
