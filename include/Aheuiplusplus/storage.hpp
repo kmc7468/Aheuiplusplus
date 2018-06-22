@@ -10,8 +10,6 @@
 
 namespace app
 {
-	class function;
-
 	enum class storage_type
 	{
 		list,
