@@ -12,10 +12,10 @@ namespace app
 		latest = v1_1,
 	};
 
-	long long get_major(app::version version) noexcept;
-	long long get_minor(app::version version) noexcept;
-	version get_version(long long major) noexcept;
-	version get_version(long long major, long long minor) noexcept;
+	int get_major(app::version version) noexcept;
+	int get_minor(app::version version) noexcept;
+	version get_version(int major) noexcept;
+	version get_version(int major, int minor) noexcept;
 }
 
 #endif

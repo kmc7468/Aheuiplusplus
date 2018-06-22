@@ -2,7 +2,7 @@
 
 namespace app
 {
-	long long get_major(app::version version) noexcept
+	int get_major(app::version version) noexcept
 	{
 		switch (version)
 		{
@@ -14,7 +14,7 @@ namespace app
 			return -1;
 		}
 	}
-	long long get_minor(app::version version) noexcept
+	int get_minor(app::version version) noexcept
 	{
 		switch (version)
 		{
@@ -28,7 +28,7 @@ namespace app
 			return -1;
 		}
 	}
-	version get_version(long long major) noexcept
+	version get_version(int major) noexcept
 	{
 		switch (major)
 		{
@@ -39,7 +39,7 @@ namespace app
 			return version::none;
 		}
 	}
-	version get_version(long long major, long long minor) noexcept
+	version get_version(int major, int minor) noexcept
 	{
 		switch (major)
 		{
