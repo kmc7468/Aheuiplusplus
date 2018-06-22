@@ -33,10 +33,10 @@ namespace app
 		switch (major)
 		{
 		case 1:
-			return app::version::v1_1;
+			return version::v1_1;
 
 		default:
-			return app::version::none;
+			return version::none;
 		}
 	}
 	version get_version(long long major, long long minor) noexcept
@@ -48,12 +48,15 @@ namespace app
 			switch (minor)
 			{
 			case 0:
-				return app::version::v1_1;
+				return version::v1_0;
+
+			case 1:
+				return version::v1_1;
 			}
 		}
 
 		default:
-			return app::version::none;
+			return version::none;
 		}
 	}
 }
