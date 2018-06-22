@@ -1080,10 +1080,6 @@ namespace app
 		return storages_;
 	}
 	
-	const std::vector<function*>& interpreter::functions() const noexcept
-	{
-		return functions_;
-	}
 	const std::vector<std::size_t>& interpreter::storage_indexs() const noexcept
 	{
 		return storage_indexs_;

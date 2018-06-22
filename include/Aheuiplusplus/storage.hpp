@@ -51,7 +51,7 @@ namespace app
 		bool is_integer_ = true;
 	};
 
-	using element = std::variant<number, char32_t, raw_code, function*>;
+	using element = std::variant<number, char32_t, raw_code>;
 
 	class storage
 	{

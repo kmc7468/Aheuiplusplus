@@ -1,7 +1,5 @@
 ﻿#include <Aheuiplusplus/storage.hpp>
 
-#include <Aheuiplusplus/function.hpp>
-
 #include <algorithm>
 #include <functional>
 #include <stdexcept>
@@ -206,10 +204,6 @@ namespace app
 		case 2:
 			push(new element(std::get<2>(*last)));
 			break;
-
-		case 3:
-			push(new element(std::get<3>(*last)));
-			break;
 		}
 
 		last = pop();
@@ -301,10 +295,6 @@ namespace app
 
 		case 2:
 			queue_.push_front(new element(std::get<2>(*data)));
-			break;
-
-		case 3:
-			queue_.push_front(new element(std::get<3>(*data)));
 			break;
 		}
 
