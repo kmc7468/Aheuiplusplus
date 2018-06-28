@@ -266,19 +266,19 @@ namespace app
 
 		if (input.length() == 1)
 		{
-			return u8char_to_char32(input[0]);
+			return encoding::utf8::decode(input[0]);
 		}
 		else if (input.length() == 2)
 		{
-			return u8char_to_char32(input[0], input[1]);
+			return encoding::utf8::decode(input[0], input[1]);
 		}
 		else if (input.length() == 3)
 		{
-			return u8char_to_char32(input[0], input[1], input[2]);
+			return encoding::utf8::decode(input[0], input[1], input[2]);
 		}
 		else
 		{
-			return u8char_to_char32(input[0], input[1], input[2], input[3]);
+			return encoding::utf8::decode(input[0], input[1], input[2], input[3]);
 		}
 #endif
 	}
