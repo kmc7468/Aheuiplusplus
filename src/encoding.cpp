@@ -1,7 +1,6 @@
 ﻿#include <Aheuiplusplus/encoding.hpp>
 
 #include <algorithm>
-#include <stdexcept>
 
 namespace app
 {
