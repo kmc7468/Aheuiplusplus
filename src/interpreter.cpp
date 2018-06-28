@@ -160,6 +160,7 @@ namespace app
 			{
 				std::size_t new_direction;
 				std::size_t new_move;
+				bool is_processed_direction = false;
 
 				char32_t chosung = get_chosung(command);
 				char32_t jungsung = get_jungsung(command);
@@ -292,6 +293,7 @@ namespace app
 						new_direction = direction;
 						new_move = move;
 
+						is_processed_direction = true;
 						is_added_additional_data = false;
 					}
 
@@ -304,6 +306,7 @@ namespace app
 							new_direction = direction;
 							new_move = move;
 
+							is_processed_direction = true;
 							is_added_additional_data = false;
 						}
 					}
@@ -418,7 +421,7 @@ namespace app
 					return 0;
 				}
 
-				if (version_ != version::v1_0)
+				if (version_ != version::v1_0 && !is_processed_direction)
 				{
 					switch (jungsung_org)
 					{
