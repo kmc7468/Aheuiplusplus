@@ -288,7 +288,7 @@ namespace app
 				{
 					if (!(chosung == U'ㄲ' &&
 						(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
-							jongsung == U'ㅅ'))) // 예외 명령
+							jongsung == U'ㅅ' || jongsung == U'ㅆ'))) // 예외 명령
 					{
 						new_direction = direction;
 						new_move = move;
@@ -301,7 +301,7 @@ namespace app
 					{
 						if ((chosung == U'ㄲ' &&
 							(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
-								jongsung == U'ㅅ')))
+								jongsung == U'ㅅ' || jongsung == U'ㅆ')))
 						{
 							new_direction = direction;
 							new_move = move;
@@ -322,7 +322,7 @@ namespace app
 					
 					if (chosung == U'ㄱ' || chosung == U'ㅋ' || chosung == U'ㅉ' ||
 						(chosung == U'ㄲ' && !(jongsung == U'ㅁ' || jongsung == U'ㅂ' ||
-							jongsung == U'ㅄ' || jongsung == U'ㅅ')))
+							jongsung == U'ㅄ' || jongsung == U'ㅅ' || jongsung == U'ㅆ')))
 					{
 						chosung = U'ㅇ';
 					}
@@ -331,7 +331,7 @@ namespace app
 					{
 						if ((chosung == U'ㄲ' &&
 							(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
-								jongsung == U'ㅅ')))
+								jongsung == U'ㅅ' || jongsung == U'ㅆ')))
 						{
 							chosung = U'ㅇ';
 						}
