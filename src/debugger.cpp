@@ -136,9 +136,9 @@ namespace app
 				{
 					reinterpret_cast<list*>(storage_backup)->original().push_back(
 						new element(*storage_converted->original()[k]));
-
-					reinterpret_cast<list*>(storage_backup)->virtual_length(storage_converted->length());
 				}
+
+				reinterpret_cast<list*>(storage_backup)->virtual_length(storage_converted->length());
 			}
 			else
 			{
