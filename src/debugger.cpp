@@ -162,7 +162,9 @@ namespace app
 				std::fprintf(output_stream_, "%s(비어 있음)\n", tab.c_str());
 			}
 
-			for (std::size_t k = 0; k < storage_backup->length(); ++k)
+			std::size_t count = storage_backup->length();
+
+			for (std::size_t k = 0; k < count; ++k)
 			{
 				tab = std::string(depth * 4, ' ');
 
