@@ -159,9 +159,10 @@ namespace app
 	{
 		if (jongsung == U'ㅇ' && !is_added_additional_data) // 숫자(정수) 입력
 		{
-			if (input_stream_ != stdin && std::feof(input_stream_))
+			if (std::feof(input_stream_))
 			{
-				storage_()->push(new element(number(0ll)));
+				storage_()->push(new element(number(
+					(is_later(version::v2_0, version_) ? -1ll : 0ll))));
 				return false;
 			}
 
@@ -225,9 +226,10 @@ namespace app
 		}
 		else if (jongsung == U'ㅇ' && is_added_additional_data) // 숫자(소수) 입력
 		{
-			if (input_stream_ != stdin && std::feof(input_stream_))
+			if (std::feof(input_stream_))
 			{
-				storage_()->push(new element(number(0.0)));
+				storage_()->push(new element(number(
+					(is_later(version::v2_0, version_) ? -1.0 : 0.0))));
 				return false;
 			}
 
@@ -297,9 +299,17 @@ namespace app
 		}
 		else if (jongsung == U'ㅎ' && !is_added_additional_data) // 문자 입력
 		{
-			if (input_stream_ != stdin && std::feof(input_stream_))
+			if (std::feof(input_stream_))
 			{
-				storage_()->push(new element(0));
+				if (is_later(version::v2_0, version_))
+				{
+					storage_()->push(new element(number(-1ll)));
+				}
+				else
+				{
+					storage_()->push(new element(0));
+				}
+				
 				return false;
 			}
 
@@ -317,9 +327,9 @@ namespace app
 		}
 		else if (jongsung == U'ㅎ' && is_added_additional_data) // 문자열 입력
 		{
-			if (input_stream_ != stdin && std::feof(input_stream_))
+			if (std::feof(input_stream_))
 			{
-				storage_()->push(new element(0));
+				storage_()->push(new element(U""));
 				return false;
 			}
 
