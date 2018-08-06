@@ -77,4 +77,21 @@ namespace app
 			return version::none;
 		}
 	}
+
+	bool operator>(app::version lhs, app::version rhs) noexcept
+	{
+		return static_cast<int>(lhs) > static_cast<int>(rhs);
+	}
+	bool operator>=(app::version lhs, app::version rhs) noexcept
+	{
+		return static_cast<int>(lhs) >= static_cast<int>(rhs);
+	}
+	bool operator<(app::version lhs, app::version rhs) noexcept
+	{
+		return static_cast<int>(lhs) < static_cast<int>(rhs);
+	}
+	bool operator<=(app::version lhs, app::version rhs) noexcept
+	{
+		return static_cast<int>(lhs) <= static_cast<int>(rhs);
+	}
 }

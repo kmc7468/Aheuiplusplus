@@ -21,6 +21,11 @@ namespace app
 	int get_minor(app::version version) noexcept;
 	version get_version(int major) noexcept;
 	version get_version(int major, int minor) noexcept;
+
+	bool operator>(app::version lhs, app::version rhs) noexcept;
+	bool operator>=(app::version lhs, app::version rhs) noexcept;
+	bool operator<(app::version lhs, app::version rhs) noexcept;
+	bool operator<=(app::version lhs, app::version rhs) noexcept;
 }
 
 #endif
