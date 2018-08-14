@@ -2,68 +2,40 @@
 
 namespace app
 {
-	number::number(long long integer) noexcept
-		: value_(integer)
-	{}
-	number::number(double decimal) noexcept
-		: value_(decimal)
-	{}
-	number::number(const number& number) noexcept
-		: value_(number.value_)
-	{}
+	element_type get_element_type(const app::element_base& element) noexcept
+	{
+		switch (element.index())
+		{
+		case 0:
+			return element_type::number;
 
-	number& number::operator=(const number& number) noexcept
-	{
-		value_ = number.value_;
-		return *this;
-	}
+		case 1:
+			return element_type::pointer;
 
-	long long number::integer() const noexcept
-	{
-		if (is_integer())
-		{
-			return std::get<0>(value_);
-		}
-		else
-		{
-			return static_cast<long long>(std::get<1>(value_));
-		}
-	}
-	void number::integer(long long new_integer) noexcept
-	{
-		value_ = new_integer;
-	}
-	double number::decimal() const noexcept
-	{
-		if (is_integer())
-		{
-			return static_cast<double>(std::get<0>(value_));
-		}
-		else
-		{
-			return std::get<1>(value_);
+		case 2:
+			return element_type::instance;
+
+		case 3:
+			return element_type::function;
+
+		case 4:
+			return element_type::type;
+
+		default:
+			return element_type::none;
 		}
 	}
-	void number::decimal(double new_decimal) noexcept
+	element_type get_element_type(const app::element& element) noexcept
 	{
-		value_ = new_decimal;
-	}
-	bool number::is_integer() const noexcept
-	{
-		return value_.index() == 0;
-	}
-	void number::is_integer(bool new_is_integer) noexcept
-	{
-		if (is_integer() != new_is_integer)
+		if (element.index() == 0)
 		{
-			if (new_is_integer)
-			{
-				value_ = static_cast<long long>(std::get<1>(value_));
-			}
-			else
-			{
-				value_ = static_cast<double>(std::get<0>(value_));
-			}
+			return get_element_type(std::get<0>(element));
 		}
+
+		return static_cast<element_type>(
+			static_cast<int>(
+					get_element_type(std::get<1>(element)[0])
+				) | static_cast<int>(element_type::array)
+			);
 	}
 }
