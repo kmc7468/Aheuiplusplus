@@ -1,4 +1,4 @@
-#include <Aheuiplusplus/mode.hpp>
+ï»¿#include <Aheuiplusplus/mode.hpp>
 
 #include <stdexcept>
 
@@ -11,7 +11,7 @@ namespace app
 		: minimum_version_(minimum_version), maximum_version_(maximum_version)
 	{
 		if (minimum_version > maximum_version)
-			throw std::invalid_argument("ÀÎ¼ö minimum_versionÀº ÀÎ¼ö maximum_versionº¸´Ù ³·Àº ¹öÀüÀÌ¿©¾ß ÇÕ´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ minimum_versionì€ ì¸ìˆ˜ maximum_versionë³´ë‹¤ ë‚®ì€ ë²„ì „ì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
 	}
 	mode::mode(bool is_integer_mode, bool is_aheui_compatible_mode,
 			   app::version minimum_version, app::version maximum_version)
@@ -19,7 +19,7 @@ namespace app
 		  minimum_version_(minimum_version), maximum_version_(maximum_version)
 	{
 		if (minimum_version > maximum_version)
-			throw std::invalid_argument("ÀÎ¼ö minimum_versionÀº ÀÎ¼ö maximum_versionº¸´Ù ³·Àº ¹öÀüÀÌ¿©¾ß ÇÕ´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ minimum_versionì€ ì¸ìˆ˜ maximum_versionë³´ë‹¤ ë‚®ì€ ë²„ì „ì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
 	}
 	mode::mode(const app::mode& mode) noexcept
 		: is_integer_mode_(mode.is_integer_mode_), is_aheui_compatible_mode_(mode.is_aheui_compatible_mode_),
@@ -75,7 +75,7 @@ namespace app
 		minimum_version_ = new_minimum_version;
 		
 		if (maximum_version_ < new_minimum_version)
-			throw std::invalid_argument("ÀÎ¼ö new_minimum_versionÀº ÇÊµå maximum_versionº¸´Ù ³·Àº ¹öÀüÀÌ¿©¾ß ÇÕ´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ new_minimum_versionì€ í•„ë“œ maximum_versionë³´ë‹¤ ë‚®ì€ ë²„ì „ì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
 	}
 	app::version mode::maximum_version() const noexcept
 	{
@@ -86,6 +86,6 @@ namespace app
 		maximum_version_ = new_maximum_version;
 
 		if (minimum_version_ > new_maximum_version)
-			throw std::invalid_argument("ÀÎ¼ö new_maximum_versionÀº ÇÊµå minimum_versionº¸´Ù ³ôÀº ¹öÀüÀÌ¿©¾ß ÇÕ´Ï´Ù.");
+			throw std::invalid_argument("ì¸ìˆ˜ new_maximum_versionì€ í•„ë“œ minimum_versionë³´ë‹¤ ë†’ì€ ë²„ì „ì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
 	}
 }

@@ -1,4 +1,4 @@
-#include <Aheuiplusplus/command_line.hpp>
+ï»¿#include <Aheuiplusplus/command_line.hpp>
 
 #include <Aheuiplusplus/interpreter.hpp>
 
@@ -71,7 +71,7 @@ namespace app
 	{
 		if (argc <= 1)
 		{
-			std::fprintf(error_stream, "¿À·ù: ÀÔ·ÂÀÌ ¾ø½À´Ï´Ù. --help ¿É¼ÇÀ» ÀÌ¿ëÇØ »ç¿ë¹ıÀ» È®ÀÎÇÏ½Ç ¼ö ÀÖ½À´Ï´Ù.\n");
+			std::fprintf(error_stream, "ì˜¤ë¥˜: ì…ë ¥ì´ ì—†ìŠµë‹ˆë‹¤. --help ì˜µì…˜ì„ ì´ìš©í•´ ì‚¬ìš©ë²•ì„ í™•ì¸í•˜ì‹¤ ìˆ˜ ìˆìŠµë‹ˆë‹¤.\n");
 			return false;
 		}
 
@@ -89,8 +89,8 @@ namespace app
 
 		option_code_path_.clear();
 
-		static const char* duplicate_message = " ¿É¼ÇÀÌ µÎ¹ø ÀÌ»ó »ç¿ëµÇ¾ú½À´Ï´Ù.";
-		static const char* invalid_argument_message = " ¿É¼ÇÀÇ ÀÎ¼ö°¡ ¿Ã¹Ù¸£Áö ¾Ê½À´Ï´Ù.";
+		static const char* duplicate_message = " ì˜µì…˜ì´ ë‘ë²ˆ ì´ìƒ ì‚¬ìš©ë˜ì—ˆìŠµë‹ˆë‹¤.";
+		static const char* invalid_argument_message = " ì˜µì…˜ì˜ ì¸ìˆ˜ê°€ ì˜¬ë°”ë¥´ì§€ ì•ŠìŠµë‹ˆë‹¤.";
 
 		for (int i = 1; i < argc; ++i)
 		{
@@ -100,7 +100,7 @@ namespace app
 			{
 				if (option_help)
 				{
-					std::fprintf(error_stream, "¿À·ù: %s%s\n", "--help", duplicate_message);
+					std::fprintf(error_stream, "ì˜¤ë¥˜: %s%s\n", "--help", duplicate_message);
 					return false;
 				}
 
@@ -110,7 +110,7 @@ namespace app
 			{
 				if (option_version)
 				{
-					std::fprintf(error_stream, "¿À·ù: %s%s\n", "--version", duplicate_message);
+					std::fprintf(error_stream, "ì˜¤ë¥˜: %s%s\n", "--version", duplicate_message);
 					return false;
 				}
 
@@ -121,7 +121,7 @@ namespace app
 			{
 				if (option_aheui_)
 				{
-					std::fprintf(error_stream, "¿À·ù: %s%s\n", "-A", duplicate_message);
+					std::fprintf(error_stream, "ì˜¤ë¥˜: %s%s\n", "-A", duplicate_message);
 					return false;
 				}
 
@@ -131,7 +131,7 @@ namespace app
 			{
 				if (option_interpreting_mode_)
 				{
-					std::fprintf(error_stream, "¿À·ù: %s%s\n", "-i", duplicate_message);
+					std::fprintf(error_stream, "ì˜¤ë¥˜: %s%s\n", "-i", duplicate_message);
 					return false;
 				}
 
@@ -141,12 +141,12 @@ namespace app
 			{
 				if (argument.length() <= 5)
 				{
-					std::fprintf(error_stream, "¿À·ù: %s%s\n", "-std", invalid_argument_message);
+					std::fprintf(error_stream, "ì˜¤ë¥˜: %s%s\n", "-std", invalid_argument_message);
 					return false;
 				}
 				else if (argument[4] != '=')
 				{
-					std::fprintf(error_stream, "¿À·ù: %s%s\n", "-std", invalid_argument_message);
+					std::fprintf(error_stream, "ì˜¤ë¥˜: %s%s\n", "-std", invalid_argument_message);
 					return false;
 				}
 
@@ -162,7 +162,7 @@ namespace app
 
 					if (option_version_ == version::none)
 					{
-						std::fprintf(error_stream, "¿À·ù: %s%s\n", "-std", invalid_argument_message);
+						std::fprintf(error_stream, "ì˜¤ë¥˜: %s%s\n", "-std", invalid_argument_message);
 						return false;
 					}
 				}
@@ -179,7 +179,7 @@ namespace app
 
 					if (option_version_ == version::none)
 					{
-						std::fprintf(error_stream, "¿À·ù: %s%s\n", "-std", invalid_argument_message);
+						std::fprintf(error_stream, "ì˜¤ë¥˜: %s%s\n", "-std", invalid_argument_message);
 						return false;
 					}
 				}
@@ -188,7 +188,7 @@ namespace app
 			{
 				if (option_utf8_)
 				{
-					std::fprintf(error_stream, "¿À·ù: %s%s\n", "-utf8", duplicate_message);
+					std::fprintf(error_stream, "ì˜¤ë¥˜: %s%s\n", "-utf8", duplicate_message);
 					return false;
 				}
 
@@ -198,7 +198,7 @@ namespace app
 			{
 				if (option_utf16_)
 				{
-					std::fprintf(error_stream, "¿À·ù: %s%s\n", "-utf16", duplicate_message);
+					std::fprintf(error_stream, "ì˜¤ë¥˜: %s%s\n", "-utf16", duplicate_message);
 					return false;
 				}
 
@@ -208,7 +208,7 @@ namespace app
 			{
 				if (option_utf16be_)
 				{
-					std::fprintf(error_stream, "¿À·ù: %s%s\n", "-utf16be", duplicate_message);
+					std::fprintf(error_stream, "ì˜¤ë¥˜: %s%s\n", "-utf16be", duplicate_message);
 					return false;
 				}
 
@@ -219,7 +219,7 @@ namespace app
 			{
 				if (option_loud_mode_)
 				{
-					std::fprintf(error_stream, "¿À·ù: %s%s\n", "-l", duplicate_message);
+					std::fprintf(error_stream, "ì˜¤ë¥˜: %s%s\n", "-l", duplicate_message);
 					return false;
 				}
 
@@ -230,12 +230,12 @@ namespace app
 			{
 				if (argument.front() == '-')
 				{
-					std::fprintf(error_stream, "¿À·ù: %s´Â ¾Ë ¼ö ¾ø´Â ¿É¼ÇÀÔ´Ï´Ù.\n", argument.data());
+					std::fprintf(error_stream, "ì˜¤ë¥˜: %sëŠ” ì•Œ ìˆ˜ ì—†ëŠ” ì˜µì…˜ì…ë‹ˆë‹¤.\n", argument.data());
 					return false;
 				}
 				else if (!option_code_path_.empty())
 				{
-					std::fprintf(error_stream, "¿À·ù: °æ·Î°¡ µÎ°³ ÀÌ»ó ÀÔ·ÂµÇ¾ú½À´Ï´Ù.\n");
+					std::fprintf(error_stream, "ì˜¤ë¥˜: ê²½ë¡œê°€ ë‘ê°œ ì´ìƒ ì…ë ¥ë˜ì—ˆìŠµë‹ˆë‹¤.\n");
 					return false;
 				}
 
@@ -247,20 +247,20 @@ namespace app
 		{
 
 			std::fprintf(error_stream,
-				"»ç¿ë¹ı: %s [option(s)...] [path]\n"
-				"path´Â ¾ÆÈñ++(¶Ç´Â ¾ÆÈñ) ÄÚµå°¡ ±â·ÏµÈ ÅØ½ºÆ® ÆÄÀÏ¿¡ ´ëÇÑ ¿Ã¹Ù¸¥ °æ·Î¿©¾ß ÇÕ´Ï´Ù(ÀÎÅÍÇÁ¸®ÆÃ ¸ğµåÀÏ °æ¿ì ÇÊ¿äÇÏÁö ¾Ê½À´Ï´Ù.).\n"
+				"ì‚¬ìš©ë²•: %s [option(s)...] [path]\n"
+				"pathëŠ” ì•„í¬++(ë˜ëŠ” ì•„í¬) ì½”ë“œê°€ ê¸°ë¡ëœ í…ìŠ¤íŠ¸ íŒŒì¼ì— ëŒ€í•œ ì˜¬ë°”ë¥¸ ê²½ë¡œì—¬ì•¼ í•©ë‹ˆë‹¤(ì¸í„°í”„ë¦¬íŒ… ëª¨ë“œì¼ ê²½ìš° í•„ìš”í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.).\n"
 				"\n"
-				"--help - »ç¿ë¹ı ¹× ¸í·ÉÁÙ ¿É¼Ç ¸ñ·ÏÀ» º¾´Ï´Ù.\n"
-				"--version - ÀÌ ¼ÒÇÁÆ®¿ş¾îÀÇ ¹öÀüÀ» º¾´Ï´Ù.\n"
+				"--help - ì‚¬ìš©ë²• ë° ëª…ë ¹ì¤„ ì˜µì…˜ ëª©ë¡ì„ ë´…ë‹ˆë‹¤.\n"
+				"--version - ì´ ì†Œí”„íŠ¸ì›¨ì–´ì˜ ë²„ì „ì„ ë´…ë‹ˆë‹¤.\n"
 				"\n"
-				"-A - ¾ÆÈñ Àü¿ë ¸ğµå·Î ½ÇÇàÇÕ´Ï´Ù. -std ¿É¼Ç°ú ÇÔ²² ¾²ÀÏ ¼ö ¾ø½À´Ï´Ù.\n"
-				"-i - ÀÎÅÍÇÁ¸®ÆÃ ¸ğµå·Î ½ÇÇàÇÕ´Ï´Ù. -utf8, -utf16, -utf16be ¿É¼Ç°ú ÇÔ²² ¾²ÀÏ ¼ö ¾ø½À´Ï´Ù.\n"
-				"-std=<version> - ÀÌ ¼ÒÇÁÆ®¿ş¾î°¡ µû¸¦ ¾ÆÈñ++ Ç¥ÁØÀÇ ¹öÀüÀ» ¼³Á¤ÇÕ´Ï´Ù. versionÀº m ¶Ç´Â m.nÀÇ ÇüÅÂ·Î ±¸¼ºµË´Ï´Ù(ÀÌ¶§ mÀº ÁÖ¹öÀü, nÀº ºÎ¹öÀüÀÔ´Ï´Ù.). -A ¿É¼Ç°ú ÇÔ²² ¾²ÀÏ ¼ö ¾ø½À´Ï´Ù.\n"
-				"-utf8 - path°¡ ³ªÅ¸³»´Â ÅØ½ºÆ® ÆÄÀÏÀÇ ÀÎÄÚµùÀÌ UTF-8ÀÓÀ» ¸í½ÃÇÕ´Ï´Ù. ±âº»ÀûÀ¸·Î ÀÌ ¿É¼ÇÀÌ Àû¿ëµË´Ï´Ù. -i, -utf16, -utf16be ¿É¼Ç°ú ÇÔ²² ¾²ÀÏ ¼ö ¾ø½À´Ï´Ù.\n"
-				"-utf16 - path°¡ ³ªÅ¸³»´Â ÅØ½ºÆ® ÆÄÀÏÀÇ ÀÎÄÚµùÀÌ UTF-16LEÀÓÀ» ¸í½ÃÇÕ´Ï´Ù. -i, -utf8, -utf16be ¿É¼Ç°ú ÇÔ²² ¾²ÀÏ ¼ö ¾ø½À´Ï´Ù.\n"
-				"-utf16be - path°¡ ³ªÅ¸³»´Â ÅØ½ºÆ® ÆÄÀÏÀÇ ÀÎÄÚµùÀÌ UTF-16BEÀÓÀ» ¸í½ÃÇÕ´Ï´Ù. -i, -utf8, -utf16 ¿É¼Ç°ú ÇÔ²² ¾²ÀÏ ¼ö ¾ø½À´Ï´Ù.\n"
+				"-A - ì•„í¬ ì „ìš© ëª¨ë“œë¡œ ì‹¤í–‰í•©ë‹ˆë‹¤. -std ì˜µì…˜ê³¼ í•¨ê»˜ ì“°ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n"
+				"-i - ì¸í„°í”„ë¦¬íŒ… ëª¨ë“œë¡œ ì‹¤í–‰í•©ë‹ˆë‹¤. -utf8, -utf16, -utf16be ì˜µì…˜ê³¼ í•¨ê»˜ ì“°ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n"
+				"-std=<version> - ì´ ì†Œí”„íŠ¸ì›¨ì–´ê°€ ë”°ë¥¼ ì•„í¬++ í‘œì¤€ì˜ ë²„ì „ì„ ì„¤ì •í•©ë‹ˆë‹¤. versionì€ m ë˜ëŠ” m.nì˜ í˜•íƒœë¡œ êµ¬ì„±ë©ë‹ˆë‹¤(ì´ë•Œ mì€ ì£¼ë²„ì „, nì€ ë¶€ë²„ì „ì…ë‹ˆë‹¤.). -A ì˜µì…˜ê³¼ í•¨ê»˜ ì“°ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n"
+				"-utf8 - pathê°€ ë‚˜íƒ€ë‚´ëŠ” í…ìŠ¤íŠ¸ íŒŒì¼ì˜ ì¸ì½”ë”©ì´ UTF-8ì„ì„ ëª…ì‹œí•©ë‹ˆë‹¤. ê¸°ë³¸ì ìœ¼ë¡œ ì´ ì˜µì…˜ì´ ì ìš©ë©ë‹ˆë‹¤. -i, -utf16, -utf16be ì˜µì…˜ê³¼ í•¨ê»˜ ì“°ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n"
+				"-utf16 - pathê°€ ë‚˜íƒ€ë‚´ëŠ” í…ìŠ¤íŠ¸ íŒŒì¼ì˜ ì¸ì½”ë”©ì´ UTF-16LEì„ì„ ëª…ì‹œí•©ë‹ˆë‹¤. -i, -utf8, -utf16be ì˜µì…˜ê³¼ í•¨ê»˜ ì“°ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n"
+				"-utf16be - pathê°€ ë‚˜íƒ€ë‚´ëŠ” í…ìŠ¤íŠ¸ íŒŒì¼ì˜ ì¸ì½”ë”©ì´ UTF-16BEì„ì„ ëª…ì‹œí•©ë‹ˆë‹¤. -i, -utf8, -utf16 ì˜µì…˜ê³¼ í•¨ê»˜ ì“°ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n"
 				"\n"
-				"-l - ¾ÆÈñ++(¶Ç´Â ¾ÆÈñ) ÄÚµå°¡ ÀÔ·ÂÀ» ¿äÃ»ÇßÀ» ¶§ ¿äÃ»µÆÀ½À» ³ªÅ¸³»´Â ¸Ş¼¼Áö¸¦ Ãâ·ÂÇÕ´Ï´Ù.\n",
+				"-l - ì•„í¬++(ë˜ëŠ” ì•„í¬) ì½”ë“œê°€ ì…ë ¥ì„ ìš”ì²­í–ˆì„ ë•Œ ìš”ì²­ëìŒì„ ë‚˜íƒ€ë‚´ëŠ” ë©”ì„¸ì§€ë¥¼ ì¶œë ¥í•©ë‹ˆë‹¤.\n",
 				argv[0]);
 
 			return false;
@@ -268,7 +268,7 @@ namespace app
 		else if (option_version)
 		{
 			std::fprintf(error_stream,
-				"¾ÆÈñ++ Ç¥ÁØ ÀÎÅÍÇÁ¸®ÅÍ %s\n%s\n\nÀÌ ¼ÒÇÁÆ®¿ş¾î´Â °ø°³ ¼ÒÇÁÆ®¿ş¾î·Î, ¼Ò½º ÄÚµå´Â ¾Æ·¡ À¥»çÀÌÆ®¿¡¼­ MIT ¶óÀÌ¼±½º·Î ¹èÆ÷µÇ°í ÀÖ½À´Ï´Ù.\n\n%s\n",
+				"ì•„í¬++ í‘œì¤€ ì¸í„°í”„ë¦¬í„° %s\n%s\n\nì´ ì†Œí”„íŠ¸ì›¨ì–´ëŠ” ê³µê°œ ì†Œí”„íŠ¸ì›¨ì–´ë¡œ, ì†ŒìŠ¤ ì½”ë“œëŠ” ì•„ë˜ ì›¹ì‚¬ì´íŠ¸ì—ì„œ MIT ë¼ì´ì„ ìŠ¤ë¡œ ë°°í¬ë˜ê³  ìˆìŠµë‹ˆë‹¤.\n\n%s\n",
 				version_string, "(C) 2018. kmc7468 All rights reserved.", "https://github.com/kmc7468/Aheuiplusplus");
 
 			return false;
@@ -276,47 +276,47 @@ namespace app
 
 		if (option_aheui_ && option_version_ != version::none)
 		{
-			std::fprintf(error_stream, "¿À·ù: -A ¿É¼Ç°ú -std ¿É¼ÇÀº ÇÔ²² ¾²ÀÏ ¼ö ¾ø½À´Ï´Ù.\n");
+			std::fprintf(error_stream, "ì˜¤ë¥˜: -A ì˜µì…˜ê³¼ -std ì˜µì…˜ì€ í•¨ê»˜ ì“°ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n");
 			return false;
 		}
 		else if (option_interpreting_mode_ && !option_code_path_.empty())
 		{
-			std::fprintf(error_stream, "¿À·ù: ÀÎÅÍÇÁ¸®ÆÃ ¸ğµåÀÏ °æ¿ì path°¡ ÇÊ¿äÇÏÁö ¾Ê½À´Ï´Ù.\n");
+			std::fprintf(error_stream, "ì˜¤ë¥˜: ì¸í„°í”„ë¦¬íŒ… ëª¨ë“œì¼ ê²½ìš° pathê°€ í•„ìš”í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.\n");
 			return false;
 		}
 		else if (!option_interpreting_mode_ && option_code_path_.empty())
 		{
-			std::fprintf(error_stream, "¿À·ù: ÀÏ¹İ ¸ğµåÀÏ °æ¿ì path°¡ ÇÊ¿äÇÕ´Ï´Ù.\n");
+			std::fprintf(error_stream, "ì˜¤ë¥˜: ì¼ë°˜ ëª¨ë“œì¼ ê²½ìš° pathê°€ í•„ìš”í•©ë‹ˆë‹¤.\n");
 			return false;
 		}
 		else if (option_interpreting_mode_ && option_utf8_)
 		{
-			std::fprintf(error_stream, "¿À·ù: -i ¿É¼Ç°ú -utf8 ¿É¼ÇÀº ÇÔ²² ¾²ÀÏ ¼ö ¾ø½À´Ï´Ù.\n");
+			std::fprintf(error_stream, "ì˜¤ë¥˜: -i ì˜µì…˜ê³¼ -utf8 ì˜µì…˜ì€ í•¨ê»˜ ì“°ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n");
 			return false;
 		}
 		else if (option_interpreting_mode_ && option_utf16_)
 		{
-			std::fprintf(error_stream, "¿À·ù: -i ¿É¼Ç°ú -utf16 ¿É¼ÇÀº ÇÔ²² ¾²ÀÏ ¼ö ¾ø½À´Ï´Ù.\n");
+			std::fprintf(error_stream, "ì˜¤ë¥˜: -i ì˜µì…˜ê³¼ -utf16 ì˜µì…˜ì€ í•¨ê»˜ ì“°ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n");
 			return false;
 		}
 		else if (option_interpreting_mode_ && option_utf16be_)
 		{
-			std::fprintf(error_stream, "¿À·ù: -i ¿É¼Ç°ú -utf16be ¿É¼ÇÀº ÇÔ²² ¾²ÀÏ ¼ö ¾ø½À´Ï´Ù.\n");
+			std::fprintf(error_stream, "ì˜¤ë¥˜: -i ì˜µì…˜ê³¼ -utf16be ì˜µì…˜ì€ í•¨ê»˜ ì“°ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n");
 			return false;
 		}
 		else if (option_utf8_ && option_utf16_)
 		{
-			std::fprintf(error_stream, "¿À·ù: -utf8 ¿É¼Ç°ú -utf16 ¿É¼ÇÀº ÇÔ²² ¾²ÀÏ ¼ö ¾ø½À´Ï´Ù.\n");
+			std::fprintf(error_stream, "ì˜¤ë¥˜: -utf8 ì˜µì…˜ê³¼ -utf16 ì˜µì…˜ì€ í•¨ê»˜ ì“°ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n");
 			return false;
 		}
 		else if (option_utf8_ && option_utf16be_)
 		{
-			std::fprintf(error_stream, "¿À·ù: -utf8 ¿É¼Ç°ú -utf16be ¿É¼ÇÀº ÇÔ²² ¾²ÀÏ ¼ö ¾ø½À´Ï´Ù.\n");
+			std::fprintf(error_stream, "ì˜¤ë¥˜: -utf8 ì˜µì…˜ê³¼ -utf16be ì˜µì…˜ì€ í•¨ê»˜ ì“°ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n");
 			return false;
 		}
 		else if (option_utf16_ && option_utf16be_)
 		{
-			std::fprintf(error_stream, "¿À·ù: -utf16 ¿É¼Ç°ú -utf16be ¿É¼ÇÀº ÇÔ²² ¾²ÀÏ ¼ö ¾ø½À´Ï´Ù.\n");
+			std::fprintf(error_stream, "ì˜¤ë¥˜: -utf16 ì˜µì…˜ê³¼ -utf16be ì˜µì…˜ì€ í•¨ê»˜ ì“°ì¼ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n");
 			return false;
 		}
 
