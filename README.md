@@ -1,6 +1,8 @@
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://shields.io/) [![language](https://img.shields.io/badge/language-C%2B%2B17-blue.svg)](https://shields.io/)
 # 아희++
 아희와 호환성이 있는 난해한 객체지향 한글 프로그래밍 언어
+## [레퍼런스](https://github.com/kmc7468/Aheuiplusplus/wiki)
+아희++의 표준안과 예제를 수록하고 있습니다. 표준안에 애매한 내용이나 질문이 있다면 이슈 등을 통해 알려주시면 감사하겠습니다.
 ## 컴파일
 ### 필요한 소프트웨어
 - CMake 3.8.0 이상
@@ -21,8 +23,6 @@ $ make
 - `COMPILE_TARGET`:<br>
 아희++ 표준 인터프리터를 실행 파일의 형태로 컴파일 할지, 정적 라이브러리의 형태로 컴파일 할지 설정하는 옵션입니다.
 	- 값은 `Executable`, `Library` 중 하나이며, 대소문자는 구분되지 않습니다. 전자는 실행 파일, 후자는 정적 라이브러리의 형태를 의미합니다.
-## [레퍼런스](https://github.com/kmc7468/Aheuiplusplus/wiki)
-아희++의 표준안과 예제를 수록하고 있습니다. 표준안에 애매한 내용이나 질문이 있다면 이슈 등을 통해 알려주시면 감사하겠습니다.
 ## 예제
 더 많은 예제는 레퍼런스에서 확인하실 수 있습니다.
 ### [개발자 수다방](https://gist.github.com/RanolP/6ecb4b1030fccad19dc05f3716d6c2c7) by [RanolP](https://gist.github.com/RanolP)
