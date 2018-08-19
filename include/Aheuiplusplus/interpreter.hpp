@@ -1,0 +1,18 @@
+#ifndef AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
+#define AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
+
+namespace app
+{
+#define AHEUIPLUSPLUS_VERSION_STRING "2.0.0"
+#define AHEUIPLUSPLUS_VERSION 2
+#define AHEUIPLUSPLUS_VERSION_MAJOR AHEUIPLUSPLUS_VERSION
+#define AHEUIPLUSPLUS_VERSION_MINOR 0
+#define AHEUIPLUSPLUS_VERSION_PATCH 0
+
+	inline constexpr const char* version_string = AHEUIPLUSPLUS_VERSION_STRING;
+	inline constexpr int version_major = AHEUIPLUSPLUS_VERSION_MAJOR;
+	inline constexpr int version_minor = AHEUIPLUSPLUS_VERSION_MINOR;
+	inline constexpr int version_patch = AHEUIPLUSPLUS_VERSION_PATCH;
+}
+
+#endif
