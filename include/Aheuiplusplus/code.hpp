@@ -4,6 +4,7 @@
 #include <Aheuiplusplus/cursor.hpp>
 
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include <u5e/basic_grapheme.hpp>
@@ -30,12 +31,15 @@ namespace app
 
 	public:
 		grapheme at(std::size_t x, std::size_t y) const;
+		grapheme at(const point& location) const;
+		grapheme at(const cursor& location) const;
 
 	private:
 		void parse_codes_(const std::u32string_view& codes);
 
 	private:
 		std::vector<std::u32string> codes_;
+		std::vector<std::vector<grapheme>> codes_grapheme_;
 	};
 }
 

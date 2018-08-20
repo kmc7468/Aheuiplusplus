@@ -1,8 +1,8 @@
 #include <Aheuiplusplus/code.hpp>
 
-#include <utility>
-
 #include <u5e/basic_grapheme_iterator.hpp>
+
+#include <utility>
 
 namespace app
 {
@@ -35,15 +35,15 @@ namespace app
 
 	grapheme code::at(std::size_t x, std::size_t y) const
 	{
-		const std::u32string& line = codes_[y];
-		u5e::basic_grapheme_iterator<std::u32string> iterator(line.begin(), line.end());
-
-		for (std::size_t i = 0; i < x; ++i)
-		{
-			++iterator;
-		}
-
-		return *iterator;
+		return codes_grapheme_[y][x];
+	}
+	grapheme code::at(const point& location) const
+	{
+		return at(location.x(), location.y());
+	}
+	grapheme code::at(const cursor& location) const
+	{
+		return at(location.x(), location.y());
 	}
 
 	void code::parse_codes_(const std::u32string_view& codes)
@@ -53,6 +53,8 @@ namespace app
 		std::size_t pos = 0;
 		std::size_t line_pos;
 		
+		using grapheme_iterator = u5e::basic_grapheme_iterator<std::u32string>;
+
 		while ((line_pos = codes.find(U'\n', pos)) != std::u32string_view::npos)
 		{
 			std::u32string& line = codes_.emplace_back(codes.substr(pos, line_pos - pos));
@@ -62,11 +64,27 @@ namespace app
 			{
 				line.erase(line.end() - 1);
 			}
+
+			const grapheme_iterator end = grapheme_iterator(line.begin(), line.end(), line.end());
+			std::vector<grapheme>& line_grapheme = codes_grapheme_.emplace_back();
+
+			for (grapheme_iterator iter(line.begin(), line.end()); iter != end; ++iter)
+			{
+				line_grapheme.push_back(*iter);
+			}
 		}
 
 		if (pos < codes.size())
 		{
-			codes_.emplace_back(codes.substr(pos));
+			std::u32string& line = codes_.emplace_back(codes.substr(pos));
+
+			const grapheme_iterator end = grapheme_iterator(line.begin(), line.end(), line.end());
+			std::vector<grapheme>& line_grapheme = codes_grapheme_.emplace_back();
+
+			for (grapheme_iterator iter(line.begin(), line.end()); iter != end; ++iter)
+			{
+				line_grapheme.push_back(*iter);
+			}
 		}
 	}
 }

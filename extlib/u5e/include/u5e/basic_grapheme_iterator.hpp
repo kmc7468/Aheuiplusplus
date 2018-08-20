@@ -156,7 +156,7 @@ namespace u5e {
 
     void find_start_of_grapheme() {
       // GB2
-      if (where_ == begin_)
+      if (where_ == begin_ || where_ == end_)
         return;
       // rewind where_ until it's no longer in the same grapheme
 
@@ -167,7 +167,7 @@ namespace u5e {
       codepoint a = *copy;
 
       while (1) {
-        if (where_ == begin_)
+        if (where_ == begin_ || where_ == end_)
           return;
         codepoint b = *where_;
 
