@@ -38,6 +38,7 @@ $ make
 ## 외부 라이브러리
 아래에 열거된 외부 라이브러리들은 아희++ 표준 인터프리터를 컴파일 할 때 같이 컴파일 되므로 추가적인 작업이 필요하지 않습니다.
 - [u5e](https://github.com/ruoso/u5e)의 커밋 [3b970d5](https://github.com/ruoso/u5e/tree/3b970d5bc251fdef341d039d66c84ec5eaf4cb6a) - 2-clause BSD license
+	- include/u5e/basic_grapheme_iterator.hpp 파일의 159번 줄 및 170번 줄이 수정되었습니다. (커밋 [abca129](https://github.com/kmc7468/Aheuiplusplus/commit/abca1292fe6c421d835516e00b33d62ae5710200))
 - [UTF8-CPP](https://github.com/nemtrif/utfcpp) 2.3.5
 ## 라이선스
 아희++ 표준 인터프리터의 모든 소스 코드는 MIT 라이선스가 적용됩니다. 단, 외부 라이브러리에는 적용되지 않습니다.
