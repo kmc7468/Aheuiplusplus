@@ -13,6 +13,30 @@ namespace app
 	inline constexpr int version_major = AHEUIPLUSPLUS_VERSION_MAJOR;
 	inline constexpr int version_minor = AHEUIPLUSPLUS_VERSION_MINOR;
 	inline constexpr int version_patch = AHEUIPLUSPLUS_VERSION_PATCH;
+
+	class interpreter final
+	{
+		friend class debugger;
+	
+	public:
+		interpreter() = default;
+		interpreter(const interpreter& interpreter) = delete;
+		interpreter(interpreter&& interpreter) noexcept = delete;
+		~interpreter() = default;
+
+	private:
+		interpreter(debugger& debugger);
+		interpreter(debugger* debugger);
+
+	public:
+		interpreter& operator=(const interpreter& interpreter) = delete;
+		interpreter& operator=(interpreter&& interpreter) noexcept = delete;
+		bool operator==(const interpreter& interpreter) const = delete;
+		bool operator!=(const interpreter& interpreter) const = delete;
+
+	private:
+		debugger* const debugger_ = nullptr;
+	};
 }
 
 #endif
