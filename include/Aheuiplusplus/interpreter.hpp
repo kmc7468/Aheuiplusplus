@@ -1,6 +1,8 @@
 #ifndef AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 #define AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 
+#include <Aheuiplusplus/code.hpp>
+
 namespace app
 {
 #define AHEUIPLUSPLUS_VERSION_STRING "2.0.0"
@@ -14,6 +16,8 @@ namespace app
 	inline constexpr int version_minor = AHEUIPLUSPLUS_VERSION_MINOR;
 	inline constexpr int version_patch = AHEUIPLUSPLUS_VERSION_PATCH;
 
+	class debugger;
+
 	class interpreter final
 	{
 		friend class debugger;
@@ -25,8 +29,9 @@ namespace app
 		~interpreter() = default;
 
 	private:
-		interpreter(debugger& debugger);
 		interpreter(debugger* debugger);
+		interpreter(debugger* debugger, const app::code& code);
+		interpreter(debugger* debugger, app::code&& code);
 
 	public:
 		interpreter& operator=(const interpreter& interpreter) = delete;
@@ -34,7 +39,14 @@ namespace app
 		bool operator==(const interpreter& interpreter) const = delete;
 		bool operator!=(const interpreter& interpreter) const = delete;
 
+	public:
+		const app::code& code() const noexcept;
+		void code(const app::code& new_code);
+		void code(app::code&& new_code) noexcept;
+
 	private:
+		app::code code_;
+
 		debugger* const debugger_ = nullptr;
 	};
 }

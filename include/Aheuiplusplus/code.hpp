@@ -30,6 +30,8 @@ namespace app
 		bool operator!=(const code& code) const = delete;
 
 	public:
+		bool empty() const noexcept;
+		void clear() noexcept;
 		grapheme at(std::size_t x, std::size_t y) const;
 		grapheme at(const point& location) const;
 		grapheme at(const cursor& location) const;

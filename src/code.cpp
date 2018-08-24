@@ -33,6 +33,15 @@ namespace app
 		return *this;
 	}
 
+	bool code::empty() const noexcept
+	{
+		return codes_.empty();
+	}
+	void code::clear() noexcept
+	{
+		codes_.clear();
+		codes_grapheme_.clear();
+	}
 	grapheme code::at(std::size_t x, std::size_t y) const
 	{
 		return codes_grapheme_[y][x];

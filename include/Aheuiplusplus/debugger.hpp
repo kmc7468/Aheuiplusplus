@@ -5,7 +5,6 @@
 #include <Aheuiplusplus/cursor.hpp>
 #include <Aheuiplusplus/interpreter.hpp>
 
-#include <string_view>
 #include <vector>
 
 namespace app
@@ -13,8 +12,9 @@ namespace app
 	class debugger final
 	{
 	public:
-		debugger(const std::u32string_view& code);
-		debugger(std::u32string&& code);
+		debugger() = default;
+		debugger(const code& code);
+		debugger(code&& code);
 		debugger(const debugger& debugger) = delete;
 		debugger(debugger&& debugger) noexcept = delete;
 		~debugger() = default;
@@ -35,7 +35,6 @@ namespace app
 		grapheme current_command_;
 
 		interpreter interpreter_;
-		std::u32string code_;
 	};
 }
 
