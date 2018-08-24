@@ -13,10 +13,10 @@ namespace app
 		latest = v2_0,
 	};
 
-	long long get_major(app::version version) noexcept;
-	long long get_minor(app::version version) noexcept;
-	version get_version(long long major) noexcept;
-	version get_version(long long major, long long minor) noexcept;
+	int get_major(app::version version) noexcept;
+	int get_minor(app::version version) noexcept;
+	version get_version(int major, int minor) noexcept;
+	version get_version(int major) noexcept;
 	bool is_later(app::version lhs, app::version rhs) noexcept;
 }
 

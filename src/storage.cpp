@@ -159,7 +159,7 @@ namespace app
 	}
 	element* list::pop()
 	{
-		std::vector<element*>::iterator end = vector_.begin() + virtual_length();
+		std::vector<element*>::iterator end = vector_.begin() + virtual_length_;
 
 		if (vector_.begin() == end)
 		{
@@ -168,7 +168,7 @@ namespace app
 
 		element* data = *(end - 1);
 		vector_.erase(end - 1);
-		virtual_length(virtual_length() - 1);
+		virtual_length_ -= 1;
 
 		return data;
 	}
@@ -178,39 +178,38 @@ namespace app
 	}
 	void list::push(element* element)
 	{
-		vector_.insert(vector_.begin() + virtual_length(), element);
-		virtual_length(virtual_length() + 1);
+		vector_.insert(vector_.begin() + virtual_length_, element);
+		virtual_length_ += 1;
 	}
 	element* list::copy()
 	{
-		element* last = pop();
+		std::vector<element*>::iterator end = vector_.begin() + virtual_length_;
 
-		if (last == nullptr)
+		if (vector_.begin() == vector_.end())
 		{
 			return nullptr;
 		}
 
-		push(last);
+		element* last = *(end - 1);
+		element* data;
 
 		switch (last->index())
 		{
 		case 0:
-			push(new element(std::get<0>(*last)));
+			data = new element(std::get<0>(*last));
 			break;
 
 		case 1:
-			push(new element(std::get<1>(*last)));
+			data = new element(std::get<1>(*last));
 			break;
 
 		case 2:
-			push(new element(std::get<2>(*last)));
+			data = new element(std::get<2>(*last));
 			break;
 		}
 
-		last = pop();
-		push(last);
-
-		return last;
+		push(data);
+		return data;
 	}
 	void list::move(element* element)
 	{
@@ -221,11 +220,8 @@ namespace app
 		if (virtual_length_ < 2)
 			throw std::bad_function_call();
 
-		element* first = pop();
-		element* second = pop();
-
-		push(first);
-		push(second);
+		std::vector<element*>::iterator last_iterator = vector_.begin() + virtual_length_ - 1;
+		std::iter_swap(last_iterator, last_iterator - 1);
 	}
 	std::size_t list::length() const
 	{
@@ -242,7 +238,7 @@ namespace app
 	}
 	void list::virtual_length(std::size_t new_virtual_length)
 	{
-		if (new_virtual_length > length())
+		if (new_virtual_length > vector_.size())
 			throw std::out_of_range("인수 new_virtual_length는 함숫값 length()보다 클 수 없습니다.");
 
 		virtual_length_ = new_virtual_length;
@@ -257,7 +253,7 @@ namespace app
 	}
 	element* queue::pop()
 	{
-		if (length() == 0)
+		if (queue_.size() == 0)
 		{
 			return nullptr;
 		}
@@ -277,7 +273,7 @@ namespace app
 	}
 	element* queue::copy()
 	{
-		if (length() == 0)
+		if (queue_.size() == 0)
 		{
 			return nullptr;
 		}
@@ -307,14 +303,10 @@ namespace app
 	}
 	void queue::swap()
 	{
-		if (length() < 2)
+		if (queue_.size() < 2)
 			throw std::bad_function_call();
 
-		element* first = pop();
-		element* second = pop();
-
-		queue_.push_front(first);
-		queue_.push_front(second);
+		std::iter_swap(queue_.begin(), queue_.begin() + 1);
 	}
 	std::size_t queue::length() const
 	{
