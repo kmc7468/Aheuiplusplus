@@ -2,7 +2,7 @@
 
 namespace app
 {
-	long long get_major(app::version version) noexcept
+	int get_major(app::version version) noexcept
 	{
 		switch (version)
 		{
@@ -10,15 +10,19 @@ namespace app
 		case app::version::v1_1:
 			return 1;
 
+		case app::version::v2_0:
+			return 2;
+
 		default:
 			return -1;
 		}
 	}
-	long long get_minor(app::version version) noexcept
+	int get_minor(app::version version) noexcept
 	{
 		switch (version)
 		{
 		case app::version::v1_0:
+		case app::version::v2_0:
 			return 0;
 
 		case app::version::v1_1:
@@ -28,18 +32,21 @@ namespace app
 			return -1;
 		}
 	}
-	version get_version(long long major) noexcept
+	version get_version(int major) noexcept
 	{
 		switch (major)
 		{
 		case 1:
-			return app::version::v1_1;
+			return version::v1_1;
+
+		case 2:
+			return version::v2_0;
 
 		default:
-			return app::version::none;
+			return version::none;
 		}
 	}
-	version get_version(long long major, long long minor) noexcept
+	version get_version(int major, int minor) noexcept
 	{
 		switch (major)
 		{
@@ -48,12 +55,35 @@ namespace app
 			switch (minor)
 			{
 			case 0:
-				return app::version::v1_1;
+				return version::v1_0;
+
+			case 1:
+				return version::v1_1;
+
+			default:
+				return version::none;
+			}
+		}
+
+		case 2:
+		{
+			switch (minor)
+			{
+			case 0:
+				return version::v2_0;
+
+			default:
+				return version::none;
 			}
 		}
 
 		default:
-			return app::version::none;
+			return version::none;
 		}
+	}
+
+	bool is_later(app::version lhs, app::version rhs) noexcept
+	{
+		return static_cast<long long>(lhs) <= static_cast<long long>(rhs);
 	}
 }

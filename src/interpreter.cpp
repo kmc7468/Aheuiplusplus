@@ -160,6 +160,7 @@ namespace app
 			{
 				std::size_t new_direction;
 				std::size_t new_move;
+				bool is_processed_direction = false;
 
 				char32_t chosung = get_chosung(command);
 				char32_t jungsung = get_jungsung(command);
@@ -287,11 +288,12 @@ namespace app
 				{
 					if (!(chosung == U'ㄲ' &&
 						(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
-							jongsung == U'ㅅ'))) // 예외 명령
+							jongsung == U'ㅅ' || jongsung == U'ㅆ'))) // 예외 명령
 					{
 						new_direction = direction;
 						new_move = move;
 
+						is_processed_direction = true;
 						is_added_additional_data = false;
 					}
 
@@ -299,11 +301,12 @@ namespace app
 					{
 						if ((chosung == U'ㄲ' &&
 							(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
-								jongsung == U'ㅅ')))
+								jongsung == U'ㅅ' || jongsung == U'ㅆ')))
 						{
 							new_direction = direction;
 							new_move = move;
 
+							is_processed_direction = true;
 							is_added_additional_data = false;
 						}
 					}
@@ -319,7 +322,7 @@ namespace app
 					
 					if (chosung == U'ㄱ' || chosung == U'ㅋ' || chosung == U'ㅉ' ||
 						(chosung == U'ㄲ' && !(jongsung == U'ㅁ' || jongsung == U'ㅂ' ||
-							jongsung == U'ㅄ' || jongsung == U'ㅅ')))
+							jongsung == U'ㅄ' || jongsung == U'ㅅ' || jongsung == U'ㅆ')))
 					{
 						chosung = U'ㅇ';
 					}
@@ -328,7 +331,7 @@ namespace app
 					{
 						if ((chosung == U'ㄲ' &&
 							(jongsung == U'ㅁ' || jongsung == U'ㅂ' || jongsung == U'ㅄ' ||
-								jongsung == U'ㅅ')))
+								jongsung == U'ㅅ' || jongsung == U'ㅆ')))
 						{
 							chosung = U'ㅇ';
 						}
@@ -418,7 +421,7 @@ namespace app
 					return 0;
 				}
 
-				if (version_ != version::v1_0)
+				if (version_ != version::v1_0 && !is_processed_direction)
 				{
 					switch (jungsung_org)
 					{
@@ -1080,10 +1083,6 @@ namespace app
 		return storages_;
 	}
 	
-	const std::vector<function*>& interpreter::functions() const noexcept
-	{
-		return functions_;
-	}
 	const std::vector<std::size_t>& interpreter::storage_indexs() const noexcept
 	{
 		return storage_indexs_;

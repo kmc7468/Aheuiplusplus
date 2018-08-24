@@ -3,51 +3,12 @@
 
 #include <cstdint>
 #include <cstdio>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
 namespace app
 {
-	bool is_little_endian();
-	template<typename Ty_>
-	std::uint8_t get_byte(const Ty_& data, int index)
-	{
-		if (index >= sizeof(Ty_))
-			throw std::invalid_argument("인수 index는 템플릿 인수 Ty_의 크기 미만이여야 합니다.");
-		
-		return *(reinterpret_cast<const std::uint8_t*>(&data) + index);
-	}
-	template<typename Ty_>
-	std::uint8_t get_byte_in_little_endian(const Ty_& data, int index)
-	{
-		if (index >= sizeof(Ty_))
-			throw std::invalid_argument("인수 index는 템플릿 인수 Ty_의 크기 미만이여야 합니다.");
-		
-		if (is_little_endian())
-		{
-			return *(reinterpret_cast<const std::uint8_t*>(&data) + index);
-		}
-		else
-		{
-			return *(reinterpret_cast<const std::uint8_t*>(&data) + ((sizeof(Ty_) - 1) - index));
-		}
-	}
-	template<typename Ty_>
-	std::uint8_t get_byte_in_big_endian(const Ty_& data, int index)
-	{
-		if (index >= sizeof(Ty_))
-			throw std::invalid_argument("인수 index는 템플릿 인수 Ty_의 크기 미만이여야 합니다.");
-
-		if (is_little_endian())
-		{
-			return *(reinterpret_cast<const std::uint8_t*>(&data) + ((sizeof(Ty_) - 1) - index));
-		}
-		else
-		{
-			return *(reinterpret_cast<const std::uint8_t*>(&data) + index);
-		}
-	}
-
 	namespace encoding
 	{
 		class utf8 final
