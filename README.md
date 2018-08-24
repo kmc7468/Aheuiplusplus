@@ -1,6 +1,8 @@
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://shields.io/) [![language](https://img.shields.io/badge/language-C%2B%2B17-blue.svg)](https://shields.io/)
 # 아희++
 아희와 호환성이 있는 난해한 객체지향 한글 프로그래밍 언어
+- 인터프리터 버전: 1.2.1
+- **이 브랜치에는 추가적인 커밋이 없을 예정입니다. [이곳](https://github.com/kmc7468/Aheuiplusplus)에서 최신 소스 코드를 확인하실 수 있습니다.**<br>
 ## 사용 방법
 아희++ 표준 구현체(이하 "인터프리터")는 작동 모드를 크게 인터프리팅 모드 및 일반 모드로 나눌 수 있습니다.
 ### 인터프리팅 모드
