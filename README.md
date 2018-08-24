@@ -1,6 +1,7 @@
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://shields.io/) [![language](https://img.shields.io/badge/language-C%2B%2B17-blue.svg)](https://shields.io/)
 # 아희++
 아희와 호환성이 있는 난해한 객체지향 한글 프로그래밍 언어
+- 인터프리터 버전: 2.0.0 (불안정한 버전)
 ## [레퍼런스](https://github.com/kmc7468/Aheuiplusplus/wiki)
 아희++의 표준안과 예제를 수록하고 있습니다. 표준안에 애매한 내용이나 질문이 있다면 이슈 등을 통해 알려주시면 감사하겠습니다.
 ## 컴파일
