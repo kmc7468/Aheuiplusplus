@@ -1,15 +1,14 @@
 ﻿#ifndef AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 #define AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 
-#define AHEUIPLUSPLUS_VERSION_STRING ("1.2.0")
+#define AHEUIPLUSPLUS_VERSION_STRING ("1.2.1")
 #define AHEUIPLUSPLUS_VERSION_PRE ("")
 #define AHEUIPLUSPLUS_VERSION (1)
 #define AHEUIPLUSPLUS_VERSION_MAJOR AHEUIPLUSPLUS_VERSION
 #define AHEUIPLUSPLUS_VERSION_MINOR (2)
-#define AHEUIPLUSPLUS_VERSION_PATCH (0)
+#define AHEUIPLUSPLUS_VERSION_PATCH (1)
 
 #include <Aheuiplusplus/code.hpp>
-#include <Aheuiplusplus/function.hpp>
 #include <Aheuiplusplus/storage.hpp>
 #include <Aheuiplusplus/version.hpp>
 
@@ -94,7 +93,6 @@ namespace app
 		const std::vector<std::vector<app::storage*>>& storages() const noexcept;
 		const std::vector<std::size_t>& storage_indexs() const noexcept;
 		std::size_t selected_index() const noexcept;
-		const std::vector<function*>& functions() const noexcept;
 
 		bool is_integer_mode() const noexcept;
 		bool is_compatible_with_aheui() const noexcept;
@@ -107,7 +105,6 @@ namespace app
 		std::vector<std::vector<app::storage*>> storages_;
 		std::vector<std::size_t> storage_indexs_;
 		std::size_t selected_index_ = 0;
-		std::vector<function*> functions_;
 
 		bool is_integer_mode_ = true;
 		bool is_compatible_with_aheui_ = true;

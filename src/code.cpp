@@ -266,19 +266,19 @@ namespace app
 
 		if (input.length() == 1)
 		{
-			return u8char_to_char32(input[0]);
+			return encoding::utf8::decode(input[0]);
 		}
 		else if (input.length() == 2)
 		{
-			return u8char_to_char32(input[0], input[1]);
+			return encoding::utf8::decode(input[0], input[1]);
 		}
 		else if (input.length() == 3)
 		{
-			return u8char_to_char32(input[0], input[1], input[2]);
+			return encoding::utf8::decode(input[0], input[1], input[2]);
 		}
 		else
 		{
-			return u8char_to_char32(input[0], input[1], input[2], input[3]);
+			return encoding::utf8::decode(input[0], input[1], input[2], input[3]);
 		}
 #endif
 	}
@@ -293,7 +293,7 @@ namespace app
 
 		_setmode(_fileno(output_stream), _O_TEXT);
 #else
-		std::string utf8 = char32_to_u8char(character);
+		std::string utf8 = encoding::utf8::encode(character);
 
 		write_u8char(output_stream, utf8);
 #endif
@@ -315,7 +315,7 @@ namespace app
 			std::ungetwc(converted[0], input_stream);
 		}
 #else
-		int length = get_u8char_length(character);
+		int length = encoding::utf8::encoded_length(character);
 
 		if (length == 1)
 		{
@@ -323,14 +323,14 @@ namespace app
 		}
 		else if (length == 2)
 		{
-			std::string converted = char32_to_u8char(character);
+			std::string converted = encoding::utf8::encode(character);
 
 			std::ungetc(converted[1], input_stream);
 			std::ungetc(converted[0], input_stream);
 		}
 		else if (length == 3)
 		{
-			std::string converted = char32_to_u8char(character);
+			std::string converted = encoding::utf8::encode(character);
 
 			std::ungetc(converted[2], input_stream);
 			std::ungetc(converted[1], input_stream);
@@ -338,7 +338,7 @@ namespace app
 		}
 		else
 		{
-			std::string converted = char32_to_u8char(character);
+			std::string converted = encoding::utf8::encode(character);
 
 			std::ungetc(converted[3], input_stream);
 			std::ungetc(converted[2], input_stream);
