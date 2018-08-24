@@ -2,6 +2,7 @@
 #define AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 
 #include <Aheuiplusplus/code.hpp>
+#include <Aheuiplusplus/cursor.hpp>
 
 namespace app
 {
@@ -15,6 +16,34 @@ namespace app
 	inline constexpr int version_major = AHEUIPLUSPLUS_VERSION_MAJOR;
 	inline constexpr int version_minor = AHEUIPLUSPLUS_VERSION_MINOR;
 	inline constexpr int version_patch = AHEUIPLUSPLUS_VERSION_PATCH;
+
+	class interpreter;
+
+	class interpreter_state
+	{
+		friend class interpreter;
+		
+	public:
+		interpreter_state() noexcept;
+		interpreter_state(const interpreter_state& state) noexcept;
+		~interpreter_state() = default;
+
+	public:
+		interpreter_state& operator=(const interpreter_state& state) noexcept;
+		bool operator==(const interpreter_state& state) const = delete;
+		bool operator!=(const interpreter_state& state) const = delete;
+
+	public:
+		void reset() noexcept;
+
+	public:
+		app::cursor cursor() const noexcept;
+		bool is_out_of_version() const noexcept;
+
+	private:
+		app::cursor cursor_;
+		bool is_out_of_version_;
+	};
 
 	class debugger;
 
@@ -40,12 +69,16 @@ namespace app
 		bool operator!=(const interpreter& interpreter) const = delete;
 
 	public:
+		void reset_state() noexcept;
+
+	public:
 		const app::code& code() const noexcept;
 		void code(const app::code& new_code);
 		void code(app::code&& new_code) noexcept;
 
 	private:
 		app::code code_;
+		interpreter_state state_;
 
 		debugger* const debugger_ = nullptr;
 	};
