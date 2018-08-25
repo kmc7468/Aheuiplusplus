@@ -348,6 +348,14 @@ namespace app
 	{
 		option_interpreting_mode_ = new_option_interpreting_mode;
 	}
+	version command_line::option_version() const noexcept
+	{
+		return option_version_;
+	}
+	void command_line::option_version(version new_option_version) noexcept
+	{
+		option_version_ = new_option_version;
+	}
 	bool command_line::option_utf8() const noexcept
 	{
 		return option_utf8_;

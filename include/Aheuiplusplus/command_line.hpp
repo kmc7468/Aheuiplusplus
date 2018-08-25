@@ -32,6 +32,8 @@ namespace app
 		void option_aheui(bool new_option_aheui) noexcept;
 		bool option_interpreting_mode() const noexcept;
 		void option_interpreting_mode(bool new_option_interpreting_mode) noexcept;
+		version option_version() const noexcept;
+		void option_version(version new_option_version) noexcept;
 		bool option_utf8() const noexcept;
 		void option_utf8(bool new_option_utf8) noexcept;
 		bool option_utf16() const noexcept;
