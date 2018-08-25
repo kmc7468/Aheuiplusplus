@@ -1,37 +1,66 @@
-﻿#ifndef AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
+#ifndef AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 #define AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 
-#define AHEUIPLUSPLUS_VERSION_STRING ("1.2.1")
-#define AHEUIPLUSPLUS_VERSION_PRE ("")
-#define AHEUIPLUSPLUS_VERSION (1)
-#define AHEUIPLUSPLUS_VERSION_MAJOR AHEUIPLUSPLUS_VERSION
-#define AHEUIPLUSPLUS_VERSION_MINOR (2)
-#define AHEUIPLUSPLUS_VERSION_PATCH (1)
-
 #include <Aheuiplusplus/code.hpp>
-#include <Aheuiplusplus/storage.hpp>
-#include <Aheuiplusplus/version.hpp>
-
-#include <memory>
-#include <vector>
+#include <Aheuiplusplus/cursor.hpp>
 
 namespace app
 {
-	class command_line;
+#define AHEUIPLUSPLUS_VERSION_STRING "2.0.0"
+#define AHEUIPLUSPLUS_VERSION 2
+#define AHEUIPLUSPLUS_VERSION_MAJOR AHEUIPLUSPLUS_VERSION
+#define AHEUIPLUSPLUS_VERSION_MINOR 0
+#define AHEUIPLUSPLUS_VERSION_PATCH 0
+
+	inline constexpr const char* version_string = AHEUIPLUSPLUS_VERSION_STRING;
+	inline constexpr int version_major = AHEUIPLUSPLUS_VERSION_MAJOR;
+	inline constexpr int version_minor = AHEUIPLUSPLUS_VERSION_MINOR;
+	inline constexpr int version_patch = AHEUIPLUSPLUS_VERSION_PATCH;
+
+	class interpreter;
+
+	class interpreter_state
+	{
+		friend class interpreter;
+		
+	public:
+		interpreter_state() noexcept;
+		interpreter_state(const interpreter_state& state) noexcept;
+		~interpreter_state() = default;
+
+	public:
+		interpreter_state& operator=(const interpreter_state& state) noexcept;
+		bool operator==(const interpreter_state& state) const = delete;
+		bool operator!=(const interpreter_state& state) const = delete;
+
+	public:
+		void reset() noexcept;
+
+	public:
+		app::cursor cursor() const noexcept;
+		bool is_out_of_version() const noexcept;
+
+	private:
+		app::cursor cursor_;
+		bool is_out_of_version_;
+	};
+
 	class debugger;
 
 	class interpreter final
 	{
-		friend class app::debugger;
-
+		friend class debugger;
+	
 	public:
-		interpreter();
-		interpreter(app::version version);
-		interpreter(std::FILE* input_stream, std::FILE* output_stream);
-		interpreter(std::FILE* input_stream, std::FILE* output_stream, app::version version);
+		interpreter() = default;
 		interpreter(const interpreter& interpreter) = delete;
 		interpreter(interpreter&& interpreter) noexcept = delete;
-		~interpreter();
+		~interpreter() = default;
+
+	private:
+		interpreter(debugger* debugger);
+		interpreter(debugger* debugger, const app::code& code);
+		interpreter(debugger* debugger, app::code&& code);
 
 	public:
 		interpreter& operator=(const interpreter& interpreter) = delete;
@@ -40,87 +69,18 @@ namespace app
 		bool operator!=(const interpreter& interpreter) const = delete;
 
 	public:
-		long long run(const raw_code& code);
-		long long run(const raw_code& code, const command_line& command_line);
-
-		const app::storage* storage(std::size_t index) const;
-		std::size_t storage_index(std::size_t index) const;
-
-	private:
-		void initialize_();
-
-		long long run_(const raw_code& code, const command_line& command_line,
-			std::size_t& x, std::size_t& y, std::size_t& direction,
-			std::size_t& move, bool& is_ignored, bool& is_reflection, char32_t& start_of_expression,
-			bool& is_out_of_version);
-
-		bool type_and_mode_(char32_t jongsung, bool is_added_additional_data, char32_t& start_of_expression,
-			std::size_t processed_command_without_expression, bool& is_out_of_version);
-
-		bool add_(char32_t jongsung, bool is_added_additional_data);
-		bool mul_(char32_t jongsung, bool is_added_additional_data);
-		bool sub_(char32_t jongsung, bool is_added_additional_data);
-		bool div_(char32_t jongsung, bool is_added_additional_data);
-		bool mod_(char32_t jongsung, bool is_added_additional_data);
-		
-		bool pop_(char32_t jongsung, bool is_added_additional_data);
-		bool push_(char32_t jongsung, bool is_added_additional_data);
-		bool copy_(char32_t jongsung, bool is_added_additional_data);
-		bool swap_(char32_t jongsung, bool is_added_additional_data);
-
-		bool change_storage_(char32_t jongsung, bool is_added_additional_data);
-		bool move_(char32_t jongsung, bool is_added_additional_data);
-		bool compare_(char32_t jongsung, bool is_added_additional_data);
-		bool is_zero_(char32_t jongsung, bool is_added_additional_data, bool& is_reflection);
-		bool expand_storage_(char32_t jongsung, bool is_added_additional_data);
-
-		long long exit_();
-
-		void go_(std::size_t& x, std::size_t& y, std::size_t move, std::size_t direction, app::code& splited_code);
-		long long get_integer_(char32_t jongsung, bool is_added_additional_data);
-		void type_casting_arithmetic_(element* left_operand, element* right_operand,
-			std::shared_ptr<element>& left_operand_out, std::shared_ptr<element>& right_operand_out) const;
-		void type_casting_compare_(element* left_operand, element* right_operand,
-			std::shared_ptr<element>& left_operand_out, std::shared_ptr<element>& right_operand_out) const;
-
-		void storage_backup_and_restore_();
-		void delete_storage_();
-
-		app::storage* storage_();
+		void reset_state() noexcept;
 
 	public:
-		app::version version() const noexcept;
-		const std::vector<std::vector<app::storage*>>& storages() const noexcept;
-		const std::vector<std::size_t>& storage_indexs() const noexcept;
-		std::size_t selected_index() const noexcept;
-
-		bool is_integer_mode() const noexcept;
-		bool is_compatible_with_aheui() const noexcept;
-
-		std::FILE* input_stream();
-		std::FILE* output_stream();
+		const app::code& code() const noexcept;
+		void code(const app::code& new_code);
+		void code(app::code&& new_code) noexcept;
 
 	private:
-		app::version version_ = app::version::latest;
-		std::vector<std::vector<app::storage*>> storages_;
-		std::vector<std::size_t> storage_indexs_;
-		std::size_t selected_index_ = 0;
+		app::code code_;
+		interpreter_state state_;
 
-		bool is_integer_mode_ = true;
-		bool is_compatible_with_aheui_ = true;
-
-		bool is_loud_mode_ = false;
-
-		std::FILE* input_stream_;
-		std::FILE* output_stream_;
-		app::debugger* debugger_ = nullptr;
-
-	public:
-		static constexpr const char* version_string = AHEUIPLUSPLUS_VERSION_STRING;
-		static constexpr const char* version_pre = AHEUIPLUSPLUS_VERSION_PRE;
-		static constexpr int version_major = AHEUIPLUSPLUS_VERSION_MAJOR;
-		static constexpr int version_minor = AHEUIPLUSPLUS_VERSION_MINOR;
-		static constexpr int version_patch = AHEUIPLUSPLUS_VERSION_PATCH;
+		debugger* const debugger_ = nullptr;
 	};
 }
 

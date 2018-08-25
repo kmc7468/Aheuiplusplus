@@ -1,4 +1,4 @@
-﻿#include <Aheuiplusplus/version.hpp>
+#include <Aheuiplusplus/version.hpp>
 
 namespace app
 {
@@ -37,10 +37,10 @@ namespace app
 		switch (major)
 		{
 		case 1:
-			return version::v1_1;
+			return version::latest_v1;
 
 		case 2:
-			return version::v2_0;
+			return version::latest_v2;
 
 		default:
 			return version::none;
@@ -51,7 +51,6 @@ namespace app
 		switch (major)
 		{
 		case 1:
-		{
 			switch (minor)
 			{
 			case 0:
@@ -63,10 +62,8 @@ namespace app
 			default:
 				return version::none;
 			}
-		}
 
 		case 2:
-		{
 			switch (minor)
 			{
 			case 0:
@@ -75,15 +72,26 @@ namespace app
 			default:
 				return version::none;
 			}
-		}
 
 		default:
 			return version::none;
 		}
 	}
 
-	bool is_later(app::version lhs, app::version rhs) noexcept
+	bool operator>(app::version lhs, app::version rhs) noexcept
 	{
-		return static_cast<long long>(lhs) <= static_cast<long long>(rhs);
+		return static_cast<int>(lhs) > static_cast<int>(rhs);
+	}
+	bool operator>=(app::version lhs, app::version rhs) noexcept
+	{
+		return static_cast<int>(lhs) >= static_cast<int>(rhs);
+	}
+	bool operator<(app::version lhs, app::version rhs) noexcept
+	{
+		return static_cast<int>(lhs) < static_cast<int>(rhs);
+	}
+	bool operator<=(app::version lhs, app::version rhs) noexcept
+	{
+		return static_cast<int>(lhs) <= static_cast<int>(rhs);
 	}
 }
