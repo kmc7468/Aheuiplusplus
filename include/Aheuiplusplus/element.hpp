@@ -2,6 +2,7 @@
 #define AHEUIPLUSPLUS_HEADER_ELEMENT_HPP
 
 #include <cstdint>
+#include <memory>
 #include <variant>
 #include <vector>
 
@@ -32,6 +33,7 @@ namespace app
 					>;
 
 	using element = std::variant<element_base, std::vector<element_base>>;
+	using element_ptr = std::shared_ptr<element>;
 
 	element_type get_element_type(const app::element_base& element) noexcept;
 	element_type get_element_type(const app::element& element) noexcept;
