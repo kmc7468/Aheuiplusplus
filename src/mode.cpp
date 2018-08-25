@@ -50,6 +50,14 @@ namespace app
 			   maximum_version_ != mode.maximum_version_;
 	}
 
+	void mode::reset() noexcept
+	{
+		is_integer_mode_ = true;
+		is_aheui_compatible_mode_ = true;
+		minimum_version_ = version::none;
+		maximum_version_ = version::latest;
+	}
+
 	bool mode::is_integer_mode() const noexcept
 	{
 		return is_integer_mode_;

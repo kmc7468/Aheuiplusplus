@@ -3,6 +3,7 @@
 
 #include <Aheuiplusplus/code.hpp>
 #include <Aheuiplusplus/cursor.hpp>
+#include <Aheuiplusplus/mode.hpp>
 
 namespace app
 {
@@ -17,10 +18,12 @@ namespace app
 	inline constexpr int version_minor = AHEUIPLUSPLUS_VERSION_MINOR;
 	inline constexpr int version_patch = AHEUIPLUSPLUS_VERSION_PATCH;
 
+	class debugger;
 	class interpreter;
 
 	class interpreter_state
 	{
+		friend class debugger;
 		friend class interpreter;
 		
 	public:
@@ -39,13 +42,13 @@ namespace app
 	public:
 		app::cursor cursor() const noexcept;
 		bool is_out_of_version() const noexcept;
+		app::mode mode() const noexcept;
 
 	private:
 		app::cursor cursor_;
 		bool is_out_of_version_;
+		app::mode mode_;
 	};
-
-	class debugger;
 
 	class interpreter final
 	{

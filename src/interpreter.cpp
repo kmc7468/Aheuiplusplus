@@ -28,6 +28,10 @@ namespace app
 		cursor_.y(0);
 		cursor_.direction(direction::down);
 		cursor_.speed(1);
+
+		is_out_of_version_ = false;
+
+		mode_.reset();
 	}
 
 	cursor interpreter_state::cursor() const noexcept
@@ -37,6 +41,10 @@ namespace app
 	bool interpreter_state::is_out_of_version() const noexcept
 	{
 		return is_out_of_version_;
+	}
+	app::mode interpreter_state::mode() const noexcept
+	{
+		return mode_;
 	}
 }
 

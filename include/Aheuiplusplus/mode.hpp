@@ -22,6 +22,9 @@ namespace app
 		bool operator!=(const mode& mode) const noexcept;
 
 	public:
+		void reset() noexcept;
+
+	public:
 		bool is_integer_mode() const noexcept;
 		void is_integer_mode(bool new_is_integer_mode) noexcept;
 		bool is_aheui_compatible_mode() const noexcept;
