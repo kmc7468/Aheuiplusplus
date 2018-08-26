@@ -1,6 +1,7 @@
 #include <Aheuiplusplus/storage.hpp>
 
 #include <algorithm>
+#include <stdexcept>
 #include <utility>
 
 namespace app
@@ -156,8 +157,11 @@ namespace app
 
 namespace app
 {
-	pipe::pipe(extension* extension)
+	pipe::pipe(extension* extension) noexcept
 		: extension_(extension)
+	{}
+	pipe::pipe(const pipe& pipe) noexcept
+		: extension_(pipe.extension_)
 	{}
 	pipe::pipe(pipe&& pipe) noexcept
 		: extension_(pipe.extension_)
@@ -165,6 +169,12 @@ namespace app
 		pipe.extension_ = nullptr;
 	}
 
+	pipe& pipe::operator=(const pipe& pipe) noexcept
+	{
+		extension_ = pipe.extension_;
+		
+		return *this;
+	}
 	pipe& pipe::operator=(pipe&& pipe) noexcept
 	{
 		extension_ = pipe.extension_;
@@ -214,5 +224,105 @@ namespace app
 	std::size_t pipe::size() const noexcept
 	{
 		return static_cast<std::size_t>(-1);
+	}
+}
+
+namespace app
+{
+	storages::storages()
+	{
+		for (std::size_t i = 0; i < 26; ++i) // List
+		{
+			std::vector<storage_ptr> lists;
+			lists.emplace_back(new list());
+
+			storages_.push_back(lists);
+		}
+
+		std::vector<storage_ptr> queues; // Queue
+		queues.emplace_back(new queue());
+
+		storages_.insert(storages_.begin() + 21, queues);
+
+		storages_.emplace_back(); // Pipe
+
+		for (std::size_t i = 0; i < 28; ++i)
+		{
+			storages_index_.push_back(0);
+		}
+	}
+	storages::storages(const storages& storages)
+		: storages_(storages.storages_), storages_index_(storages.storages_index_), selected_storage_(storages.selected_storage_)
+	{}
+	storages::storages(storages&& storages) noexcept
+		: storages_(std::move(storages.storages_)), storages_index_(std::move(storages.storages_index_)),
+		selected_storage_(storages.selected_storage_)
+	{
+		storages.selected_storage_ = 0;
+	}
+
+	storages& storages::operator=(const storages& storages)
+	{
+		storages_ = storages.storages_;
+		storages_index_ = storages.storages_index_;
+		selected_storage_ = storages.selected_storage_;
+
+		return *this;
+	}
+	storages& storages::operator=(storages&& storages) noexcept
+	{
+		storages_ = std::move(storages.storages_);
+		storages_index_ = std::move(storages.storages_index_);
+		selected_storage_ = storages.selected_storage_;
+
+		storages.selected_storage_ = 0;
+
+		return *this;
+	}
+
+	storage_ptr storages::get() const
+	{
+		return storages_[selected_storage_][storages_index_[selected_storage_]];
+	}
+
+	std::size_t storages::storage_max_index() const noexcept
+	{
+		return storages_[selected_storage_].size() - 1;
+	}
+	std::size_t storages::storage_index() const noexcept
+	{
+		return storages_index_[selected_storage_];
+	}
+	void storages::storage_index(std::size_t new_storage_index)
+	{
+		if (new_storage_index > storages_[selected_storage_].size())
+			throw std::out_of_range("인수 new_storage_index는 함숫값 app::storages::storage_max_index() const noexcept보다 1 큰 값 이하여야 합니다.");
+
+		if (new_storage_index == storages_[selected_storage_].size())
+		{
+			switch (storages_[selected_storage_][0]->type())
+			{
+			case storage_type::list:
+				storages_[selected_storage_].emplace_back(new list());
+				break;
+
+			case storage_type::queue:
+				storages_[selected_storage_].emplace_back(new queue());
+				break;
+
+			case storage_type::pipe:
+				storages_[selected_storage_].emplace_back(get());
+				break;
+			}
+		}
+
+		storages_index_[selected_storage_] = new_storage_index;
+	}
+	void storages::selected_storage(std::size_t new_selected_storage)
+	{
+		if (new_selected_storage >= 28)
+			throw std::out_of_range("인수 new_selected_storage는 28 미만이여야 합니다.");
+
+		selected_storage_ = new_selected_storage;
 	}
 }
