@@ -3,7 +3,9 @@
 
 #include <Aheuiplusplus/element.hpp>
 
+#include <map>
 #include <string>
+#include <vector>
 
 namespace app
 {
@@ -29,7 +31,28 @@ namespace app
 		virtual std::u32string description() const;
 
 		virtual element_ptr pop() = 0;
-		virtual void push(const element_ptr& value) = 0;
+		virtual element_ptr push(const element_ptr& value) = 0;
+
+		virtual void enabled();
+		virtual void disabled();
+	};
+
+	class extension_engine final
+	{
+	public:
+		extension_engine(const std::vector<std::string>& extensions);
+		extension_engine(const extension_engine& engine) = delete;
+		extension_engine(extension_engine&& engine) noexcept = delete;
+		~extension_engine();
+
+	public:
+		extension_engine& operator=(const extension_engine& engine) = delete;
+		extension_engine& operator=(extension_engine&& engine) noexcept = delete;
+		bool operator==(const extension_engine& engine) const = delete;
+		bool operator!=(const extension_engine& engine) const = delete;
+		
+	private:
+		std::map<void*, extension*> extensions_;
 	};
 }
 
