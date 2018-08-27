@@ -83,6 +83,11 @@ namespace app
 		return virtual_length_;
 	}
 
+	void list::clear()
+	{
+		list_.clear();
+	}
+
 	std::size_t list::physical_size() const noexcept
 	{
 		return list_.size();
@@ -152,6 +157,11 @@ namespace app
 	std::size_t queue::size() const noexcept
 	{
 		return deque_.size();
+	}
+
+	void queue::clear()
+	{
+		deque_.clear();
 	}
 }
 
@@ -225,6 +235,9 @@ namespace app
 	{
 		return static_cast<std::size_t>(-1);
 	}
+
+	void pipe::clear()
+	{}
 }
 
 namespace app
@@ -283,6 +296,18 @@ namespace app
 	storage_ptr storages::get() const
 	{
 		return storages_[selected_storage_][storages_index_[selected_storage_]];
+	}
+	void storages::reset()
+	{
+		for (std::vector<storage_ptr>& storages : storages_)
+		{
+			storage_ptr first = storages.front();
+			
+			storages.clear();
+			
+			first->clear();
+			storages.push_back(std::move(first));
+		}
 	}
 
 	std::size_t storages::storage_max_index() const noexcept

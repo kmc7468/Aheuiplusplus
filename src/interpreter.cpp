@@ -2,10 +2,46 @@
 
 #include <Aheuiplusplus/debugger.hpp>
 
+#include <stdexcept>
 #include <utility>
+
+#if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64)
+#	include <fcntl.h>
+#	include <io.h>
+#endif
 
 namespace app
 {
+	interpreter::interpreter()
+		: interpreter(stdin, stdout)
+	{}
+	interpreter::interpreter(std::FILE* input_stream, std::FILE* output_stream)
+		: input_stream_(input_stream), output_stream_(output_stream)
+	{
+#if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64)
+		input_stream_mode_ = _setmode(_fileno(input_stream), _O_U16TEXT);
+		output_stream_mode_ = _setmode(_fileno(output_stream), _O_U16TEXT);
+
+		if (input_stream_mode_ == -1)
+			throw std::runtime_error("인수 input_stream의 변환 모드를 변경하는데 실패했습니다.");
+		if (output_stream_mode_ == -1)
+			throw std::runtime_error("인수 output_stream의 변환 모드를 변경하는데 실패했습니다.");
+#endif
+	}
+	interpreter::~interpreter()
+	{
+#if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64)
+		if (input_stream_mode_ != -1)
+		{
+			_setmode(_fileno(input_stream_), input_stream_mode_);
+		}
+		if (output_stream_mode_ != -1)
+		{
+			_setmode(_fileno(output_stream_), output_stream_mode_);
+		}
+#endif
+	}
+
 	interpreter_state::interpreter_state() noexcept
 	{
 		reset();
@@ -63,6 +99,10 @@ namespace app
 	void interpreter::reset_state() noexcept
 	{
 		state_.reset();
+	}
+	void interpreter::reset_storages()
+	{
+		storages_.reset();
 	}
 
 	const app::code& interpreter::code() const noexcept

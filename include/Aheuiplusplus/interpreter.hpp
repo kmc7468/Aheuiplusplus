@@ -4,6 +4,9 @@
 #include <Aheuiplusplus/code.hpp>
 #include <Aheuiplusplus/cursor.hpp>
 #include <Aheuiplusplus/mode.hpp>
+#include <Aheuiplusplus/storage.hpp>
+
+#include <cstdio>
 
 namespace app
 {
@@ -55,10 +58,11 @@ namespace app
 		friend class debugger;
 	
 	public:
-		interpreter() = default;
+		interpreter();
+		interpreter(std::FILE* input_stream, std::FILE* output_stream);
 		interpreter(const interpreter& interpreter) = delete;
 		interpreter(interpreter&& interpreter) noexcept = delete;
-		~interpreter() = default;
+		~interpreter();
 
 	private:
 		interpreter(debugger* debugger);
@@ -73,6 +77,7 @@ namespace app
 
 	public:
 		void reset_state() noexcept;
+		void reset_storages();
 
 	public:
 		const app::code& code() const noexcept;
@@ -82,8 +87,14 @@ namespace app
 	private:
 		app::code code_;
 		interpreter_state state_;
+		storages storages_;
 
 		debugger* const debugger_ = nullptr;
+
+		std::FILE* input_stream_;
+		std::FILE* output_stream_;
+		int input_stream_mode_;
+		int output_stream_mode_;
 	};
 }
 

@@ -45,6 +45,8 @@ namespace app
 		virtual void swap() = 0;
 
 		virtual std::size_t size() const noexcept = 0;
+
+		virtual void clear() = 0;
 	};
 
 	using storage_ptr = std::shared_ptr<storage>;
@@ -74,6 +76,8 @@ namespace app
 		virtual void swap() override;
 
 		virtual std::size_t size() const noexcept override;
+
+		virtual void clear() override;
 		
 	public:
 		std::size_t physical_size() const noexcept;
@@ -109,6 +113,8 @@ namespace app
 
 		virtual std::size_t size() const noexcept override;
 
+		virtual void clear() override;
+
 	private:
 		std::deque<element_ptr> deque_;
 	};
@@ -139,6 +145,8 @@ namespace app
 
 		virtual std::size_t size() const noexcept override;
 
+		virtual void clear() override;
+
 	private:
 		extension* extension_;
 		element_ptr last_sent_value_ = nullptr;
@@ -160,6 +168,7 @@ namespace app
 
 	public:
 		storage_ptr get() const;
+		void reset();
 
 	public:
 		std::size_t storage_max_index() const noexcept;
