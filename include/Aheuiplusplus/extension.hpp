@@ -5,6 +5,7 @@
 
 #include <map>
 #include <string>
+#include <tuple>
 #include <vector>
 
 namespace app
@@ -35,6 +36,9 @@ namespace app
 
 		virtual void enabled();
 		virtual void disabled();
+
+	public:
+		std::tuple<int, int, int> target_version() const;
 	};
 
 	class extension_engine final

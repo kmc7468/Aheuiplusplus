@@ -1,5 +1,7 @@
 #include <Aheuiplusplus/extension.hpp>
 
+#include <Aheuiplusplus/interpreter.hpp>
+
 #include <algorithm>
 #include <cstdio>
 #include <stdexcept>
@@ -22,6 +24,11 @@ namespace app
 	{}
 	void extension::disabled()
 	{}
+
+	std::tuple<int, int, int> extension::target_version() const
+	{
+		return { version_major, version_minor, version_patch };
+	}
 }
 
 namespace app
