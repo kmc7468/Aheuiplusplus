@@ -15,7 +15,9 @@ namespace app
 	{
 		list,
 		queue,
+#ifdef AHEUIPLUSPLUS_USE_EXTENSION
 		pipe,
+#endif
 	};
 
 	class storage
@@ -119,6 +121,7 @@ namespace app
 		std::deque<element_ptr> deque_;
 	};
 
+#ifdef AHEUIPLUSPLUS_USE_EXTENSION
 	class pipe final : public storage
 	{
 	public:
@@ -151,6 +154,7 @@ namespace app
 		extension* extension_;
 		element_ptr last_sent_value_ = nullptr;
 	};
+#endif
 
 	class storages final
 	{

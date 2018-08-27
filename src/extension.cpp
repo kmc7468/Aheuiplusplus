@@ -1,4 +1,5 @@
-﻿#include <Aheuiplusplus/extension.hpp>
+﻿#ifdef AHEUIPLUSPLUS_USE_EXTENSION
+#include <Aheuiplusplus/extension.hpp>
 
 #include <Aheuiplusplus/interpreter.hpp>
 
@@ -117,3 +118,5 @@ namespace app
 		}
 	}
 }
+
+#endif

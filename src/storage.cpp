@@ -165,6 +165,7 @@ namespace app
 	}
 }
 
+#ifdef AHEUIPLUSPLUS_USE_EXTENSION
 namespace app
 {
 	pipe::pipe(extension* extension) noexcept
@@ -239,12 +240,21 @@ namespace app
 	void pipe::clear()
 	{}
 }
+#endif
 
 namespace app
 {
 	storages::storages()
 	{
-		for (std::size_t i = 0; i < 26; ++i) // List
+		static constexpr std::size_t list_count =
+#ifdef AHEUIPLUSPLUS_USE_EXTENSION
+			26
+#else
+			27
+#endif
+			;
+
+		for (std::size_t i = 0; i < list_count; ++i) // List
 		{
 			std::vector<storage_ptr> lists;
 			lists.emplace_back(new list());
@@ -257,12 +267,14 @@ namespace app
 
 		storages_.insert(storages_.begin() + 21, queues);
 
+#ifdef AHEUIPLUSPLUS_USE_EXTENSION
 		storages_.emplace_back(); // Pipe
 
 		for (std::size_t i = 0; i < 28; ++i)
 		{
 			storages_index_.push_back(0);
 		}
+#endif
 	}
 	storages::storages(const storages& storages)
 		: storages_(storages.storages_), storages_index_(storages.storages_index_), selected_storage_(storages.selected_storage_)
@@ -335,9 +347,11 @@ namespace app
 				storages_[selected_storage_].emplace_back(new queue());
 				break;
 
+#ifdef AHEUIPLUSPLUS_USE_EXTENSION
 			case storage_type::pipe:
 				storages_[selected_storage_].emplace_back(get());
 				break;
+#endif
 			}
 		}
 

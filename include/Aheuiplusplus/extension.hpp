@@ -1,5 +1,6 @@
 ﻿#ifndef AHEUIPLUSPLUS_HEADER_EXTENSION_HPP
 #define AHEUIPLUSPLUS_HEADER_EXTENSION_HPP
+#ifdef AHEUIPLUSPLUS_USE_EXTENSION
 
 #include <Aheuiplusplus/element.hpp>
 
@@ -60,4 +61,5 @@ namespace app
 	};
 }
 
+#endif
 #endif
