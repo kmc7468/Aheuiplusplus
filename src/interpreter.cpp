@@ -1,4 +1,4 @@
-#include <Aheuiplusplus/interpreter.hpp>
+ï»¿#include <Aheuiplusplus/interpreter.hpp>
 
 #include <Aheuiplusplus/debugger.hpp>
 
@@ -23,9 +23,9 @@ namespace app
 		output_stream_mode_ = _setmode(_fileno(output_stream), _O_U16TEXT);
 
 		if (input_stream_mode_ == -1)
-			throw std::runtime_error("ÀÎ¼ö input_streamÀÇ º¯È¯ ¸ğµå¸¦ º¯°æÇÏ´Âµ¥ ½ÇÆĞÇß½À´Ï´Ù.");
+			throw std::runtime_error("ì¸ìˆ˜ input_streamì˜ ë³€í™˜ ëª¨ë“œë¥¼ ë³€ê²½í•˜ëŠ”ë° ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 		if (output_stream_mode_ == -1)
-			throw std::runtime_error("ÀÎ¼ö output_streamÀÇ º¯È¯ ¸ğµå¸¦ º¯°æÇÏ´Âµ¥ ½ÇÆĞÇß½À´Ï´Ù.");
+			throw std::runtime_error("ì¸ìˆ˜ output_streamì˜ ë³€í™˜ ëª¨ë“œë¥¼ ë³€ê²½í•˜ëŠ”ë° ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 #endif
 	}
 	interpreter::~interpreter()

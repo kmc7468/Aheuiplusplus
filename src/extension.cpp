@@ -1,4 +1,4 @@
-#include <Aheuiplusplus/extension.hpp>
+ï»¿#include <Aheuiplusplus/extension.hpp>
 
 #include <Aheuiplusplus/interpreter.hpp>
 
@@ -42,7 +42,7 @@ namespace app
 #if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64)
 			HMODULE extension_module = LoadLibraryA(path.c_str());
 			if (!extension_module)
-				throw std::runtime_error("ÀÎ¼ö extensions Áß '" + path + "'¸¦ ¿©´Âµ¥ ½ÇÆĞÇß½À´Ï´Ù.");
+				throw std::runtime_error("ì¸ìˆ˜ extensions ì¤‘ '" + path + "'ë¥¼ ì—¬ëŠ”ë° ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 			
 			const std::map<void*, extension*>::iterator iter =
 				std::find_if(extensions_.begin(), extensions_.end(), [extension_module](const auto& data)
@@ -50,21 +50,21 @@ namespace app
 				return data.first == extension_module;
 			});
 			if (iter != extensions_.end())
-				throw std::runtime_error("ÀÎ¼ö extensions Áß '" + path + "'°¡ µÎ¹ø ÀÌ»ó µî·ÏµÇ¾ú½À´Ï´Ù.");
+				throw std::runtime_error("ì¸ìˆ˜ extensions ì¤‘ '" + path + "'ê°€ ë‘ë²ˆ ì´ìƒ ë“±ë¡ë˜ì—ˆìŠµë‹ˆë‹¤.");
 
 			allocate_function* allocate = reinterpret_cast<allocate_function*>(
 				GetProcAddress(extension_module, "allocate_extension"));
 			if (!allocate)
 			{
 				FreeLibrary(extension_module);
-				throw std::runtime_error("ÀÎ¼ö extensions Áß '" + path + "'´Â ¿Ã¹Ù¸¥ ¾ÆÈñ++ Ç¥ÁØ ÀÎÅÍÇÁ¸®ÅÍ È®ÀåÀÌ ¾Æ´Õ´Ï´Ù.");
+				throw std::runtime_error("ì¸ìˆ˜ extensions ì¤‘ '" + path + "'ëŠ” ì˜¬ë°”ë¥¸ ì•„í¬++ í‘œì¤€ ì¸í„°í”„ë¦¬í„° í™•ì¥ì´ ì•„ë‹™ë‹ˆë‹¤.");
 			}
 
 			extension* extension = reinterpret_cast<app::extension*>(allocate());
 			if (!extension)
 			{
 				FreeLibrary(extension_module);
-				throw std::runtime_error("ÀÎ¼ö extensions Áß '" + path + "'¸¦ µî·ÏÇÏ´Âµ¥ ½ÇÆĞÇß½À´Ï´Ù.");
+				throw std::runtime_error("ì¸ìˆ˜ extensions ì¤‘ '" + path + "'ë¥¼ ë“±ë¡í•˜ëŠ”ë° ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 			}
 
 			extensions_[extension_module] = extension;
@@ -72,7 +72,7 @@ namespace app
 #else
 			void* extension_module = dlopen(path.c_str(), RTLD_LAZY);
 			if (!extension_module)
-				throw std::runtime_error("ÀÎ¼ö extensions Áß '" + path + "'¸¦ ¿©´Âµ¥ ½ÇÆĞÇß½À´Ï´Ù.");
+				throw std::runtime_error("ì¸ìˆ˜ extensions ì¤‘ '" + path + "'ë¥¼ ì—¬ëŠ”ë° ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 
 			const std::map<void*, extension*>::iterator iter =
 				std::find_if(extensions_.begin(), extensions_.end(), [extension_module](const auto& data)
@@ -80,21 +80,21 @@ namespace app
 				return data.first == extension_module;
 			});
 			if (iter != extensions_.end())
-				throw std::runtime_error("ÀÎ¼ö extensions Áß '" + path + "'°¡ µÎ¹ø ÀÌ»ó µî·ÏµÇ¾ú½À´Ï´Ù.");
+				throw std::runtime_error("ì¸ìˆ˜ extensions ì¤‘ '" + path + "'ê°€ ë‘ë²ˆ ì´ìƒ ë“±ë¡ë˜ì—ˆìŠµë‹ˆë‹¤.");
 
 			allocate_function* allocate = reinterpret_cast<allocate_function*>(
 				dlsym(extension_module, "allocate_extension"));
 			if (!allocate)
 			{
 				dlclose(extension_module);
-				throw std::runtime_error("ÀÎ¼ö extensions Áß '" + path + "'´Â ¿Ã¹Ù¸¥ ¾ÆÈñ++ Ç¥ÁØ ÀÎÅÍÇÁ¸®ÅÍ È®ÀåÀÌ ¾Æ´Õ´Ï´Ù.");
+				throw std::runtime_error("ì¸ìˆ˜ extensions ì¤‘ '" + path + "'ëŠ” ì˜¬ë°”ë¥¸ ì•„í¬++ í‘œì¤€ ì¸í„°í”„ë¦¬í„° í™•ì¥ì´ ì•„ë‹™ë‹ˆë‹¤.");
 			}
 
 			extension* extension = reinterpret_cast<app::extension*>(allocate());
 			if (!extension)
 			{
 				dlclose(extension_module);
-				throw std::runtime_error("ÀÎ¼ö extensions Áß '" + path + "'¸¦ µî·ÏÇÏ´Âµ¥ ½ÇÆĞÇß½À´Ï´Ù.");
+				throw std::runtime_error("ì¸ìˆ˜ extensions ì¤‘ '" + path + "'ë¥¼ ë“±ë¡í•˜ëŠ”ë° ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 			}
 
 			extensions_[extension_module] = extension;

@@ -1,4 +1,4 @@
-#ifndef AHEUIPLUSPLUS_HEADER_MODE_HPP
+﻿#ifndef AHEUIPLUSPLUS_HEADER_MODE_HPP
 #define AHEUIPLUSPLUS_HEADER_MODE_HPP
 
 #include <Aheuiplusplus/version.hpp>

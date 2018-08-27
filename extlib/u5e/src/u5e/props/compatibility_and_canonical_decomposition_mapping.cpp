@@ -1,4 +1,4 @@
-#include <u5e/props/compatibility_and_canonical_decomposition_mapping.hpp>
+﻿#include <u5e/props/compatibility_and_canonical_decomposition_mapping.hpp>
 #include <initializer_list>
 #include <iterator>
 #include <cstdint>

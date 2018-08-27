@@ -1,4 +1,4 @@
-#include <Aheuiplusplus/storage.hpp>
+ï»¿#include <Aheuiplusplus/storage.hpp>
 
 #include <algorithm>
 #include <stdexcept>
@@ -321,7 +321,7 @@ namespace app
 	void storages::storage_index(std::size_t new_storage_index)
 	{
 		if (new_storage_index > storages_[selected_storage_].size())
-			throw std::out_of_range("ÀÎ¼ö new_storage_index´Â ÇÔ¼ı°ª app::storages::storage_max_index() const noexceptº¸´Ù 1 Å« °ª ÀÌÇÏ¿©¾ß ÇÕ´Ï´Ù.");
+			throw std::out_of_range("ì¸ìˆ˜ new_storage_indexëŠ” í•¨ìˆ«ê°’ app::storages::storage_max_index() const noexceptë³´ë‹¤ 1 í° ê°’ ì´í•˜ì—¬ì•¼ í•©ë‹ˆë‹¤.");
 
 		if (new_storage_index == storages_[selected_storage_].size())
 		{
@@ -346,7 +346,7 @@ namespace app
 	void storages::selected_storage(std::size_t new_selected_storage)
 	{
 		if (new_selected_storage >= 28)
-			throw std::out_of_range("ÀÎ¼ö new_selected_storage´Â 28 ¹Ì¸¸ÀÌ¿©¾ß ÇÕ´Ï´Ù.");
+			throw std::out_of_range("ì¸ìˆ˜ new_selected_storageëŠ” 28 ë¯¸ë§Œì´ì—¬ì•¼ í•©ë‹ˆë‹¤.");
 
 		selected_storage_ = new_selected_storage;
 	}

@@ -1,4 +1,4 @@
-// Copyright 2006-2016 Nemanja Trifunovic
+﻿// Copyright 2006-2016 Nemanja Trifunovic
 
 /*
 Permission is hereby granted, free of charge, to any person or organization

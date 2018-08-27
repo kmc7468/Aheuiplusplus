@@ -1,4 +1,4 @@
-{ 0, 9, grapheme_cluster_break::prop_value_type::CONTROL },
+﻿{ 0, 9, grapheme_cluster_break::prop_value_type::CONTROL },
 { 10, 10, grapheme_cluster_break::prop_value_type::LF },
 { 11, 12, grapheme_cluster_break::prop_value_type::CONTROL },
 { 13, 13, grapheme_cluster_break::prop_value_type::CR },

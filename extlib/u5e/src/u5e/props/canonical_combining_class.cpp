@@ -1,4 +1,4 @@
-#include <u5e/props/canonical_combining_class.hpp>
+﻿#include <u5e/props/canonical_combining_class.hpp>
 #include <initializer_list>
 #include <array>
 #include <iterator>
