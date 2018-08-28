@@ -2,6 +2,7 @@
 #define AHEUIPLUSPLUS_HEADER_INTERPRETER_HPP
 
 #include <Aheuiplusplus/code.hpp>
+#include <Aheuiplusplus/command_line.hpp>
 #include <Aheuiplusplus/cursor.hpp>
 #include <Aheuiplusplus/mode.hpp>
 #include <Aheuiplusplus/storage.hpp>
@@ -58,8 +59,8 @@ namespace app
 		friend class debugger;
 	
 	public:
-		interpreter();
-		interpreter(std::FILE* input_stream, std::FILE* output_stream);
+		interpreter(const command_line& command_line);
+		interpreter(std::FILE* input_stream, std::FILE* output_stream, const command_line& command_line);
 		interpreter(const interpreter& interpreter) = delete;
 		interpreter(interpreter&& interpreter) noexcept = delete;
 		~interpreter();
@@ -88,6 +89,7 @@ namespace app
 		app::code code_;
 		interpreter_state state_;
 		storages storages_;
+		version version_;
 
 		debugger* const debugger_ = nullptr;
 

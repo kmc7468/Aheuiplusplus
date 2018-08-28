@@ -12,36 +12,6 @@
 
 namespace app
 {
-	interpreter::interpreter()
-		: interpreter(stdin, stdout)
-	{}
-	interpreter::interpreter(std::FILE* input_stream, std::FILE* output_stream)
-		: input_stream_(input_stream), output_stream_(output_stream)
-	{
-#if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64)
-		input_stream_mode_ = _setmode(_fileno(input_stream), _O_U16TEXT);
-		output_stream_mode_ = _setmode(_fileno(output_stream), _O_U16TEXT);
-
-		if (input_stream_mode_ == -1)
-			throw std::runtime_error("인수 input_stream의 변환 모드를 변경하는데 실패했습니다.");
-		if (output_stream_mode_ == -1)
-			throw std::runtime_error("인수 output_stream의 변환 모드를 변경하는데 실패했습니다.");
-#endif
-	}
-	interpreter::~interpreter()
-	{
-#if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64)
-		if (input_stream_mode_ != -1)
-		{
-			_setmode(_fileno(input_stream_), input_stream_mode_);
-		}
-		if (output_stream_mode_ != -1)
-		{
-			_setmode(_fileno(output_stream_), output_stream_mode_);
-		}
-#endif
-	}
-
 	interpreter_state::interpreter_state() noexcept
 	{
 		reset();
@@ -86,6 +56,41 @@ namespace app
 
 namespace app
 {
+	interpreter::interpreter(const command_line& command_line)
+		: interpreter(stdin, stdout, command_line)
+	{}
+	interpreter::interpreter(std::FILE* input_stream, std::FILE* output_stream, const command_line& command_line)
+		: input_stream_(input_stream), output_stream_(output_stream)
+	{
+#if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64)
+		input_stream_mode_ = _setmode(_fileno(input_stream), _O_U16TEXT);
+		output_stream_mode_ = _setmode(_fileno(output_stream), _O_U16TEXT);
+
+		if (input_stream_mode_ == -1)
+			throw std::runtime_error("인수 input_stream의 변환 모드를 변경하는데 실패했습니다.");
+		if (output_stream_mode_ == -1)
+			throw std::runtime_error("인수 output_stream의 변환 모드를 변경하는데 실패했습니다.");
+#endif
+
+		version_ = command_line.option_version();
+
+		if (version_ == version::none)
+			throw std::invalid_argument("인수 command_line이 올바르지 않은 값을 갖고 있습니다. (필드 option_version)");
+	}
+	interpreter::~interpreter()
+	{
+#if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64)
+		if (input_stream_mode_ != -1)
+		{
+			_setmode(_fileno(input_stream_), input_stream_mode_);
+		}
+		if (output_stream_mode_ != -1)
+		{
+			_setmode(_fileno(output_stream_), output_stream_mode_);
+		}
+#endif
+	}
+
 	interpreter::interpreter(debugger* debugger)
 		: debugger_(debugger)
 	{}
