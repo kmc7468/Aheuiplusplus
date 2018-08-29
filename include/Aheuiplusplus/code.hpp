@@ -112,6 +112,22 @@ namespace app
 		{
 			return at(location.x(), location.y());
 		}
+		const std::vector<grapheme>& at(std::size_t y) const
+		{
+			return codes_grapheme_.at(y);
+		}
+		const std::vector<grapheme>& line(std::size_t y) const
+		{
+			return at(y);
+		}
+		const std::vector<grapheme>& line(const point& location) const
+		{
+			return at(location.y());
+		}
+		const std::vector<grapheme>& line(const cursor& location) const
+		{
+			return at(location.y());
+		}
 
 	private:
 		void parse_codes_(const String_& codes)
