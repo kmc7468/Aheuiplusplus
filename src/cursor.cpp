@@ -29,17 +29,17 @@ namespace app
 	{
 		return x_;
 	}
-	void point::x(std::size_t new_x) noexcept
+	std::size_t& point::x() noexcept
 	{
-		x_ = new_x;
+		return x_;
 	}
 	std::size_t point::y() const noexcept
 	{
 		return y_;
 	}
-	void point::y(std::size_t new_y) noexcept
+	std::size_t& point::y() noexcept
 	{
-		y_ = new_y;
+		return y_;
 	}
 }
 
@@ -72,32 +72,32 @@ namespace app
 	{
 		return point_.x();
 	}
-	void cursor::x(std::size_t new_x) noexcept
+	std::size_t& cursor::x() noexcept
 	{
-		point_.x(new_x);
+		return point_.x();
 	}
 	std::size_t cursor::y() const noexcept
 	{
 		return point_.y();
 	}
-	void cursor::y(std::size_t new_y) noexcept
+	std::size_t& cursor::y() noexcept
 	{
-		point_.y(new_y);
+		return point_.y();
 	}
 	direction cursor::direction() const noexcept
 	{
 		return direction_;
 	}
-	void cursor::direction(app::direction new_direction) noexcept
+	direction& cursor::direction() noexcept
 	{
-		direction_ = new_direction;
+		return direction_;
 	}
 	std::size_t cursor::speed() const noexcept
 	{
 		return speed_;
 	}
-	void cursor::speed(std::size_t new_speed) noexcept
+	std::size_t& cursor::speed() noexcept
 	{
-		speed_ = new_speed;
+		return speed_;
 	}
 }

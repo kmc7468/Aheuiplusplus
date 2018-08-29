@@ -30,10 +30,10 @@ namespace app
 
 	void interpreter_state::reset() noexcept
 	{
-		cursor_.x(0);
-		cursor_.y(0);
-		cursor_.direction(direction::down);
-		cursor_.speed(1);
+		cursor_.x() = 0;
+		cursor_.y() = 0;
+		cursor_.direction() = direction::down;
+		cursor_.speed() = 1;
 
 		is_out_of_version_ = false;
 

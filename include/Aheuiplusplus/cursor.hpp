@@ -28,9 +28,9 @@ namespace app
 
 	public:
 		std::size_t x() const noexcept;
-		void x(std::size_t new_x) noexcept;
+		std::size_t& x() noexcept;
 		std::size_t y() const noexcept;
-		void y(std::size_t new_y) noexcept;
+		std::size_t& y() noexcept;
 
 	private:
 		std::size_t x_ = 0;
@@ -51,13 +51,13 @@ namespace app
 
 	public:
 		std::size_t x() const noexcept;
-		void x(std::size_t new_x) noexcept;
+		std::size_t& x() noexcept;
 		std::size_t y() const noexcept;
-		void y(std::size_t new_y) noexcept;
+		std::size_t& y() noexcept;
 		app::direction direction() const noexcept;
-		void direction(app::direction new_direction) noexcept;
+		app::direction& direction() noexcept;
 		std::size_t speed() const noexcept;
-		void speed(std::size_t new_speed) noexcept;
+		std::size_t& speed() noexcept;
 
 	private:
 		app::point point_;
