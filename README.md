@@ -35,6 +35,7 @@ $ make
 - `COMPILE_TARGET`:<br>
 아희++ 표준 인터프리터를 실행 파일의 형태로 컴파일 할지, 정적 라이브러리의 형태로 컴파일 할지 설정하는 옵션입니다.
 	- 값은 `Executable`, `Library` 중 하나이며, 대소문자는 구분되지 않습니다. 전자는 실행 파일, 후자는 정적 라이브러리의 형태를 의미합니다.
+	- `Executable`은 `E`와 `Exe`로 축약할 수 있으며, `Library`는 `L`과 `Lib`로 축약할 수 있습니다. 축약형 역시 대소문자는 구분되지 않습니다.
 ## 예제
 더 많은 예제는 레퍼런스에서 확인하실 수 있습니다.
 ### [개발자 수다방](https://gist.github.com/RanolP/6ecb4b1030fccad19dc05f3716d6c2c7) by [RanolP](https://gist.github.com/RanolP)
@@ -52,6 +53,8 @@ $ make
 - [u5e](https://github.com/ruoso/u5e)의 커밋 [3b970d5](https://github.com/ruoso/u5e/tree/3b970d5bc251fdef341d039d66c84ec5eaf4cb6a) - 2-clause BSD license
 	- include/u5e/basic_grapheme_iterator.hpp 파일의 159번 줄 및 170번 줄이 수정되었습니다. (커밋 [abca129](https://github.com/kmc7468/Aheuiplusplus/commit/abca1292fe6c421d835516e00b33d62ae5710200))
 - [UTF8-CPP](https://github.com/nemtrif/utfcpp) 2.3.5
+## 이런 프로젝트는 어떠세요?
+- [TemplatedAH](https://github.com/kmc7468/TemplatedAH) - 템플릿 메타 프로그래밍을 이용한 아희 인터프리터
 ## 라이선스
 아희++ 표준 인터프리터의 모든 소스 코드는 MIT 라이선스가 적용됩니다. 단, 외부 라이브러리에는 적용되지 않습니다.
 ```
