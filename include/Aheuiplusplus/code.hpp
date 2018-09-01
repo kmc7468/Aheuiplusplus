@@ -131,6 +131,25 @@ namespace app
 			return at(location.y());
 		}
 
+		std::size_t width(std::size_t y) const
+		{
+			return at(y).size();
+		}
+		std::size_t height(std::size_t x) const
+		{
+			for (std::size_t i = codes_grapheme_.size() - 1; i >= 0; --i)
+			{
+				if (at(i).size() > x)
+				{
+					return i + 1;
+				}
+				else if (i == 0)
+				{
+					return 0;
+				}
+			}
+		}
+
 	private:
 		void parse_codes_(const String_& codes)
 		{
