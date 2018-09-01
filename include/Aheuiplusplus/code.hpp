@@ -55,13 +55,15 @@ namespace app
 		{
 			parse_codes_(codes);
 		}
-		template<typename CodeOrg_, typename = typename std::enable_if<
-			details::is_basic_string<typename CodeOrg_::string_type>::value &&
-			details::is_basic_string_view<String_>::value
+		template<typename Code_, typename = typename std::enable_if<
+			(details::is_basic_string<typename Code_::string_type>::value &&
+			details::is_basic_string_view<String_>::value) ||
+			(details::is_basic_string_view<typename Code_::string_type>::value &&
+			details::is_basic_string<String_>::value)
 		>::type>
-		basic_code(const CodeOrg_& code)
+		basic_code(const Code_& code)
 		{
-			make_view_(code);
+			make_from_code_(code);
 		}
 		basic_code(const basic_code& code)
 			: codes_(code.codes_)
@@ -176,11 +178,8 @@ namespace app
 				}
 			}
 		}
-		template<typename CodeOrg_, typename = typename std::enable_if<
-			details::is_basic_string<typename CodeOrg_::string_type>::value &&
-			details::is_basic_string_view<String_>::value
-		>::type>
-		void make_view_(const CodeOrg_& code)
+		template<typename Code_>
+		void make_from_code_(const Code_& code)
 		{
 			clear();
 
