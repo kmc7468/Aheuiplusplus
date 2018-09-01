@@ -17,21 +17,21 @@ namespace app
 
 	class storages;
 
-	class function
+	class function_info
 	{
 	public:
-		function(const function& function) = delete;
-		function(function&& function) noexcept = delete;
-		virtual ~function() = default;
+		function_info(const function_info& function) = delete;
+		function_info(function_info&& function) noexcept = delete;
+		virtual ~function_info() = default;
 
 	protected:
-		function() = default;
+		function_info() = default;
 
 	public:
-		function& operator=(const function& function) = delete;
-		function& operator=(function&& function) noexcept = delete;
-		bool operator==(const function& function) const = delete;
-		bool operator!=(const function& function) const = delete;
+		function_info& operator=(const function_info& function) = delete;
+		function_info& operator=(function_info&& function) noexcept = delete;
+		bool operator==(const function_info& function) const = delete;
+		bool operator!=(const function_info& function) const = delete;
 
 	public:
 		virtual code name() const = 0;
@@ -39,9 +39,9 @@ namespace app
 		virtual void call(storages& storages) = 0;
 	};
 
-	using function_ptr = std::shared_ptr<function>;
+	using function_ptr = std::shared_ptr<function_info>;
 
-	class named_function final : public function
+	class named_function final : public function_info
 	{
 	public:
 		named_function(const code_view& name, const code_view& code);
@@ -68,7 +68,7 @@ namespace app
 		code code_;
 	};
 
-	class unnamed_function final : public function
+	class unnamed_function final : public function_info
 	{
 	public:
 		explicit unnamed_function(const code_view& code);
@@ -94,7 +94,7 @@ namespace app
 
 	using native_function_object = std::function<void(storages&)>;
 
-	class native_function final : public function
+	class native_function final : public function_info
 	{
 	public:
 		native_function(const code_view& name, const native_function_object& function);
