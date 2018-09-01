@@ -2,7 +2,6 @@
 #define AHEUIPLUSPLUS_HEADER_FUNCTION_HPP
 
 #include <Aheuiplusplus/code.hpp>
-#include <Aheuiplusplus/storage.hpp>
 
 #include <functional>
 #include <memory>
@@ -15,6 +14,8 @@ namespace app
 		unnamed_function,
 		native_function,
 	};
+
+	class storages;
 
 	class function
 	{

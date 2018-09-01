@@ -1,6 +1,8 @@
 ﻿#ifndef AHEUIPLUSPLUS_HEADER_ELEMENT_HPP
 #define AHEUIPLUSPLUS_HEADER_ELEMENT_HPP
 
+#include <Aheuiplusplus/function.hpp>
+
 #include <cstdint>
 #include <memory>
 #include <variant>
@@ -28,8 +30,10 @@ namespace app
 
 	using element_base =
 		std::variant<std::variant<long long, double>,	// number
-					 std::uintptr_t						// pointer
-					 // TODO: instance, function, type
+					 std::uintptr_t,					// pointer
+					 // TODO: instance
+					 function_ptr						// function
+					 // TODO: type
 					>;
 
 	using element = std::variant<element_base, std::vector<element_base>>;

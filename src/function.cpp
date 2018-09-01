@@ -1,5 +1,7 @@
 ﻿#include <Aheuiplusplus/function.hpp>
 
+#include <Aheuiplusplus/storage.hpp>
+
 #include <utility>
 
 namespace app
