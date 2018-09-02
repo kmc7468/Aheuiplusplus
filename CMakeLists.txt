@@ -28,6 +28,9 @@ endif(${COMPILE_TARGET} STREQUAL "e" OR ${COMPILE_TARGET} STREQUAL "exe")
 ## USE_EXTENSION
 set(USE_EXTENSION ON CACHE BOOL "아희++ 표준 인터프리터 확장을 사용할 지 설정합니다.")
 
+## PRINT_BENCHMARK
+set(PRINT_BENCHMARK OFF CACHE BOOL "아희++ 표준 인터프리터의 성능을 출력할 지 설정합니다.")
+
 # Searching files
 ## Header files
 include_directories(${INCLUDE_DIR})
@@ -54,6 +57,10 @@ endif(${COMPILE_TARGET} STREQUAL "executable")
 if(${USE_EXTENSION})
 	add_definitions(-DAHEUIPLUSPLUS_USE_EXTENSION)
 endif(${USE_EXTENSION})
+
+if(${PRINT_BENCHMARK})
+	add_definitions(-DAHEUIPLUSPLUS_PRINT_BENCHMARK)
+endif(${PRINT_BENCHMARK})
 
 # Installation
 if(${COMPILE_TARGET} STREQUAL "executable")
