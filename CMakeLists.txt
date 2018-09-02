@@ -15,7 +15,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR})
 
 # Cache
 ## COMPILE_TARGET
-set(COMPILE_TARGET "Executable" CACHE STRING "아희++을 어떤 형태로 컴파일 할 지 설정합니다.")
+set(COMPILE_TARGET "Executable" CACHE STRING "아희++을 어떤 형태로 컴파일 할지 설정합니다.")
 set_property(CACHE COMPILE_TARGET PROPERTY STRINGS "Executable" "Library")
 string(TOLOWER ${COMPILE_TARGET} COMPILE_TARGET)
 
@@ -26,10 +26,10 @@ elseif(${COMPILE_TARGET} STREQUAL "l" OR ${COMPILE_TARGET} STREQUAL "lib")
 endif(${COMPILE_TARGET} STREQUAL "e" OR ${COMPILE_TARGET} STREQUAL "exe")
 
 ## USE_EXTENSION
-set(USE_EXTENSION ON CACHE BOOL "아희++ 표준 인터프리터 확장을 사용할 지 설정합니다.")
+set(USE_EXTENSION ON CACHE BOOL "아희++ 표준 인터프리터 확장을 사용할지 설정합니다.")
 
 ## PRINT_BENCHMARK
-set(PRINT_BENCHMARK OFF CACHE BOOL "아희++ 표준 인터프리터의 성능을 출력할 지 설정합니다.")
+set(PRINT_BENCHMARK OFF CACHE BOOL "아희++ 표준 인터프리터의 성능을 출력할지 설정합니다.")
 
 # Searching files
 ## Header files

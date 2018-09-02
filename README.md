@@ -36,6 +36,10 @@ $ make
 아희++ 표준 인터프리터를 실행 파일의 형태로 컴파일 할지, 정적 라이브러리의 형태로 컴파일 할지 설정하는 옵션입니다.
 	- 값은 `Executable`, `Library` 중 하나이며, 대소문자는 구분되지 않습니다. 전자는 실행 파일, 후자는 정적 라이브러리의 형태를 의미합니다.
 	- `Executable`은 `E`와 `Exe`로 축약할 수 있으며, `Library`는 `L`과 `Lib`로 축약할 수 있습니다. 축약형 역시 대소문자는 구분되지 않습니다.
+- `USE_EXTENSION`:<br>
+아희++ 표준 인터프리터 확장을 사용할지 설정하는 옵션합니다.
+- `PRINT_BENCHMARK`:<br>
+아희++ 표준 인터프리터의 성능을 출력할지 설정하는 옵션입니다.
 ## 예제
 더 많은 예제는 레퍼런스에서 확인하실 수 있습니다.
 ### [개발자 수다방](https://gist.github.com/RanolP/6ecb4b1030fccad19dc05f3716d6c2c7) by [RanolP](https://gist.github.com/RanolP)
