@@ -1,4 +1,5 @@
-﻿#include <Aheuiplusplus/Aheuiplusplus.hpp>
+﻿#if AHEUIPLUSPLUS_TARGET == 1
+#include <Aheuiplusplus/Aheuiplusplus.hpp>
 
 #include <cstdlib>
 
@@ -12,3 +13,5 @@ int main(int argc, char** argv)
 
 	return EXIT_SUCCESS;
 }
+
+#endif

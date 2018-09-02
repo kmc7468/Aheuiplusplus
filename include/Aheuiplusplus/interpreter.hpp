@@ -8,7 +8,8 @@
 #include <Aheuiplusplus/namespace.hpp>
 #include <Aheuiplusplus/storage.hpp>
 
-#include <cstdio>
+#include <istream>
+#include <ostream>
 #include <vector>
 
 namespace app
@@ -62,15 +63,14 @@ namespace app
 	
 	public:
 		interpreter(const command_line& command_line);
-		interpreter(std::FILE* input_stream, std::FILE* output_stream, const command_line& command_line);
+		interpreter(std::istream& input_stream, std::ostream& output_stream, const command_line& command_line);
 		interpreter(const interpreter& interpreter) = delete;
 		interpreter(interpreter&& interpreter) noexcept = delete;
-		~interpreter();
+		~interpreter() = default;
 
 	private:
-		interpreter(debugger* debugger);
-		interpreter(debugger* debugger, const app::code& code);
-		interpreter(debugger* debugger, app::code&& code);
+		interpreter(debugger* debugger, const command_line& command_line);
+		interpreter(debugger* debugger, std::istream& input_stream, std::ostream& output_stream, const command_line& command_line);
 
 	public:
 		interpreter& operator=(const interpreter& interpreter) = delete;
@@ -84,8 +84,11 @@ namespace app
 
 	public:
 		const app::code& code() const noexcept;
-		void code(const app::code& new_code);
+		void code(const app::code_view& new_code);
 		void code(app::code&& new_code) noexcept;
+
+		const std::vector<namespace_ptr>& namespaces() const noexcept;
+		std::vector<namespace_ptr>& namespaces() noexcept;
 
 	private:
 		app::code code_;
@@ -95,8 +98,8 @@ namespace app
 
 		debugger* const debugger_ = nullptr;
 
-		std::FILE* input_stream_;
-		std::FILE* output_stream_;
+		std::istream& input_stream_;
+		std::ostream& output_stream_;
 		int input_stream_mode_;
 		int output_stream_mode_;
 

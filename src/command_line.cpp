@@ -3,6 +3,7 @@
 #include <Aheuiplusplus/interpreter.hpp>
 
 #include <cstdlib>
+#include <iostream>
 #include <utility>
 
 namespace app
@@ -65,13 +66,13 @@ namespace app
 
 	bool command_line::parse(int argc, char** argv)
 	{
-		return parse(stderr, argc, argv);
+		return parse(std::cerr, argc, argv);
 	}
-	bool command_line::parse(std::FILE* error_stream, int argc, char** argv)
+	bool command_line::parse(std::ostream& error_stream, int argc, char** argv)
 	{
 		if (argc <= 1)
 		{
-			std::fprintf(error_stream, "오류: 입력이 없습니다. --help 옵션을 이용해 사용법을 확인하실 수 있습니다.\n");
+			error_stream << "오류: 입력이 없습니다. --help 옵션을 이용해 사용법을 확인하실 수 있습니다.\n";
 			return false;
 		}
 
@@ -89,8 +90,8 @@ namespace app
 
 		option_code_path_.clear();
 
-		static const char* duplicate_message = " 옵션이 두번 이상 사용되었습니다.";
-		static const char* invalid_argument_message = " 옵션의 인수가 올바르지 않습니다.";
+		static const char* duplicate_message = " 옵션이 두번 이상 사용되었습니다.\n";
+		static const char* invalid_argument_message = " 옵션의 인수가 올바르지 않습니다.\n";
 
 		for (int i = 1; i < argc; ++i)
 		{
@@ -100,7 +101,7 @@ namespace app
 			{
 				if (option_help)
 				{
-					std::fprintf(error_stream, "오류: %s%s\n", "--help", duplicate_message);
+					error_stream << "오류: --help" << duplicate_message;
 					return false;
 				}
 
@@ -110,7 +111,7 @@ namespace app
 			{
 				if (option_version)
 				{
-					std::fprintf(error_stream, "오류: %s%s\n", "--version", duplicate_message);
+					error_stream << "오류: --version" << duplicate_message;
 					return false;
 				}
 
@@ -121,7 +122,7 @@ namespace app
 			{
 				if (option_aheui_)
 				{
-					std::fprintf(error_stream, "오류: %s%s\n", "-A", duplicate_message);
+					error_stream << "오류: -A" << duplicate_message;
 					return false;
 				}
 
@@ -131,7 +132,7 @@ namespace app
 			{
 				if (option_interpreting_mode_)
 				{
-					std::fprintf(error_stream, "오류: %s%s\n", "-i", duplicate_message);
+					error_stream << "오류: -i" << duplicate_message;
 					return false;
 				}
 
@@ -141,12 +142,12 @@ namespace app
 			{
 				if (argument.length() <= 5)
 				{
-					std::fprintf(error_stream, "오류: %s%s\n", "-std", invalid_argument_message);
+					error_stream << "오류: -std" << invalid_argument_message;
 					return false;
 				}
 				else if (argument[4] != '=')
 				{
-					std::fprintf(error_stream, "오류: %s%s\n", "-std", invalid_argument_message);
+					error_stream << "오류: -std" << invalid_argument_message;
 					return false;
 				}
 
@@ -162,7 +163,7 @@ namespace app
 
 					if (option_version_ == version::none)
 					{
-						std::fprintf(error_stream, "오류: %s%s\n", "-std", invalid_argument_message);
+						error_stream << "오류: -std" << invalid_argument_message;
 						return false;
 					}
 				}
@@ -179,7 +180,7 @@ namespace app
 
 					if (option_version_ == version::none)
 					{
-						std::fprintf(error_stream, "오류: %s%s\n", "-std", invalid_argument_message);
+						error_stream << "오류: -std" << invalid_argument_message;
 						return false;
 					}
 				}
@@ -188,7 +189,7 @@ namespace app
 			{
 				if (option_utf8_)
 				{
-					std::fprintf(error_stream, "오류: %s%s\n", "-utf8", duplicate_message);
+					error_stream << "오류: -utf8" << duplicate_message;
 					return false;
 				}
 
@@ -198,7 +199,7 @@ namespace app
 			{
 				if (option_utf16_)
 				{
-					std::fprintf(error_stream, "오류: %s%s\n", "-utf16", duplicate_message);
+					error_stream << "오류: -utf16" << duplicate_message;
 					return false;
 				}
 
@@ -208,7 +209,7 @@ namespace app
 			{
 				if (option_utf16be_)
 				{
-					std::fprintf(error_stream, "오류: %s%s\n", "-utf16be", duplicate_message);
+					error_stream << "오류: -utf16be" << duplicate_message;
 					return false;
 				}
 
@@ -219,7 +220,7 @@ namespace app
 			{
 				if (option_loud_mode_)
 				{
-					std::fprintf(error_stream, "오류: %s%s\n", "-l", duplicate_message);
+					error_stream << "오류: -l" << duplicate_message;
 					return false;
 				}
 
@@ -230,12 +231,12 @@ namespace app
 			{
 				if (argument.front() == '-')
 				{
-					std::fprintf(error_stream, "오류: %s는 알 수 없는 옵션입니다.\n", argument.data());
+					error_stream << "오류: " << argument << "는 알 수 없는 옵션입니다.\n";
 					return false;
 				}
 				else if (!option_code_path_.empty())
 				{
-					std::fprintf(error_stream, "오류: 경로가 두개 이상 입력되었습니다.\n");
+					error_stream << "오류: 경로가 두개 이상 입력되었습니다.\n";
 					return false;
 				}
 
@@ -245,9 +246,8 @@ namespace app
 
 		if (option_help)
 		{
-
-			std::fprintf(error_stream,
-				"사용법: %s [option(s)...] [path]\n"
+			error_stream <<
+				"사용법: " << argv[0] << " [option(s)...] [path]\n"
 				"path는 아희++(또는 아희) 코드가 기록된 텍스트 파일에 대한 올바른 경로여야 합니다(인터프리팅 모드일 경우 필요하지 않습니다.).\n"
 				"\n"
 				"--help - 사용법 및 명령줄 옵션 목록을 봅니다.\n"
@@ -260,63 +260,63 @@ namespace app
 				"-utf16 - path가 나타내는 텍스트 파일의 인코딩이 UTF-16LE임을 명시합니다. -i, -utf8, -utf16be 옵션과 함께 쓰일 수 없습니다.\n"
 				"-utf16be - path가 나타내는 텍스트 파일의 인코딩이 UTF-16BE임을 명시합니다. -i, -utf8, -utf16 옵션과 함께 쓰일 수 없습니다.\n"
 				"\n"
-				"-l - 아희++(또는 아희) 코드가 입력을 요청했을 때 요청됐음을 나타내는 메세지를 출력합니다.\n",
-				argv[0]);
+				"-l - 아희++(또는 아희) 코드가 입력을 요청했을 때 요청됐음을 나타내는 메세지를 출력합니다.\n";
 
 			return false;
 		}
 		else if (option_version)
 		{
-			std::fprintf(error_stream,
-				"아희++ 표준 인터프리터 %s\n%s\n\n이 소프트웨어는 공개 소프트웨어로, 소스 코드는 아래 웹사이트에서 MIT 라이선스로 배포되고 있습니다.\n\n%s\n",
-				version_string, "(C) 2018. kmc7468 All rights reserved.", "https://github.com/kmc7468/Aheuiplusplus");
-
+			error_stream <<
+				"아희++ 표준 인터프리터 " << version_string << "\n"
+				"(C) 2018. kmc7468 All rights reserved.\n\n"
+				"이 소프트웨어는 공개 소프트웨어로, 소스 코드는 아래 웹사이트에서 MIT 라이선스로 배포되고 있습니다.\n\n"
+				"https://github.com/kmc7468/Aheuiplusplus\n";
 			return false;
 		}
 
 		if (option_aheui_ && option_version_ != version::none)
 		{
-			std::fprintf(error_stream, "오류: -A 옵션과 -std 옵션은 함께 쓰일 수 없습니다.\n");
+			error_stream << "오류: -A 옵션과 - std 옵션은 함께 쓰일 수 없습니다.\n";
 			return false;
 		}
 		else if (option_interpreting_mode_ && !option_code_path_.empty())
 		{
-			std::fprintf(error_stream, "오류: 인터프리팅 모드일 경우 path가 필요하지 않습니다.\n");
+			error_stream << "오류: 인터프리팅 모드일 경우 path가 필요하지 않습니다.\n";
 			return false;
 		}
 		else if (!option_interpreting_mode_ && option_code_path_.empty())
 		{
-			std::fprintf(error_stream, "오류: 일반 모드일 경우 path가 필요합니다.\n");
+			error_stream << "오류: 일반 모드일 경우 path가 필요합니다.\n";
 			return false;
 		}
 		else if (option_interpreting_mode_ && option_utf8_)
 		{
-			std::fprintf(error_stream, "오류: -i 옵션과 -utf8 옵션은 함께 쓰일 수 없습니다.\n");
+			error_stream << "오류: -i 옵션과 -utf8 옵션은 함께 쓰일 수 없습니다.\n";
 			return false;
 		}
 		else if (option_interpreting_mode_ && option_utf16_)
 		{
-			std::fprintf(error_stream, "오류: -i 옵션과 -utf16 옵션은 함께 쓰일 수 없습니다.\n");
+			error_stream << "오류: -i 옵션과 -utf16 옵션은 함께 쓰일 수 없습니다.\n";
 			return false;
 		}
 		else if (option_interpreting_mode_ && option_utf16be_)
 		{
-			std::fprintf(error_stream, "오류: -i 옵션과 -utf16be 옵션은 함께 쓰일 수 없습니다.\n");
+			error_stream << "오류: -i 옵션과 -utf16be 옵션은 함께 쓰일 수 없습니다.\n";
 			return false;
 		}
 		else if (option_utf8_ && option_utf16_)
 		{
-			std::fprintf(error_stream, "오류: -utf8 옵션과 -utf16 옵션은 함께 쓰일 수 없습니다.\n");
+			error_stream << "오류: -utf8 옵션과 -utf16 옵션은 함께 쓰일 수 없습니다.\n";
 			return false;
 		}
 		else if (option_utf8_ && option_utf16be_)
 		{
-			std::fprintf(error_stream, "오류: -utf8 옵션과 -utf16be 옵션은 함께 쓰일 수 없습니다.\n");
+			error_stream << "오류: -utf8 옵션과 -utf16be 옵션은 함께 쓰일 수 없습니다.\n";
 			return false;
 		}
 		else if (option_utf16_ && option_utf16be_)
 		{
-			std::fprintf(error_stream, "오류: -utf16 옵션과 -utf16be 옵션은 함께 쓰일 수 없습니다.\n");
+			error_stream << "오류: -utf16 옵션과 -utf16be 옵션은 함께 쓰일 수 없습니다.\n";
 			return false;
 		}
 

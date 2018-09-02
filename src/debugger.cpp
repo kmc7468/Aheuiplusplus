@@ -4,12 +4,16 @@
 
 namespace app
 {
-	debugger::debugger(const code& code)
-		: interpreter_(this, code)
-	{}
-	debugger::debugger(code&& code)
-		: interpreter_(this, std::move(code))
-	{}
+	debugger::debugger(const code_view& code, const command_line& command_line)
+		: interpreter_(this, command_line)
+	{
+		interpreter_.code(code);
+	}
+	debugger::debugger(code&& code, const command_line& command_line)
+		: interpreter_(this, command_line)
+	{
+		interpreter_.code(std::move(code));
+	}
 
 	const std::vector<point>& debugger::breakpoints() const noexcept
 	{

@@ -3,7 +3,7 @@
 
 #include <Aheuiplusplus/version.hpp>
 
-#include <cstdio>
+#include <ostream>
 #include <string>
 #include <string_view>
 
@@ -25,7 +25,7 @@ namespace app
 
 	public:
 		bool parse(int argc, char** argv);
-		bool parse(std::FILE* error_stream, int argc, char** argv);
+		bool parse(std::ostream& error_stream, int argc, char** argv);
 
 	public:
 		bool option_aheui() const noexcept;

@@ -2,14 +2,10 @@
 
 #include <Aheuiplusplus/debugger.hpp>
 
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <utility>
-
-#if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64)
-#	include <fcntl.h>
-#	include <io.h>
-#endif
 
 namespace app
 {
@@ -58,21 +54,18 @@ namespace app
 namespace app
 {
 	interpreter::interpreter(const command_line& command_line)
-		: interpreter(stdin, stdout, command_line)
+		: interpreter(nullptr, std::cin, std::cout, command_line)
 	{}
-	interpreter::interpreter(std::FILE* input_stream, std::FILE* output_stream, const command_line& command_line)
-		: input_stream_(input_stream), output_stream_(output_stream)
+	interpreter::interpreter(std::istream& input_stream, std::ostream& output_stream, const command_line& command_line)
+		: interpreter(nullptr, input_stream, output_stream, command_line)
+	{}
+
+	interpreter::interpreter(debugger* debugger, const command_line& command_line)
+		: interpreter(debugger, std::cin, std::cout, command_line)
+	{}
+	interpreter::interpreter(debugger* debugger, std::istream& input_stream, std::ostream& output_stream, const command_line& command_line)
+		: debugger_(debugger), input_stream_(input_stream), output_stream_(output_stream)
 	{
-#if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64)
-		input_stream_mode_ = _setmode(_fileno(input_stream), _O_U16TEXT);
-		output_stream_mode_ = _setmode(_fileno(output_stream), _O_U16TEXT);
-
-		if (input_stream_mode_ == -1)
-			throw std::runtime_error("인수 input_stream의 변환 모드를 변경하는데 실패했습니다.");
-		if (output_stream_mode_ == -1)
-			throw std::runtime_error("인수 output_stream의 변환 모드를 변경하는데 실패했습니다.");
-#endif
-
 		version_ = command_line.option_version();
 
 		if (version_ == version::none)
@@ -82,29 +75,6 @@ namespace app
 			std::make_shared<namespace_info>(code_view(U""))
 		);
 	}
-	interpreter::~interpreter()
-	{
-#if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64)
-		if (input_stream_mode_ != -1)
-		{
-			_setmode(_fileno(input_stream_), input_stream_mode_);
-		}
-		if (output_stream_mode_ != -1)
-		{
-			_setmode(_fileno(output_stream_), output_stream_mode_);
-		}
-#endif
-	}
-
-	interpreter::interpreter(debugger* debugger)
-		: debugger_(debugger)
-	{}
-	interpreter::interpreter(debugger* debugger, const app::code& code)
-		: debugger_(debugger), code_(code)
-	{}
-	interpreter::interpreter(debugger* debugger, app::code&& code)
-		: debugger_(debugger), code_(std::move(code))
-	{}
 
 	void interpreter::reset_state() noexcept
 	{
@@ -119,7 +89,7 @@ namespace app
 	{
 		return code_;
 	}
-	void interpreter::code(const app::code& new_code)
+	void interpreter::code(const app::code_view& new_code)
 	{
 		code_ = new_code;
 		reset_state();
@@ -128,5 +98,14 @@ namespace app
 	{
 		code_ = std::move(new_code);
 		reset_state();
+	}
+
+	const std::vector<namespace_ptr>& interpreter::namespaces() const noexcept
+	{
+		return namespaces_;
+	}
+	std::vector<namespace_ptr>& interpreter::namespaces() noexcept
+	{
+		return namespaces_;
 	}
 }

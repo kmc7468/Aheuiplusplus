@@ -2,6 +2,7 @@
 #define AHEUIPLUSPLUS_HEADER_DEBUGGER_HPP
 
 #include <Aheuiplusplus/code.hpp>
+#include <Aheuiplusplus/command_line.hpp>
 #include <Aheuiplusplus/cursor.hpp>
 #include <Aheuiplusplus/interpreter.hpp>
 
@@ -13,8 +14,8 @@ namespace app
 	{
 	public:
 		debugger() = default;
-		debugger(const code& code);
-		debugger(code&& code);
+		debugger(const code_view& code, const command_line& command_line);
+		debugger(code&& code, const command_line& command_line);
 		debugger(const debugger& debugger) = delete;
 		debugger(debugger&& debugger) noexcept = delete;
 		~debugger() = default;
