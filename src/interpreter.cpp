@@ -71,9 +71,7 @@ namespace app
 		if (version_ == version::none)
 			throw std::invalid_argument("인수 command_line이 올바르지 않은 값을 갖고 있습니다. (필드 option_version)");
 
-		namespaces_.push_back(
-			std::make_shared<namespace_info>(code_view(U""))
-		);
+		reset_namespaces();
 	}
 
 	void interpreter::reset_state() noexcept
@@ -83,6 +81,43 @@ namespace app
 	void interpreter::reset_storages()
 	{
 		storages_.reset();
+	}
+	void interpreter::reset_namespaces()
+	{
+		namespaces_.clear();
+
+		namespaces_.push_back(
+			std::make_shared<namespace_info>(code_view(U""))
+		);
+	}
+
+	namespace_ptr interpreter::create_namespace(const code_view& name)
+	{
+		namespace_ptr result = std::make_shared<namespace_info>(name);
+
+		return namespaces_.push_back(result), result;
+	}
+	namespace_ptr interpreter::create_namespace(app::code&& name)
+	{
+		namespace_ptr result = std::make_shared<namespace_info>(std::move(name));
+
+		return namespaces_.push_back(result), result;
+	}
+	void interpreter::add_namespace(const namespace_ptr& namespace_info)
+	{
+		namespaces_.push_back(namespace_info);
+	}
+	void interpreter::remove_namespace(const namespace_ptr& namespace_info)
+	{
+		std::vector<namespace_ptr>::iterator iter =
+			std::find(namespaces_.begin(), namespaces_.end(), namespace_info);
+
+		if (iter != namespaces_.end())
+		{
+			namespaces_.erase(iter);
+		}
+		
+		throw std::invalid_argument("인수 namespace_info가 존재하지 않아 삭제할 수 없습니다.");
 	}
 
 	const app::code& interpreter::code() const noexcept

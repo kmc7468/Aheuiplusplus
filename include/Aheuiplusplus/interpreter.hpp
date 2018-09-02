@@ -81,6 +81,12 @@ namespace app
 	public:
 		void reset_state() noexcept;
 		void reset_storages();
+		void reset_namespaces();
+
+		namespace_ptr create_namespace(const code_view& name);
+		namespace_ptr create_namespace(app::code&& name);
+		void add_namespace(const namespace_ptr& namespace_info);
+		void remove_namespace(const namespace_ptr& namespace_info);
 
 	public:
 		const app::code& code() const noexcept;
