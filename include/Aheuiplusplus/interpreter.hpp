@@ -5,9 +5,11 @@
 #include <Aheuiplusplus/command_line.hpp>
 #include <Aheuiplusplus/cursor.hpp>
 #include <Aheuiplusplus/mode.hpp>
+#include <Aheuiplusplus/namespace.hpp>
 #include <Aheuiplusplus/storage.hpp>
 
 #include <cstdio>
+#include <vector>
 
 namespace app
 {
@@ -97,6 +99,8 @@ namespace app
 		std::FILE* output_stream_;
 		int input_stream_mode_;
 		int output_stream_mode_;
+
+		std::vector<namespace_ptr> namespaces_;
 	};
 }
 

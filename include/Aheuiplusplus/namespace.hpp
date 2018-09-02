@@ -12,8 +12,8 @@ namespace app
 	class namespace_info final
 	{
 	public:
-		namespace_info(const code_view& name);
-		namespace_info(code&& name);
+		explicit namespace_info(const code_view& name);
+		explicit namespace_info(code&& name);
 		namespace_info(const namespace_info& namespace_) = delete;
 		namespace_info(namespace_info&& namespace_) noexcept = delete;
 		~namespace_info() = default;

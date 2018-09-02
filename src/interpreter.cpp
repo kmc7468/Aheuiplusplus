@@ -2,6 +2,7 @@
 
 #include <Aheuiplusplus/debugger.hpp>
 
+#include <memory>
 #include <stdexcept>
 #include <utility>
 
@@ -76,6 +77,10 @@ namespace app
 
 		if (version_ == version::none)
 			throw std::invalid_argument("인수 command_line이 올바르지 않은 값을 갖고 있습니다. (필드 option_version)");
+
+		namespaces_.push_back(
+			std::make_shared<namespace_info>(code_view(U""))
+		);
 	}
 	interpreter::~interpreter()
 	{

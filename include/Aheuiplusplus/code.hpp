@@ -102,31 +102,31 @@ namespace app
 			codes_.clear();
 			codes_grapheme_.clear();
 		}
-		grapheme at(std::size_t x, std::size_t y) const
+		basic_grapheme<String_> at(std::size_t x, std::size_t y) const
 		{
 			return codes_grapheme_.at(y).at(x);
 		}
-		grapheme at(const point& location) const
+		basic_grapheme<String_> at(const point& location) const
 		{
 			return at(location.x(), location.y());
 		}
-		grapheme at(const cursor& location) const
+		basic_grapheme<String_> at(const cursor& location) const
 		{
 			return at(location.x(), location.y());
 		}
-		const std::vector<grapheme>& at(std::size_t y) const
+		const std::vector<basic_grapheme<String_>>& at(std::size_t y) const
 		{
 			return codes_grapheme_.at(y);
 		}
-		const std::vector<grapheme>& line(std::size_t y) const
+		const std::vector<basic_grapheme<String_>>& line(std::size_t y) const
 		{
 			return at(y);
 		}
-		const std::vector<grapheme>& line(const point& location) const
+		const std::vector<basic_grapheme<String_>>& line(const point& location) const
 		{
 			return at(location.y());
 		}
-		const std::vector<grapheme>& line(const cursor& location) const
+		const std::vector<basic_grapheme<String_>>& line(const cursor& location) const
 		{
 			return at(location.y());
 		}
@@ -172,7 +172,14 @@ namespace app
 
 				if (!line.empty() && line.back() == cr)
 				{
-					line.erase(line.end() - 1);
+					if constexpr (details::is_basic_string_view<String_>::value)
+					{
+						line.remove_suffix(1);
+					}
+					else
+					{
+						line.erase(line.end() - 1);
+					}
 				}
 
 				const grapheme_iterator end = grapheme_iterator(line.begin(), line.end(), line.end());
