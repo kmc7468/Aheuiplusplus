@@ -11,6 +11,7 @@ namespace app
 	command_line::command_line(const command_line& data)
 		: option_aheui_(data.option_aheui_),
 		  option_interpreting_mode_(data.option_interpreting_mode_),
+		  option_debugging_mode_(data.option_debugging_mode_),
 		  option_version_(data.option_version_),
 		  option_utf8_(data.option_utf8_),
 		  option_utf16_(data.option_utf16_),
@@ -23,6 +24,7 @@ namespace app
 	command_line::command_line(command_line&& data) noexcept
 		: option_aheui_(data.option_aheui_),
 		  option_interpreting_mode_(data.option_interpreting_mode_),
+		  option_debugging_mode_(data.option_debugging_mode_),
 		  option_version_(data.option_version_),
 		  option_utf8_(data.option_utf8_),
 		  option_utf16_(data.option_utf16_),
@@ -37,6 +39,7 @@ namespace app
 	{
 		option_aheui_ = data.option_aheui_;
 		option_interpreting_mode_ = data.option_interpreting_mode_;
+		option_debugging_mode_ = data.option_debugging_mode_;
 		option_version_ = data.option_version_;
 		option_utf8_ = data.option_utf8_;
 		option_utf16_ = data.option_utf16_;
@@ -52,6 +55,7 @@ namespace app
 	{
 		option_aheui_ = data.option_aheui_;
 		option_interpreting_mode_ = data.option_interpreting_mode_;
+		option_debugging_mode_ = data.option_debugging_mode_;
 		option_version_ = data.option_version_;
 		option_utf8_ = data.option_utf8_;
 		option_utf16_ = data.option_utf16_;
@@ -81,6 +85,7 @@ namespace app
 
 		option_aheui_ = false;
 		option_interpreting_mode_ = false;
+		option_debugging_mode_ = false;
 		option_version_ = version::none;
 		option_utf8_ = false;
 		option_utf16_ = false;
@@ -137,6 +142,16 @@ namespace app
 				}
 
 				option_interpreting_mode_ = true;
+			}
+			else if (argument == "-d")
+			{
+				if (option_debugging_mode_)
+				{
+					error_stream << "오류: -d" << duplicate_message;
+					return false;
+				}
+
+				option_debugging_mode_ = true;
 			}
 			else if (argument.substr(0, 4) == "-std")
 			{
@@ -248,17 +263,18 @@ namespace app
 		{
 			error_stream <<
 				"사용법: " << argv[0] << " [option(s)...] [path]\n"
-				"path는 아희++(또는 아희) 코드가 기록된 텍스트 파일에 대한 올바른 경로여야 합니다(인터프리팅 모드일 경우 필요하지 않습니다.).\n"
+				"path는 아희++(또는 아희) 코드가 기록된 텍스트 파일에 대한 올바른 경로여야 합니다(인터프리팅 모드 또는 디버깅 모드일 때에는 필요하지 않습니다.).\n"
 				"\n"
 				"--help - 사용법 및 명령줄 옵션 목록을 봅니다.\n"
 				"--version - 이 소프트웨어의 버전을 봅니다.\n"
 				"\n"
 				"-A - 아희 전용 모드로 실행합니다. -std 옵션과 함께 쓰일 수 없습니다.\n"
-				"-i - 인터프리팅 모드로 실행합니다. -utf8, -utf16, -utf16be 옵션과 함께 쓰일 수 없습니다.\n"
+				"-i - 인터프리팅 모드로 실행합니다. -d, -utf8, -utf16, -utf16be 옵션과 함께 쓰일 수 없습니다.\n"
+				"-d - 디버깅 모드로 실행합니다. -i, -utf8, -utf16, -utf16be 옵션과 함께 쓰일 수 없습니다.\n"
 				"-std=<version> - 이 소프트웨어가 따를 아희++ 표준의 버전을 설정합니다. version은 m 또는 m.n의 형태로 구성됩니다(이때 m은 주버전, n은 부버전입니다.). -A 옵션과 함께 쓰일 수 없습니다.\n"
-				"-utf8 - path가 나타내는 텍스트 파일의 인코딩이 UTF-8임을 명시합니다. 기본적으로 이 옵션이 적용됩니다. -i, -utf16, -utf16be 옵션과 함께 쓰일 수 없습니다.\n"
-				"-utf16 - path가 나타내는 텍스트 파일의 인코딩이 UTF-16LE임을 명시합니다. -i, -utf8, -utf16be 옵션과 함께 쓰일 수 없습니다.\n"
-				"-utf16be - path가 나타내는 텍스트 파일의 인코딩이 UTF-16BE임을 명시합니다. -i, -utf8, -utf16 옵션과 함께 쓰일 수 없습니다.\n"
+				"-utf8 - path가 나타내는 텍스트 파일의 인코딩이 UTF-8임을 명시합니다. 기본적으로 이 옵션이 적용됩니다. -i, -d, -utf16, -utf16be 옵션과 함께 쓰일 수 없습니다.\n"
+				"-utf16 - path가 나타내는 텍스트 파일의 인코딩이 UTF-16LE임을 명시합니다. -i, -d, -utf8, -utf16be 옵션과 함께 쓰일 수 없습니다.\n"
+				"-utf16be - path가 나타내는 텍스트 파일의 인코딩이 UTF-16BE임을 명시합니다. -i, -d, -utf8, -utf16 옵션과 함께 쓰일 수 없습니다.\n"
 				"\n"
 				"-l - 아희++(또는 아희) 코드가 입력을 요청했을 때 요청됐음을 나타내는 메세지를 출력합니다.\n";
 
@@ -284,7 +300,12 @@ namespace app
 			error_stream << "오류: 인터프리팅 모드일 경우 path가 필요하지 않습니다.\n";
 			return false;
 		}
-		else if (!option_interpreting_mode_ && option_code_path_.empty())
+		else if (option_debugging_mode_ && !option_code_path_.empty())
+		{
+			error_stream << "오류: 디버깅 모드일 경우 path가 필요하지 않습니다.\n";
+			return false;
+		}
+		else if (!option_interpreting_mode_ && !option_debugging_mode_ && option_code_path_.empty())
 		{
 			error_stream << "오류: 일반 모드일 경우 path가 필요합니다.\n";
 			return false;
@@ -302,6 +323,26 @@ namespace app
 		else if (option_interpreting_mode_ && option_utf16be_)
 		{
 			error_stream << "오류: -i 옵션과 -utf16be 옵션은 함께 쓰일 수 없습니다.\n";
+			return false;
+		}
+		else if (option_interpreting_mode_ && option_debugging_mode_)
+		{
+			error_stream << "오류: -i 옵션과 -d 옵션은 함께 쓰일 수 없습니다.\n";
+			return false;
+		}
+		else if (option_debugging_mode_ && option_utf8_)
+		{
+			error_stream << "오류: -d 옵션과 -utf8 옵션은 함께 쓰일 수 없습니다.\n";
+			return false;
+		}
+		else if (option_debugging_mode_ && option_utf16_)
+		{
+			error_stream << "오류: -d 옵션과 -utf16 옵션은 함께 쓰일 수 없습니다.\n";
+			return false;
+		}
+		else if (option_debugging_mode_ && option_utf16be_)
+		{
+			error_stream << "오류: -d 옵션과 -utf16be 옵션은 함께 쓰일 수 없습니다.\n";
 			return false;
 		}
 		else if (option_utf8_ && option_utf16_)
@@ -347,6 +388,14 @@ namespace app
 	void command_line::option_interpreting_mode(bool new_option_interpreting_mode) noexcept
 	{
 		option_interpreting_mode_ = new_option_interpreting_mode;
+	}
+	bool command_line::option_debugging_mode() const noexcept
+	{
+		return option_debugging_mode_;
+	}
+	void command_line::option_debugging_mode(bool new_option_debugging_mode) noexcept
+	{
+		option_debugging_mode_ = new_option_debugging_mode;
 	}
 	version command_line::option_version() const noexcept
 	{

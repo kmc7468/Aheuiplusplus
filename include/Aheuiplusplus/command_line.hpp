@@ -32,6 +32,8 @@ namespace app
 		void option_aheui(bool new_option_aheui) noexcept;
 		bool option_interpreting_mode() const noexcept;
 		void option_interpreting_mode(bool new_option_interpreting_mode) noexcept;
+		bool option_debugging_mode() const noexcept;
+		void option_debugging_mode(bool new_option_debugging_mode) noexcept;
 		version option_version() const noexcept;
 		void option_version(version new_option_version) noexcept;
 		bool option_utf8() const noexcept;
@@ -51,6 +53,7 @@ namespace app
 	private:
 		bool option_aheui_ = false;
 		bool option_interpreting_mode_ = false;
+		bool option_debugging_mode_ = false;
 		version option_version_ = version::none;
 		bool option_utf8_ = false;
 		bool option_utf16_ = false;
