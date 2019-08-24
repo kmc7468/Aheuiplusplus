@@ -1,9 +1,13 @@
+**개발이 중단되었습니다! 최초로 통로를 제대로 구현한 아희 인터프리터 [톡희](https://github.com/kmc7468/talkheui)는 어떠신가요?**
+
 [![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://shields.io/) [![language](https://img.shields.io/badge/language-C%2B%2B17-blue.svg)](https://shields.io/)
 # 아희++
 아희와 호환성이 있는 난해한 객체지향 한글 프로그래밍 언어
 - 인터프리터 버전: 2.0.0 (불안정한 버전)
 	- 다른 버전: [1.2.1](https://github.com/kmc7468/Aheuiplusplus/tree/version/1.2.1)
 - 아직 개발중인 버전입니다.
+
+**개발이 중단되었습니다! 최초로 통로를 제대로 구현한 아희 인터프리터 [톡희](https://github.com/kmc7468/talkheui)는 어떠신가요?**
 ## [레퍼런스](https://github.com/kmc7468/Aheuiplusplus/wiki)
 아희++의 표준안과 예제를 수록하고 있습니다. 표준안에 애매한 내용이나 질문이 있다면 이슈 등을 통해 알려주시면 감사하겠습니다.
 ## 아희++ 표준 인터프리터의 특징
@@ -59,6 +63,8 @@ $ make
 - [UTF8-CPP](https://github.com/nemtrif/utfcpp) 2.3.5
 ## 이런 프로젝트는 어떠세요?
 - [TemplatedAH](https://github.com/kmc7468/TemplatedAH) - 템플릿 메타 프로그래밍을 이용한 아희 인터프리터
+- **[톡희](https://github.com/kmc7468/talkheui) - 새로운 아희 인터프리터**<br>
+최초로 통로를 제대로 구현한 아희 인터프리터! 아희++의 정신적 후속작입니다.
 ## 라이선스
 아희++ 표준 인터프리터의 모든 소스 코드는 MIT 라이선스가 적용됩니다. 단, 외부 라이브러리에는 적용되지 않습니다.
 ```
